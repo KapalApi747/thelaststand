@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Livewire;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+
+class TenantLogin extends Component
+{
+    public $email;
+    public $password;
+    public $errorMessage;
+
+    // Render the login form view
+    public function render()
+    {
+        return view('livewire.tenant-login-form');
+    }
+
+    // Handle the login logic
+    public function login()
+    {
+        $this->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:8',
+        ]);
+
+        // Attempt to authenticate the user
+        $user = User::where('email', $this->email)->first();
+
+        if ($user && Auth::guard('tenant')->attempt([
+                'email' => $this->email,
+                'password' => $this->password
+            ])) {
+            // Login success
+            return redirect()->to('/dashboard');
+        } else {
+            // Login failed
+            $this->errorMessage = 'Invalid credentials. Please try again.';
+        }
+    }
+}
