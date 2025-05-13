@@ -7,11 +7,16 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
+use Stancl\Tenancy\Events\TenancyBootstrapped;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Stancl\Tenancy\Tenancy;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -101,7 +106,6 @@ class TenancyServiceProvider extends ServiceProvider
     {
         $this->bootEvents();
         $this->mapRoutes();
-
         $this->makeTenancyMiddlewareHighestPriority();
     }
 

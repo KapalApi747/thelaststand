@@ -266,7 +266,8 @@
                 </div>
             </main>
         </div>
-        <livewire: tenant-registration>
+        <@livewire('tenant-registration')>
+        <@livewire('tenant-login')>
 
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>

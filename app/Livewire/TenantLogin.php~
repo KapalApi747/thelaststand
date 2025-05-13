@@ -2,9 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Stancl\Tenancy\Facades\Tenancy;
 
 class TenantLogin extends Component
 {
@@ -12,32 +16,59 @@ class TenantLogin extends Component
     public $password;
     public $errorMessage;
 
+    public function testButton(): void
+    {
+        dd(tenancy());
+        $this->errorMessage = 'Test button clicked!';
+    }
+
+    public function login()
+    {
+        Log::info('🚀 login() triggered');
+
+        try {
+            $this->validate([
+                'email' => 'required|email',
+                'password' => 'required|string|min:8',
+            ]);
+
+            Log::info('✅ Validation passed');
+
+            $user = User::where('email', $this->email)->first();
+            Log::info('👤 User lookup: ' . ($user ? 'found' : 'not found'));
+
+            $attempt = Auth::guard('tenant')->attempt([
+                'email' => $this->email,
+                'password' => $this->password
+            ]);
+
+            Log::info('🔐 Attempt result: ' . ($attempt ? 'success' : 'failure'));
+
+            if ($attempt) {
+                $tenantDomain = request()->getHost(); // dancingdragon.myapp.local
+                $path = '/tenant-dashboard';
+
+                Tenancy::initialize($user->tenant);
+
+                Log::info("Login success, redirecting to tenant domain: $tenantDomain");
+                Log::info("Current DB Name: " . DB::connection('tenant')->getDatabaseName());
+
+                //$this->redirect("http://{$tenantDomain}:8000{$path}");
+                return redirect()->to("http://{$tenantDomain}:8000{$path}");
+            } else {
+                $this->errorMessage = '❌ Invalid credentials.';
+            }
+
+
+        } catch (\Exception $e) {
+            Log::error('💥 Login error: ' . $e->getMessage());
+            $this->errorMessage = 'Something went wrong: ' . $e->getMessage();
+        }
+    }
+
     // Render the login form view
     public function render()
     {
-        return view('livewire.tenant-login-form');
-    }
-
-    // Handle the login logic
-    public function login()
-    {
-        $this->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:8',
-        ]);
-
-        // Attempt to authenticate the user
-        $user = User::where('email', $this->email)->first();
-
-        if ($user && Auth::guard('tenant')->attempt([
-                'email' => $this->email,
-                'password' => $this->password
-            ])) {
-            // Login success
-            return redirect()->to('/dashboard');
-        } else {
-            // Login failed
-            $this->errorMessage = 'Invalid credentials. Please try again.';
-        }
+        return view('livewire.tenant-login')->layout('components.layouts.guest.guest');
     }
 }

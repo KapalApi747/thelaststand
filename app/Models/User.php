@@ -13,6 +13,8 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $connection = 'tenant';  // This ensures the tenant's database is used
+
     /**
      * The attributes that are mass assignable.
      *
