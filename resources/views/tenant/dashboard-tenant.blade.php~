@@ -1,9 +1,0 @@
-{{--<x-tenant-layout>--}}
-    <div class="p-6">
-        <h1 class="text-2xl font-bold">Welcome to your store dashboard, {{ auth('tenant')->user()->name }}!</h1>
-
-        <p class="mt-4 text-gray-600">
-            You are now logged in as tenant user. Here you can manage your store, products, orders, and more!
-        </p>
-    </div>
-{{--</x-tenant-layout>--}}

@@ -7,11 +7,11 @@ use Livewire\Volt\Volt;
 foreach (config('tenancy.central_domains') as $domain) {
     Route::middleware('web')->domain($domain)->group(function () {
 
-        require __DIR__.'/auth.php';
-
         Route::get('/', function () {
             return view('welcome');
         })->name('home');
+
+        require __DIR__.'/auth.php';
 
         Route::view('dashboard', 'dashboard')
             ->middleware(['auth', 'verified'])

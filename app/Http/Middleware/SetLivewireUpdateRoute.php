@@ -11,7 +11,7 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class SetLivewireUpdateRoute
 {
-    public function handle($request, Closure $next)
+    /*public function handle($request, Closure $next)
     {
         $host = Request::getHost();
         $centralDomains = config('tenancy.central_domains');
@@ -33,6 +33,31 @@ class SetLivewireUpdateRoute
         }
 
         return $next($request);
+    }*/
+
+    public function handle($request, Closure $next)
+    {
+        if ($request->is('livewire/update')) {
+            $host = $request->getHost();
+            $centralDomains = config('tenancy.central_domains');
+
+            if (in_array($host, $centralDomains)) {
+                Livewire::setUpdateRoute(function ($handle) {
+                    return Route::middleware('web')->post('/livewire/update', $handle);
+                });
+            } else {
+                Livewire::setUpdateRoute(function ($handle) {
+                    return Route::middleware([
+                        InitializeTenancyByDomain::class,
+                        PreventAccessFromCentralDomains::class,
+                        'web',
+                    ])->post('/livewire/update', $handle);
+                });
+            }
+        }
+
+        return $next($request);
     }
+
 }
 

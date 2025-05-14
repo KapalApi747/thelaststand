@@ -6,7 +6,9 @@ use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 use Stancl\Tenancy\Facades\Tenancy;
 
@@ -15,14 +17,26 @@ class TenantLogin extends Component
     public $email;
     public $password;
     public $errorMessage;
+    public bool $remember = false;
 
     public function testButton(): void
     {
-        dd(tenancy());
         $this->errorMessage = 'Test button clicked!';
     }
 
-    public function login()
+    public function loginTenant()
+    {
+        $credentials = $this->only(['email', 'password']);
+
+        if (Auth::attempt($credentials, $this->remember)) {
+            session()->regenerate();
+            return redirect()->intended('/tenant-dashboard'); // or wherever
+        }
+
+        $this->addError('email', __('Invalid credentials.'));
+    }
+
+    /*public function login()
     {
         Log::info('🚀 login() triggered');
 
@@ -35,7 +49,7 @@ class TenantLogin extends Component
             Log::info('✅ Validation passed');
 
             $user = User::where('email', $this->email)->first();
-            Log::info('👤 User lookup: ' . ($user ? 'found' : 'not found'));
+            Log::info('👤 User lookup: ' . $user->name . $user->email . ':' . ($user ? 'found' : 'not found'));
 
             $attempt = Auth::guard('tenant')->attempt([
                 'email' => $this->email,
@@ -45,14 +59,16 @@ class TenantLogin extends Component
             Log::info('🔐 Attempt result: ' . ($attempt ? 'success' : 'failure'));
 
             if ($attempt) {
-                $tenantDomain = request()->getHost(); // dancingdragon.myapp.local
-                $path = '/tenant-dashboard';
+                $tenantDomain = request()->getHost();
 
                 Log::info("Login success, redirecting to tenant domain: $tenantDomain");
                 Log::info("Current DB Name: " . DB::connection('tenant')->getDatabaseName());
 
-                //$this->redirect("http://{$tenantDomain}:8000{$path}");
-                return redirect()->to("http://{$tenantDomain}:8000{$path}");
+                Log::info('Session ID before Login: ' . session()->getId());
+                Log::info('Auth check (tenant): ' . (Auth::guard('tenant')->check() ? 'yes' : 'no'));
+                Log::info('Current domain: ' . request()->getHost());
+
+                return redirect()->route('tenant.dashboard');
             } else {
                 $this->errorMessage = '❌ Invalid credentials.';
             }
@@ -62,7 +78,65 @@ class TenantLogin extends Component
             Log::error('💥 Login error: ' . $e->getMessage());
             $this->errorMessage = 'Something went wrong: ' . $e->getMessage();
         }
-    }
+    }*/
+
+    /*public function loginTenant()
+    {
+        Log::info('🚀 login() triggered');
+
+        try {
+            $this->validate([
+                'email' => 'required|email',
+                'password' => 'required|string|min:8',
+            ]);
+
+            Log::info('✅ Validation passed');
+
+            $user = User::where('email', $this->email)->first();
+
+            if ($user && Hash::check($this->password, $user->password)) {
+                Auth::guard('tenant')->login($user);
+                session()->regenerate();
+                Log::info('✅ Authenticated user: ' . $user->email);
+                Log::info("🔗 Redirecting to tenant dashboard on domain: " . request()->getHost());
+
+                return redirect()->route('tenant.dashboard');
+            } else {
+                $this->errorMessage = '❌ Invalid credentials.';
+            }
+        } catch (\Exception $e) {
+            Log::error('💥 Login error: ' . $e->getMessage());
+            $this->errorMessage = 'Something went wrong: ' . $e->getMessage();
+        }
+    }*/
+
+    /*public function loginTenant()
+    {
+        $this->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:8',
+        ]);
+
+        // ⛳ Ensure tenant DB is initialized
+        if (!tenant()) {
+            abort(403, 'No tenant context found.');
+        }
+
+        // Attempt login on tenant guard
+        if (Auth::guard('tenant')->attempt([
+            'email' => $this->email,
+            'password' => $this->password,
+        ])) {
+            Log::info('✅ Login success on tenant guard');
+            Session::regenerate();
+            session()->put('tenant_guard_user', Auth::guard('tenant')->user());
+            return redirect()->route('tenant.dashboard');
+        }
+
+        Log::warning('❌ Login failed');
+        $this->errorMessage = 'Invalid credentials.';
+    }*/
+
 
     // Render the login form view
     public function render()
