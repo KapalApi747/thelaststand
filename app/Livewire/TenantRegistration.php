@@ -36,7 +36,7 @@ class TenantRegistration extends Component
         ]);
 
         $tenant->domains()->create([
-            'domain' => $this->domain . '.localhost', // Or your actual app domain
+            'domain' => $this->domain . '.myapp.local'
         ]);
 
         // Step 2: Migrate the tenant database
@@ -54,6 +54,6 @@ class TenantRegistration extends Component
             ]);
         });
 
-        $this->successMessage = "Tenant created! Please update your hosts file by adding the line: 127.0.0.1 {$this->domain}.local";
+        $this->successMessage = "Tenant $this->store_name created!";
     }
 }

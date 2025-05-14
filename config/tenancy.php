@@ -9,6 +9,9 @@ return [
     'tenant_model' => Tenant::class,
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
     'domain_model' => Domain::class,
+    'tenant_identification' => [
+        'domain' => '{tenant}.myapp.local',
+    ],
 
     /**
      * The list of domains hosting your central app.
@@ -18,6 +21,7 @@ return [
     'central_domains' => [
         '127.0.0.1',
         'localhost',
+        'myapp.local',
     ],
 
     /**
@@ -50,7 +54,7 @@ return [
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
          */
-        'prefix' => 'tenant',
+        'prefix' => 'dbtenant',
         'suffix' => '',
 
         /**

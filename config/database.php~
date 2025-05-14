@@ -62,7 +62,7 @@ return [
             ]) : [],
         ],
 
-        /*'tenant' => [
+        'tenant' => [
             'driver' => 'mysql',  // or 'pgsql' depending on your database type
             'host' => env('DB_HOST', '127.0.0.1'),
             'database' => '', // Leave this empty because we'll set it dynamically
@@ -74,7 +74,7 @@ return [
             'prefix' => '',
             'strict' => true,
             'engine' => null,
-        ],*/
+        ],
 
         'mariadb' => [
             'driver' => 'mariadb',
