@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Livewire\Admin;
+
+use App\Models\Tenant;
+use App\Models\TenantProfile;
+use Livewire\Component;
+
+class EditTenantProfile extends Component
+{
+    public Tenant $tenant;
+    public $profile;
+
+    public function mount(Tenant $tenant)
+    {
+        $this->tenant = $tenant;
+        $this->profile = $tenant->profile->toArray();
+    }
+
+    protected function rules()
+    {
+        return [
+            'profile.email' => 'nullable|email',
+            'profile.phone' => 'nullable|string|max:20',
+            'profile.address' => 'nullable|string',
+            'profile.city' => 'nullable|string|max:100',
+            'profile.state' => 'nullable|string|max:100',
+            'profile.zip' => 'nullable|string|max:20',
+            'profile.country' => 'nullable|string|max:100',
+            'profile.vat_id' => 'nullable|string|max:100',
+            'profile.business_description' => 'nullable|string|max:1000',
+            'profile.store_status' => 'required|in:active,inactive',
+
+            //'storeName' => 'required|string|max:255',
+            //'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ];
+    }
+
+    public function saveProfile(Tenant $tenant)
+    {
+        $this->validate();
+        $this->tenant->profile->update($this->profile);
+        session()->flash('message', 'Profile updated successfully.');
+    }
+    public function render()
+    {
+        return view('livewire.admin.edit-tenant-profile');
+    }
+}

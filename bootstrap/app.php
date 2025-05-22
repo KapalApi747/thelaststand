@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\AuthenticateTenant;
+use App\Http\Middleware\OnlyTenancyOnTenantDomain;
 use App\Http\Middleware\SetLivewireUpdateRoute;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -13,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(SetLivewireUpdateRoute::class);
+        $middleware->alias([
+            'tenant.auth' => AuthenticateTenant::class,
+            'tenant.onlytenancyontenant' => OnlyTenancyOnTenantDomain::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

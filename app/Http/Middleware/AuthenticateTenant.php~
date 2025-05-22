@@ -21,12 +21,12 @@ class AuthenticateTenant
     {
         Log::info('Auth check (tenant): ' . (Auth::guard('tenant')->check() ? 'yes' : 'no'));
 
-        dd([
+        /*dd([
             'tenancy_initialized' => tenancy()->initialized,
             'session' => session()->all(),
             'tenant_guard_user' => session('login_tenant_' . sha1(User::class)),
             'authenticated_user' => Auth::guard('tenant')->user(),
-        ]);
+        ]);*/
 
         // Check if tenant guard is authenticated
         if (!Auth::guard('tenant')->check()) {

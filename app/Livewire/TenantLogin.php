@@ -30,7 +30,7 @@ class TenantLogin extends Component
 
         if (Auth::attempt($credentials, $this->remember)) {
             session()->regenerate();
-            return redirect()->intended('/tenant-dashboard'); // or wherever
+            return redirect()->intended(route('tenant-dashboard.index')); // or wherever
         }
 
         $this->addError('email', __('Invalid credentials.'));

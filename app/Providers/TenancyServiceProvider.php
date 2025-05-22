@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Livewire\Livewire;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Events\TenancyBootstrapped;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use Stancl\Tenancy\Tenancy;
+use Stancl\Tenancy\Resolvers\DomainTenantResolver;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -107,6 +105,23 @@ class TenancyServiceProvider extends ServiceProvider
         $this->bootEvents();
         $this->mapRoutes();
         $this->makeTenancyMiddlewareHighestPriority();
+
+        /*DomainTenantResolver::$shouldCache = true;
+
+        DomainTenantResolver::$cacheTTL = 3600;
+
+        DomainTenantResolver::$cacheStore = null;*/
+
+        Event::listen(TenancyBootstrapped::class, function (TenancyBootstrapped $event) {
+            $basePath = storage_path('framework');
+
+            foreach (['cache', 'sessions', 'views'] as $folder) {
+                $path = "{$basePath}/{$folder}";
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, 0755, true);
+                }
+            }
+        });
     }
 
     protected function bootEvents()

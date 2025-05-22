@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Http\Middleware\AuthenticateTenant;
-use App\Livewire\TenantDashboard;
+use App\Livewire\Tenant\Backend\ProductManagement;
+use App\Livewire\Tenant\Backend\StoreSettings;
+use App\Livewire\Tenant\Backend\TenantDashboard;
 use App\Livewire\TenantLogin;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -29,27 +29,19 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    Route::get('/', TenantLogin::class)->name('tenant.login');
-
-    //Route::get('/tenant-login', TenantLogin::class)->name('tenant.login');
-
-    Route::get('/test-tenant', function () {
-        return 'You are inside a tenant: ' . tenant('id');
-    })->name('tenant.test');
-
-    Route::get('/debug-session', function () {
-        return [
-            'session' => session()->all(),
-            'user' => auth()->user(),
-            'cookie' => request()->cookie(config('session.cookie')),
-            'domain' => request()->getHost(),
-        ];
+    Livewire::setScriptRoute(function ($handle) {
+        return Route::get('/livewire/livewire.js', $handle);
     });
 
-    Route::get('/tenant-dashboard', TenantDashboard::class)
-        ->name('tenant.dashboard');
+    Route::get('/', TenantLogin::class)->name('tenant.login');
 
-    Route::get('/test-page-1', \App\Livewire\TestPageOne::class)->name('tenant.test1');
-    Route::get('/test-page-2', \App\Livewire\TestPageTwo::class)->name('tenant.test2');
+    Route::middleware(['web','tenant.auth'])
+        ->prefix('tenant-dashboard')
+        ->as('tenant-dashboard.')
+        ->group(function () {
+            Route::get('/', TenantDashboard::class)->name('index');
+            Route::get('/store-settings', StoreSettings::class)->name('store-settings');
+            Route::get('/product-management', ProductManagement::class)->name('product-management');
+        });
 });
 

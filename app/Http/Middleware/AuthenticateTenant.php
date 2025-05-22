@@ -19,20 +19,9 @@ class AuthenticateTenant
      */
     public function handle(Request $request, Closure $next)
     {
-        Log::info('Auth check (tenant): ' . (Auth::guard('tenant')->check() ? 'yes' : 'no'));
-
-        /*dd([
-            'tenancy_initialized' => tenancy()->initialized,
-            'session' => session()->all(),
-            'tenant_guard_user' => session('login_tenant_' . sha1(User::class)),
-            'authenticated_user' => Auth::guard('tenant')->user(),
-        ]);*/
-
-        // Check if tenant guard is authenticated
-        if (!Auth::guard('tenant')->check()) {
-            Log::info('Current guard: ' . Auth::guard()->getName());
-
-            return redirect()->route('tenant.test');
+        // Optional: specify a custom guard if you're using one
+        if (!Auth::check()) {
+            return redirect()->route('tenant.login');
         }
 
         return $next($request);
