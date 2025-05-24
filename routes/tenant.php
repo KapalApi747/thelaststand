@@ -2,10 +2,16 @@
 
 declare(strict_types=1);
 
-use App\Http\Middleware\AuthenticateTenant;
-use App\Livewire\TenantDashboard;
+use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
+use App\Livewire\Tenant\Backend\Products\ProductEdit;
+use App\Livewire\Tenant\Backend\Products\ProductManagement;
+use App\Livewire\Tenant\Backend\Products\ProductView;
+use App\Livewire\Tenant\Backend\Profile\StoreSettings;
+use App\Livewire\Tenant\Backend\TenantDashboard;
+use App\Livewire\Tenant\Backend\Users\UserEdit;
+use App\Livewire\Tenant\Backend\Users\UserIndex;
+use App\Livewire\Tenant\Backend\Users\UserRegistration;
 use App\Livewire\TenantLogin;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -29,27 +35,28 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
+    /*Livewire::setScriptRoute(function ($handle) {
+        return Route::get('/livewire/livewire.js', $handle);
+    });*/
+
     Route::get('/', TenantLogin::class)->name('tenant.login');
 
-    //Route::get('/tenant-login', TenantLogin::class)->name('tenant.login');
+    Route::middleware(['web','tenant.auth'])
+        ->prefix('tenant-dashboard')
+        ->as('tenant-dashboard.')
+        ->group(function () {
+            Route::get('/', TenantDashboard::class)->name('index');
+            Route::get('/profile-settings', StoreSettings::class)->name('store-settings');
 
-    Route::get('/test-tenant', function () {
-        return 'You are inside a tenant: ' . tenant('id');
-    })->name('tenant.test');
+            Route::get('/products', ProductManagement::class)->name('product-management');
+            Route::get('/products/{product:slug}', ProductView::class)->name('product-view');
+            Route::get('/products/{product:slug}/edit', ProductEdit::class)->name('product-edit');
 
-    Route::get('/debug-session', function () {
-        return [
-            'session' => session()->all(),
-            'user' => auth()->user(),
-            'cookie' => request()->cookie(config('session.cookie')),
-            'domain' => request()->getHost(),
-        ];
-    });
+            Route::get('/categories', CategoryManagement::class)->name('category-management');
 
-    Route::get('/tenant-dashboard', TenantDashboard::class)
-        ->name('tenant.dashboard');
-
-    Route::get('/test-page-1', \App\Livewire\TestPageOne::class)->name('tenant.test1');
-    Route::get('/test-page-2', \App\Livewire\TestPageTwo::class)->name('tenant.test2');
+            Route::get('/user-index', UserIndex::class)->name('user-index');
+            Route::get('/user-register', UserRegistration::class)->name('user-register');
+            Route::get('/users/{user:slug}/edit', UserEdit::class)->name('user-edit');
+        });
 });
 

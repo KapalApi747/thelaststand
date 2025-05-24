@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Livewire\Tenant\Backend\Users;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Spatie\Permission\Models\Role;
+
+#[Layout('t-dashboard-layout')]
+class StaffRegistration extends Component
+{
+    public $name;
+    public $email;
+    public $password;
+    public $password_confirmation;
+    public $roles = [];
+    public $is_active = 1;
+
+    protected $rules = [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:8|confirmed',
+        'password_confirmation' => 'required|string|min:8',
+        'roles' => 'required|array|min:1',
+        'is_active' => 'required|boolean',
+    ];
+
+    public function registerUser()
+    {
+        $this->validate();
+
+        $user = User::create([
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => Hash::make($this->password),
+            'is_active' => $this->is_active,
+        ]);
+
+        $user->assignRole($this->roles);
+
+        session()->flash('message', 'User registered successfully!');
+    }
+
+    public function render()
+    {
+        $existingRoles = Role::all();
+
+        return view('livewire.tenant.backend.users.staff-registration', [
+            'availableRoles' => $existingRoles,
+        ]);
+    }
+}

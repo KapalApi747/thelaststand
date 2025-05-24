@@ -2,47 +2,77 @@
 
 namespace App\Livewire;
 
+use App\Models\Category;
 use App\Models\Tenant;
+use App\Models\TenantProfile;
 use App\Models\User;
+use Database\Seeders\TenantPermissionSeeder;
+use Database\Seeders\TenantProductSeeder;
+use Database\Seeders\TenantRoleSeeder;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class TenantRegistration extends Component
 {
+    use WithFileUploads;
+
+    public $tenant;
     public $store_name;
     public $domain;
     public $email;
     public $password;
+    public $logo;
     public $successMessage;
-    public function render()
-    {
-        return view('livewire.tenant-registration');
-    }
 
     public function tenantRegistrationFunction() {
+
         $this->validate([
             'store_name' => 'required|string|max:255',
             'domain' => 'required|string|max:255|unique:domains,domain',
             'email' => 'required|email|max:255',
             'password' => 'required|string|min:8',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|dimensions:width<=200,height<=200|max:2048',
         ]);
 
         // Step 1: Create the tenant and attach the domain
         $tenant = Tenant::create([
             'id' => $this->domain, // You can use domain as tenant id
-            'data' => [
-                'store_name' => $this->store_name,
-            ],
+            'store_name' => $this->store_name,
+            'plan' => 'free', // Optional: You can set a default plan here
         ]);
 
         $tenant->domains()->create([
-            'domain' => $this->domain . '.test'
+            'domain' => $this->domain . '.myapp.local'
         ]);
 
         // Step 2: Migrate the tenant database
         $tenant->run(function () {
             // This runs inside the tenant context
             // Optional: You can seed here too if needed
+
+            Category::create(['name' => 'Category 1']);
+            Category::create(['name' => 'Category 2']);
+            Category::create(['name' => 'Category 3']);
+            Category::create(['name' => 'Category 4']);
+
+            TenantProfile::create([
+                'tenant_id' => tenant()->id,
+                'email' => $this->domain . '@email.com',
+                'phone' => '0612345678',
+                'address' => 'Test Address',
+                'city' => 'Test City',
+                'state' => 'Test State',
+                'zip' => '0000AB',
+                'country' => 'Test Country',
+                'vat_id' => '1234567890',
+                'business_description' => 'This is a business description!',
+                'store_status' => 'active',
+            ]);
+
+            $this->call(TenantProductSeeder::class);
+            $this->call(TenantRoleSeeder::class);
+            $this->call(TenantPermissionSeeder::class);
         });
 
         // Step 3: Create a default user for the tenant
@@ -54,6 +84,24 @@ class TenantRegistration extends Component
             ]);
         });
 
-        $this->successMessage = "Tenant $this->store_name created!";
+        // Step 4: Upload logo if present
+        $tenantId = $tenant->id;
+        $path = "tenant{$tenantId}/assets/img";
+        $file = $this->logo;
+
+        try {
+            $filename = 'store_logo.png';
+            $file->storeAs($path, $filename, 'tenancy');
+            $tenant->update(['logo_path' => "{$path}/{$filename}"]);
+        } catch (\Exception $e) {
+            dd("Upload failed:", $e->getMessage());
+        }
+
+        $this->successMessage = "Tenant $this->store_name created! You may proceed to log in using the link: http://" . $this->domain . ".myapp.local:8000/";
+    }
+
+    public function render()
+    {
+        return view('livewire.tenant-registration');
     }
 }

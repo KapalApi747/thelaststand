@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class TenantProfile extends Model
+{
+    use HasFactory;
+    protected $table = 'tenant_profiles';
+    protected $connection = 'mysql';
+
+    protected $fillable = [
+        'tenant_id',
+        'email',
+        'phone',
+        'address',
+        'city',
+        'state',
+        'zip',
+        'country',
+        'vat_id',
+        'business_description',
+        'store_status',
+    ];
+
+    public function tenant() {
+        return $this->belongsto(Tenant::class, 'tenant_id');
+    }
+}

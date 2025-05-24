@@ -1,0 +1,16 @@
+<div>
+    {{-- General Report --}}
+    <livewire:tenant.backend.general-report />
+
+    {{--Analytics --}}
+    <livewire:tenant.backend.analytics />
+
+    {{--Sales Overview--}}
+    <livewire:tenant.backend.sales-overview />
+
+    {{--Numbers--}}
+    <livewire:tenant.backend.numbers />
+
+    {{--Quick Info--}}
+    <livewire:tenant.backend.quick-info />
+</div>

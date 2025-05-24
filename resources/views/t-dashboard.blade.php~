@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="./img/fav.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.12.1/css/pro.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>Welcome To The Last Stand!</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
+</head>
+<body class="bg-gray-100">
+<livewire:tenant.backend.navbar />
+<!-- strat wrapper -->
+<div class="h-screen flex flex-row flex-wrap">
+    <livewire:tenant.backend.sidebar />
+    <!-- strat content -->
+    <main class="bg-gray-100 flex-1 p-6 md:mt-16">
+        {{ $slot }}
+    </main>
+</div>
+@livewireScripts
+@stack('scripts')
+</body>
+</html>

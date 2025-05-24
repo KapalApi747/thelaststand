@@ -1,27 +1,36 @@
 <div>
     <div class="bg-white p-16">
         <p class="text-lg font-bold">Tenant Creation</p>
-        {{-- To attain knowledge, add things every day; To attain wisdom, subtract things every day. --}}
-        <form wire:submit.prevent="tenantRegistrationFunction" class="space-y-4 bg-gray-200">
+        <form wire:submit.prevent="tenantRegistrationFunction" class="space-y-4 bg-gray-200" enctype="multipart/form-data">
             @csrf
-            <div>
+            <div class="mt-4">
                 <label for="store_name">Store Name</label>
                 <input type="text" id="store_name" wire:model.defer="store_name" class="border p-2 w-full">
+                @error('store_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
-            <div>
-                <label for="domain">Domain (without .localhost)</label>
+            <div class="mt-4">
+                <label for="domain">Domain (without .thelaststand.local)</label>
                 <input type="text" id="domain" wire:model.defer="domain" class="border p-2 w-full">
+                @error('domain') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
-            <div>
+            <div class="mt-4">
                 <label for="email">Email</label>
                 <input type="email" id="email" wire:model.defer="email" class="border p-2 w-full">
+                @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
-            <div>
+            <div class="mt-4">
                 <label for="password">Password</label>
                 <input type="password" id="password" wire:model.defer="password" class="border p-2 w-full">
+                @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+
+            <div class="mt-4">
+                <label for="logo">Store Logo</label>
+                <input type="file" id="logo" wire:model="logo">
+                @error('logo') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
             <button type="submit" class="bg-blue-500 text-gray-900 p-2 rounded">Register Store</button>

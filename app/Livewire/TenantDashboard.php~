@@ -4,14 +4,16 @@ namespace App\Livewire;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('tenant-dashboard')]
 class TenantDashboard extends Component
 {
-    public function logout()
+    /*public function logout()
     {
         Auth::logout();
-        Session::flush(); // Optional: clear the session completely
+        Session::flush();
 
         return redirect()->route('tenant.login');
     }
@@ -25,5 +27,5 @@ class TenantDashboard extends Component
             'cookieValue' => request()->cookie(config('session.cookie')),
             'domain' => request()->getHost(),
         ])->layout('components.layouts.guest.guest');
-    }
+    }*/
 }

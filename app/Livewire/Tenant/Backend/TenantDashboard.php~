@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Livewire\Tenant\Backend;
+
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+
+#[Layout('t-dashboard-layout')]
+class TenantDashboard extends Component
+{
+    /*public function render()
+    {
+        return view('livewire.tenant-dashboard', [
+            'user' => auth()->user()?->only(['id', 'name', 'email']),
+            'isAuthenticated' => auth()->check(),
+            'sessionId' => session()->getId(),
+            'csrfToken' => session()->token(),
+            'cookieValue' => request()->cookie(config('session.cookie')),
+            'domain' => request()->getHost(),
+        ])->layout('components.layouts.guest.guest');
+    }*/
+    public function render()
+    {
+        return view('livewire.tenant.backend.tenant-dashboard');
+    }
+}

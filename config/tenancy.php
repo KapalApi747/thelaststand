@@ -106,6 +106,7 @@ return [
         'disks' => [
             'local',
             'public',
+            'tenancy',
             // 's3',
         ],
 
@@ -118,6 +119,7 @@ return [
             // Disks whose roots should be overridden after storage_path() is suffixed.
             'local' => '%storage_path%/app/',
             'public' => '%storage_path%/app/public/',
+            //'tenancy' => '%storage_path%/app/',
         ],
 
         /**
@@ -184,7 +186,7 @@ return [
     'routes' => true,
 
     /**
-     * Parameters used by the tenants:migrate command.
+     * Parameters used by the tenant:migrate command.
      */
     'migration_parameters' => [
         '--force' => true, // This needs to be true to run migrations in production.
@@ -193,7 +195,7 @@ return [
     ],
 
     /**
-     * Parameters used by the tenants:seed command.
+     * Parameters used by the tenant:seed command.
      */
     'seeder_parameters' => [
         '--class' => 'DatabaseSeeder', // root seeder class

@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Livewire\Tenant\Backend\Users;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+
+#[Layout('t-dashboard-layout')]
+class UserEdit extends Component
+{
+    use WithFileUploads;
+
+    public $user;
+    public $name;
+    public $email;
+    public $password;
+    public $password_confirmation;
+    public $roles = [];
+    public $is_active;
+    public $profile_picture;
+    public $existingProfilePicture;
+
+    protected $rules = [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'nullable|string|min:8|confirmed',
+        'password_confirmation' => 'nullable|string|min:8',
+        'roles' => 'required|array|min:1',
+        'is_active' => 'required|boolean',
+        'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+    ];
+
+    public function mount(User $user)
+    {
+        $user->load('roles');
+        $this->user = $user;
+
+        $this->name = $user->name;
+        $this->email = $user->email;
+        $this->is_active = $user->is_active;
+        $this->existingProfilePicture = $user->profile_picture_path;
+        $this->roles = $user->roles->pluck('id')->toArray();
+    }
+
+    public function updateUser()
+    {
+        $this->validate();
+
+        $updateInfo = [
+            'name' => $this->name,
+            'email' => $this->email,
+            'is_active' => $this->is_active,
+        ];
+
+        if ($this->password) {
+            $updateInfo['password'] = Hash::make($this->password);
+        }
+
+        $this->user->update($updateInfo);
+
+        if ($this->profile_picture) {
+            $profilePicturePath = $this->profile_picture->store('assets/img/users', 'tenancy');
+            $this->user->profile_picture_path = $profilePicturePath;
+            $this->user->save();
+        }
+
+        $this->user->syncRoles($this->roles);
+
+        session()->flash('message', 'User updated successfully!');
+    }
+
+    public function render()
+    {
+        return view('livewire.tenant.backend.users.user-edit');
+    }
+}

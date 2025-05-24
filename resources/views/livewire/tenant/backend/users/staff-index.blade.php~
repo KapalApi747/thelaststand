@@ -1,0 +1,91 @@
+<div class="space-y-6">
+
+    @if (session()->has('message'))
+        <div class="p-2 bg-green-200 text-green-800 rounded">
+            {{ session('message') }}
+        </div>
+    @endif
+
+    <h2 class="text-xl font-semibold mb-4">My Staff</h2>
+
+    <div class="bg-white p-4 rounded shadow mt-6">
+
+        <div class="flex flex-wrap gap-4 mb-6">
+            <input
+                type="text"
+                wire:model.live.debounce.300ms="search"
+                placeholder="Search users (use user's name, email) ..."
+                class="border border-gray-300 rounded px-3 py-2 w-full md:w-1/3"
+            />
+
+            <select wire:model.live="role" class="border border-gray-300 rounded px-3 py-2">
+                <option value="">All Roles</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                @endforeach
+            </select>
+
+            <select wire:model.live="is_active" class="border border-gray-300 rounded px-3 py-2">
+                <option value="">All Statuses</option>
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+            </select>
+
+            <select wire:model.live="pagination" class="border border-gray-300 rounded px-3 py-2">
+                <option value="10">10 per page</option>
+                <option value="20">20 per page</option>
+                <option value="50">50 per page</option>
+            </select>
+
+            <select wire:model.live="sortField" class="border border-gray-300 rounded px-3 py-2">
+                <option value="name">Name</option>
+                <option value="created_at">Date Added</option>
+            </select>
+
+            <select wire:model.live="sortDirection" class="border border-gray-300 rounded px-3 py-2">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+
+        </div>
+
+        @if ($users->isEmpty())
+            <p class="text-gray-600">The users list is currently empty. Please adjust your search criteria.</p>
+        @else
+            <table class="w-full border-collapse border">
+                <thead>
+                <tr class="bg-gray-200">
+                    <th class="border p-2">Name</th>
+                    <th class="border p-2">Email</th>
+                    <th class="border p-2">Role</th>
+                    <th class="border p-2">Active</th>
+                    <th class="border p-2">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($users as $user)
+                    <tr>
+                        <td class="border p-2">{{ $user->name }}</td>
+                        <td class="border p-2">{{ $user->email }}</td>
+                        <td class="border p-2">{{ $user->roles->pluck('name')->implode(', ') }}</td>
+                        <td class="border p-2">{{ $user->is_active ? 'Yes' : 'No' }}</td>
+                        <td class="border p-2">
+                            {{--<div>
+                                <a href="{{ route('tenant-dashboard.staff-view', $user) }}"
+                                   class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2">View</a>
+                            </div>
+                            <div>
+                                <a href="{{ route('tenant-dashboard.staff-edit', $user) }}"
+                                   class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mt-2 ml-2">Edit</a>
+                            </div>--}}
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        @endif
+    </div>
+    <div class="mt-6">
+        {{ $users->links() }}
+    </div>
+</div>
