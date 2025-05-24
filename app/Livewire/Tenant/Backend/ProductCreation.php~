@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Tenant\Backend;
 
+use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductImage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -16,20 +16,29 @@ class ProductCreation extends Component
     public $description;
     public $price;
     public $stock;
-    public $status = 'draft';
+    public $is_active = true;
     public $images = [];
+    public $categoryIds = [];
+    public $allCategories;
 
     protected function rules()
     {
         return [
-            'sku' => 'required|string|max:100|unique:mysql.products,sku',
+            'sku' => 'required|string|max:100|unique:products,sku',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
+            'categoryIds' => 'required|array|min:1',
+            'categoryIds.*' => 'exists:categories,id',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'status' => 'required|in:draft,active',
+            'is_active' => 'required|boolean',
             'images.*' => 'image|max:2048',
         ];
+    }
+
+    public function mount()
+    {
+        $this->allCategories = Category::all();
     }
 
     public function saveProduct()
@@ -42,23 +51,21 @@ class ProductCreation extends Component
             'description' => $this->description,
             'price' => $this->price,
             'stock' => $this->stock,
-            'status' => $this->status,
+            'is_active' => $this->is_active,
         ]);
 
-        tenant()->products()->attach($product->id);
+        $product->categories()->sync($this->categoryIds);
 
         foreach ($this->images as $image) {
-            $partialPath = 'img/products';
-            $storagePath = $image->store('assets/' . $partialPath, 'tenancy');
+            $storagePath = $image->store('assets/img/products', 'tenancy');
 
-            ProductImage::create([
-                'product_id' => $product->id,
-                'path' => $storagePath,
+            $product->images()->create([
+                'path' => $storagePath
             ]);
         }
 
         session()->flash('message', 'Product created successfully!');
-        $this->reset(['name', 'description', 'price', 'status', 'images']);
+        $this->reset(['sku', 'name', 'description', 'images']);
     }
 
     public function render()

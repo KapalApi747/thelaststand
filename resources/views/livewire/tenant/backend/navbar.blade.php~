@@ -3,7 +3,7 @@
 
     <!-- logo -->
     <div class="flex-none w-56 flex flex-row items-center">
-        <img src="{{ asset("tenancy/tenant" . tenant()->id . "/assets/img/store_logo.png") }}" class="w-10 flex-none" alt="logo">
+        <img src="{{ asset("tenant" . tenant()->id . "/assets/img/store_logo.png") }}" class="w-10 flex-none" alt="logo">
         @if (tenant())
         <strong class="capitalize ml-1 flex-1">{{ tenant()->store_name }}</strong>
         @endif
@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="ml-2 capitalize flex ">
-                        <h1 class="text-sm text-gray-800 font-semibold m-0 p-0 leading-none">moeSaid</h1>
+                        <h1 class="text-sm text-gray-800 font-semibold m-0 p-0 leading-none">{{ auth()->user()->name }}</h1>
                         <i class="fad fa-chevron-down ml-2 text-xs leading-none"></i>
                     </div>
                 </button>

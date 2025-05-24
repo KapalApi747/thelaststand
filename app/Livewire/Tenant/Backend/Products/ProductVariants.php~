@@ -1,0 +1,107 @@
+<?php
+
+namespace App\Livewire\Tenant\Backend\Products;
+
+use App\Models\Product;
+use App\Models\ProductVariant;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+
+#[Layout('t-dashboard-layout')]
+class ProductVariants extends Component
+{
+    public Product $product;
+    public $variants;
+
+    public $name;
+    public $sku;
+    public $description;
+    public $price;
+    public $stock;
+    public $is_active = true;
+
+    public $variantEditId = null;
+
+    protected $rules = [
+        'name' => 'required|string|max:255',
+        'sku' => 'required|string|max:255|unique:product_variants,sku',
+        'price' => 'nullable|numeric|min:0',
+        'stock' => 'nullable|integer|min:0',
+        'is_active' => 'boolean',
+    ];
+
+    public function mount(Product $product)
+    {
+        $this->product = $product;
+        $this->loadVariants();
+    }
+
+    public function loadVariants()
+    {
+        $this->variants = $this->product->variants()->get();
+    }
+
+    public function resetForm()
+    {
+        $this->reset(['name', 'sku', 'description', 'price', 'stock', 'is_active', 'variantEditId']);
+    }
+
+    public function editVariant(ProductVariant $variant)
+    {
+        $this->variantEditId = $variant->id;
+        $this->name = $variant->name;
+        $this->sku = $variant->sku;
+        $this->description = $variant->description;
+        $this->price = $variant->price;
+        $this->stock = $variant->stock;
+        $this->is_active = $variant->is_active;
+    }
+
+    public function saveVariant()
+    {
+        $rules = $this->rules;
+        if ($this->variantEditId) {
+            $rules['sku'] = 'required|string|max:255|unique:product_variants,sku,' . $this->variantEditId;
+        }
+
+        $this->validate($rules);
+
+        if ($this->variantEditId) {
+            $variant = ProductVariant::findOrFail($this->variantEditId);
+            $variant->update([
+                'name' => $this->name,
+                'sku' => $this->sku,
+                'description' => $this->description,
+                'price' => $this->price,
+                'stock' => $this->stock,
+                'is_active' => $this->is_active,
+            ]);
+            session()->flash('message', 'Variant updated successfully!');
+        } else {
+            $this->product->variants()->create([
+                'name' => $this->name,
+                'sku' => $this->sku,
+                'description' => $this->description,
+                'price' => $this->price,
+                'stock' => $this->stock,
+                'is_active' => $this->is_active,
+            ]);
+            session()->flash('message', 'Variant created successfully!');
+        }
+
+        $this->resetForm();
+        $this->loadVariants();
+    }
+
+    public function delete($id)
+    {
+        ProductVariant::findOrFail($id)->delete();
+        session()->flash('message', 'Variant deleted successfully!');
+        $this->loadVariants();
+    }
+
+    public function render()
+    {
+        return view('livewire.tenant.backend.products.product-variants');
+    }
+}

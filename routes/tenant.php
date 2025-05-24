@@ -2,9 +2,15 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Tenant\Backend\ProductManagement;
-use App\Livewire\Tenant\Backend\StoreSettings;
+use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
+use App\Livewire\Tenant\Backend\Products\ProductEdit;
+use App\Livewire\Tenant\Backend\Products\ProductManagement;
+use App\Livewire\Tenant\Backend\Products\ProductView;
+use App\Livewire\Tenant\Backend\Profile\StoreSettings;
 use App\Livewire\Tenant\Backend\TenantDashboard;
+use App\Livewire\Tenant\Backend\Users\UserEdit;
+use App\Livewire\Tenant\Backend\Users\UserIndex;
+use App\Livewire\Tenant\Backend\Users\UserRegistration;
 use App\Livewire\TenantLogin;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
@@ -29,9 +35,9 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    Livewire::setScriptRoute(function ($handle) {
+    /*Livewire::setScriptRoute(function ($handle) {
         return Route::get('/livewire/livewire.js', $handle);
-    });
+    });*/
 
     Route::get('/', TenantLogin::class)->name('tenant.login');
 
@@ -40,8 +46,17 @@ Route::middleware([
         ->as('tenant-dashboard.')
         ->group(function () {
             Route::get('/', TenantDashboard::class)->name('index');
-            Route::get('/store-settings', StoreSettings::class)->name('store-settings');
-            Route::get('/product-management', ProductManagement::class)->name('product-management');
+            Route::get('/profile-settings', StoreSettings::class)->name('store-settings');
+
+            Route::get('/products', ProductManagement::class)->name('product-management');
+            Route::get('/products/{product:slug}', ProductView::class)->name('product-view');
+            Route::get('/products/{product:slug}/edit', ProductEdit::class)->name('product-edit');
+
+            Route::get('/categories', CategoryManagement::class)->name('category-management');
+
+            Route::get('/user-index', UserIndex::class)->name('user-index');
+            Route::get('/user-register', UserRegistration::class)->name('user-register');
+            Route::get('/users/{user:slug}/edit', UserEdit::class)->name('user-edit');
         });
 });
 

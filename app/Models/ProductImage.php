@@ -9,8 +9,6 @@ class ProductImage extends Model
 {
     use HasFactory;
 
-    protected $connection = 'mysql';
-
     protected $fillable = [
         'product_id',
         'path',

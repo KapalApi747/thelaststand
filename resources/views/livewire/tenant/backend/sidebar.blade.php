@@ -13,33 +13,84 @@
         </div>
         <!-- end sidebar toggle -->
 
-        <p class="uppercase text-xs text-gray-600 mb-4 tracking-wider">homes</p>
+        <p class="uppercase text-xs text-gray-600 mb-4 tracking-wider">Homes</p>
 
         <!-- link -->
-        <a href="./index.html" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
-            <i class="fad fa-chart-pie text-xs mr-2"></i>
-            <div>Analytics dashboard</div>
+        <a
+            href="{{ route('tenant-dashboard.index') }}"
+            class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+            <i class="fad fa-chart-pie text-xs"></i>
+            <div>Dashboard</div>
         </a>
         <!-- end link -->
 
         <!-- link -->
-        <a href="{{ route('tenant-dashboard.product-management') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
-            <i class="fa-solid fa-bag-shopping text-xs mr-2"></i>
-            <div>Product Management</div>
+        <a
+            href="{{ route('tenant-dashboard.product-management') }}"
+            class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+            <i class="fa-solid fa-bag-shopping text-xs"></i>
+            <div>Products</div>
         </a>
         <!-- end link -->
 
         <!-- link -->
-        <a href="{{ route('tenant-dashboard.store-settings') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
-            <i class="fad fa-shopping-cart text-xs mr-2"></i>
+        <a
+            href="{{ route('tenant-dashboard.category-management') }}"
+            class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+            <i class="fa-solid fa-book-open text-xs"></i>
+            <div>Categories</div>
+        </a>
+        <!-- end link -->
+
+        <!-- link -->
+        <a
+            href="{{ route('tenant-dashboard.store-settings') }}"
+            class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+            <i class="fad fa-shopping-cart text-xs"></i>
             <div>Profile & Store Settings</div>
         </a>
         <!-- end link -->
 
-        <a href="./index.html" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
-            <i class="fas fa-solid fa-person-walking mr-2"></i>
-            <div>Users</div>
-        </a>
+        <!-- link -->
+        <div x-data="{ open: false }">
+            <button @click="open = !open" type="button"
+                    class="w-full font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+                <i class="fas fa-users text-xs"></i>
+                <div class="flex items-center">
+                    Users
+                    <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+            </button>
+
+            <!-- Dropdown panel -->
+            <div x-show="open" @click.outside="open = false"
+                 class="absolute z-10 w-full origin-bottom-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+                <div class="py-1">
+
+                    <a href="{{ route('tenant-dashboard.user-index') }}"
+                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition flex justify-between items-center">
+                        <i class="fas fa-person-walking"></i>
+                        <div>
+                            All Users
+                        </div>
+                    </a>
+
+                    <a href="{{ route('tenant-dashboard.user-register') }}"
+                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition flex justify-between items-center">
+                        <i class="fas fa-user-plus"></i>
+                        <div>
+                            Register New User
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <!-- end link -->
 
         <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">apps</p>
 

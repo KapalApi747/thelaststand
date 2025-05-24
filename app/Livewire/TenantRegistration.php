@@ -2,10 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Models\Category;
 use App\Models\Tenant;
+use App\Models\TenantProfile;
 use App\Models\User;
+use Database\Seeders\TenantPermissionSeeder;
+use Database\Seeders\TenantProductSeeder;
+use Database\Seeders\TenantRoleSeeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -46,6 +50,33 @@ class TenantRegistration extends Component
         $tenant->run(function () {
             // This runs inside the tenant context
             // Optional: You can seed here too if needed
+
+            $permissionSeeder = new TenantPermissionSeeder();
+            $roleSeeder = new TenantRoleSeeder();
+            $productSeeder = new TenantProductSeeder();
+
+            Category::create(['name' => 'Category 1']);
+            Category::create(['name' => 'Category 2']);
+            Category::create(['name' => 'Category 3']);
+            Category::create(['name' => 'Category 4']);
+
+            TenantProfile::create([
+                'tenant_id' => tenant()->id,
+                'email' => $this->domain . '@email.com',
+                'phone' => '0612345678',
+                'address' => 'Test Address',
+                'city' => 'Test City',
+                'state' => 'Test State',
+                'zip' => '0000AB',
+                'country' => 'Test Country',
+                'vat_id' => '1234567890',
+                'business_description' => 'This is a business description!',
+                'store_status' => 'active',
+            ]);
+
+            $permissionSeeder->run();
+            $roleSeeder->run();
+            $productSeeder->run();
         });
 
         // Step 3: Create a default user for the tenant
@@ -70,7 +101,7 @@ class TenantRegistration extends Component
             dd("Upload failed:", $e->getMessage());
         }
 
-        $this->successMessage = "Tenant $this->store_name created!";
+        $this->successMessage = "Tenant $this->store_name created! You may proceed to log in using the link: http://" . $this->domain . ".myapp.local:8000/";
     }
 
     public function render()
