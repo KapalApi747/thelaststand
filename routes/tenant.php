@@ -11,9 +11,11 @@ use App\Livewire\Tenant\Backend\TenantDashboard;
 use App\Livewire\Tenant\Backend\Users\UserEdit;
 use App\Livewire\Tenant\Backend\Users\UserIndex;
 use App\Livewire\Tenant\Backend\Users\UserRegistration;
+use App\Livewire\Tenant\Backend\Users\UserView;
+use App\Livewire\Tenant\Frontend\Main\Cart;
+use App\Livewire\Tenant\Frontend\Main\ShopProducts;
 use App\Livewire\TenantLogin;
 use Illuminate\Support\Facades\Route;
-use Livewire\Livewire;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -41,6 +43,13 @@ Route::middleware([
 
     Route::get('/', TenantLogin::class)->name('tenant.login');
 
+    Route::prefix('shop')
+        ->as('shop.')
+        ->group(function () {
+            Route::get('products', ShopProducts::class)->name('shop-products');
+            Route::get('cart', Cart::class)->name('shop-cart');
+        });
+
     Route::middleware(['web','tenant.auth'])
         ->prefix('tenant-dashboard')
         ->as('tenant-dashboard.')
@@ -56,6 +65,7 @@ Route::middleware([
 
             Route::get('/user-index', UserIndex::class)->name('user-index');
             Route::get('/user-register', UserRegistration::class)->name('user-register');
+            Route::get('/users/{user:slug}', UserView::class)->name('user-view');
             Route::get('/users/{user:slug}/edit', UserEdit::class)->name('user-edit');
         });
 });

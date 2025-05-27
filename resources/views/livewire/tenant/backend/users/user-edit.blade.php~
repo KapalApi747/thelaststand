@@ -34,7 +34,7 @@
             <label for="roles">Roles</label>
             <select wire:model="userRoles" id="roles" multiple class="form-multiselect">
                 @foreach($allRoles as $role)
-                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    <option value="{{ $role->name }}">{{ $role->name }}</option>
                 @endforeach
             </select>
             @error('roles') <span class="text-red-600">{{ $message }}</span> @enderror

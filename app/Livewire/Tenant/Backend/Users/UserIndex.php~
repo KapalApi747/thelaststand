@@ -24,11 +24,10 @@ class UserIndex extends Component
     public $sortField = 'name';
     public $sortDirection = 'asc';
 
-    public function activeToggle($userId)
+    public function activeToggle()
     {
-        $user = User::findOrFail($userId);
-        $user->is_active = !$user->is_active;
-        $user->save();
+        $this->user->is_active = !$this->user->is_active;
+        $this->user->save();
 
         session()->flash('message', 'User status updated successfully!');
     }
