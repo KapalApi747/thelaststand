@@ -22,4 +22,5 @@
     @empty
         <p>Your cart is empty.</p>
     @endforelse
+    <livewire:tenant.frontend.shopping.stripe-payment-button />
 </div>

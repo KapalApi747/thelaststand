@@ -10,7 +10,6 @@
         </div>
     </div>
 
-
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         @forelse ($products as $product)
             <div class="bg-white rounded-xl shadow p-4">

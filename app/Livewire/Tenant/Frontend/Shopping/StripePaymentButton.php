@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Livewire\Tenant\Frontend\Shopping;
+
+use Livewire\Component;
+use Stripe\StripeClient;
+
+class StripePaymentButton extends Component
+{
+    public function checkoutStripe()
+    {
+        $cartTenantKey = 'cart_' . tenant()->id;
+        $cart = session($cartTenantKey, []);
+
+        if (empty($cart)) {
+            $this->dispatch('notify', ['type' => 'error', 'message' => 'Your cart is empty.']);
+            return;
+        }
+
+        $stripe = new StripeClient(config('services.stripe.secret'));
+
+        $lineItems = [];
+
+        foreach($cart as $item) {
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => $item['name'],
+                    ],
+                    'unit_amount' => $item['price'] * 100,
+                ],
+                'quantity' => $item['quantity'],
+            ];
+        }
+
+        $session = $stripe->checkout->sessions->create([
+            'payment_method_types' => ['card'],
+            'line_items' => $lineItems,
+            'mode' => 'payment',
+            'success_url' => route('shop.checkout-success'),
+            'cancel_url' => route('shop.checkout-cancel'),
+        ]);
+
+        return redirect()->away($session->url);
+    }
+
+    public function render()
+    {
+        return view('livewire.tenant.frontend.shopping.stripe-payment-button');
+    }
+}

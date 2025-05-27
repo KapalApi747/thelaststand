@@ -4,6 +4,7 @@ namespace App\Livewire\Tenant\Backend\Users;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -25,19 +26,22 @@ class UserEdit extends Component
     public $profile_picture;
     public $existingProfilePicture;
 
-    protected $rules = [
-        'name' => 'required|string|max:255',
-        'email' => [
-            'required',
-            'email',
-            Rule::unique('users', 'email')->ignore($this->user->id),
-        ],
-        'password' => 'nullable|string|min:8|confirmed',
-        'password_confirmation' => 'nullable|string|min:8',
-        'roles' => 'required|array|min:1',
-        'is_active' => 'required|boolean',
-        'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-    ];
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($this->user->id),
+            ],
+            'password' => 'nullable|string|min:8|confirmed',
+            'userRoles' => 'required|array|min:1',
+            'is_active' => 'required|boolean',
+            'profile_picture' => 'nullable|image|max:2048',
+        ];
+    }
+
 
     public function mount(User $user)
     {

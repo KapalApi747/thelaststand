@@ -51,6 +51,10 @@ class TenantRegistration extends Component
             // This runs inside the tenant context
             // Optional: You can seed here too if needed
 
+            $permissionSeeder = new TenantPermissionSeeder();
+            $roleSeeder = new TenantRoleSeeder();
+            $productSeeder = new TenantProductSeeder();
+
             Category::create(['name' => 'Category 1']);
             Category::create(['name' => 'Category 2']);
             Category::create(['name' => 'Category 3']);
@@ -70,9 +74,9 @@ class TenantRegistration extends Component
                 'store_status' => 'active',
             ]);
 
-            $this->call(TenantProductSeeder::class);
-            $this->call(TenantRoleSeeder::class);
-            $this->call(TenantPermissionSeeder::class);
+            $permissionSeeder->run();
+            $roleSeeder->run();
+            $productSeeder->run();
         });
 
         // Step 3: Create a default user for the tenant

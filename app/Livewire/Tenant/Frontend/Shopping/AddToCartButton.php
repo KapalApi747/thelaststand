@@ -11,7 +11,8 @@ class AddToCartButton extends Component
 
     public function addToCart()
     {
-        $cart = session()->get('cart', []);
+        $cartTenantKey = 'cart_' . tenant()->id;
+        $cart = session()->get($cartTenantKey, []);
 
         if (isset($cart[$this->product->id])) {
             $cart[$this->product->id]['quantity']++;
@@ -25,7 +26,7 @@ class AddToCartButton extends Component
             ];
         }
 
-        session()->put('cart', $cart);
+        session()->put($cartTenantKey, $cart);
 
         $this->dispatch('cart-updated');
         $this->dispatch('notify', ['type' => 'success', 'message' => 'Product added to cart successfully!']);

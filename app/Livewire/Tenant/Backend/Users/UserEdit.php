@@ -52,7 +52,7 @@ class UserEdit extends Component
         $this->email = $user->email;
         $this->is_active = $user->is_active;
         $this->existingProfilePicture = $user->profile_picture_path;
-        $this->userRoles = $user->roles->pluck('id')->toArray();
+        $this->userRoles = $user->roles->pluck('name')->toArray();
         $this->allRoles = Role::all();
     }
 

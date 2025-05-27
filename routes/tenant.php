@@ -14,6 +14,8 @@ use App\Livewire\Tenant\Backend\Users\UserRegistration;
 use App\Livewire\Tenant\Backend\Users\UserView;
 use App\Livewire\Tenant\Frontend\Main\Cart;
 use App\Livewire\Tenant\Frontend\Main\ShopProducts;
+use App\Livewire\Tenant\Frontend\Shopping\CheckoutCancel;
+use App\Livewire\Tenant\Frontend\Shopping\CheckoutSuccess;
 use App\Livewire\TenantLogin;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -48,6 +50,9 @@ Route::middleware([
         ->group(function () {
             Route::get('products', ShopProducts::class)->name('shop-products');
             Route::get('cart', Cart::class)->name('shop-cart');
+
+            Route::get('/checkout/success', CheckoutSuccess::class)->name('checkout-success');
+            Route::get('/checkout/cancel', CheckoutCancel::class)->name('checkout-cancel');
         });
 
     Route::middleware(['web','tenant.auth'])

@@ -2,7 +2,7 @@
     <div>
         <a
             class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
-            href="{{ route('shop.products') }}">Back To Shop</a>
+            href="{{ route('shop.shop-products') }}">Back To Shop</a>
     </div>
     @forelse ($cart as $productId => $item)
         <div class="flex items-center justify-between border p-2 rounded">
