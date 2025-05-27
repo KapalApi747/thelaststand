@@ -38,8 +38,14 @@
             <div class="dropdown relative md:static">
 
                 <button class="menu-btn focus:outline-none focus:shadow-outline flex flex-wrap items-center">
+                    @php
+                        $user = auth()->user();
+                        $profilePicturePath = $user->profile_picture_path
+                            ? asset('tenant' . tenant()->id . '/' . $user->profile_picture_path)
+                            : 'https://placehold.co/40x40?text=No+Image';
+                    @endphp
                     <div class="w-8 h-8 overflow-hidden rounded-full">
-                        <img class="w-full h-full object-cover" src="{{ asset('img/user.svg') }}" >
+                        <img class="w-full h-full object-cover" src="{{ $profilePicturePath }}" alt="User Avatar">
                     </div>
 
                     <div class="ml-2 capitalize flex ">

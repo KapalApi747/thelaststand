@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
+use App\Livewire\Tenant\Backend\Orders\OrderIndex;
+use App\Livewire\Tenant\Backend\Orders\OrderView;
 use App\Livewire\Tenant\Backend\Products\ProductEdit;
 use App\Livewire\Tenant\Backend\Products\ProductManagement;
 use App\Livewire\Tenant\Backend\Products\ProductView;
@@ -68,10 +70,13 @@ Route::middleware([
 
             Route::get('/categories', CategoryManagement::class)->name('category-management');
 
-            Route::get('/user-index', UserIndex::class)->name('user-index');
+            Route::get('/users', UserIndex::class)->name('user-index');
             Route::get('/user-register', UserRegistration::class)->name('user-register');
             Route::get('/users/{user:slug}', UserView::class)->name('user-view');
             Route::get('/users/{user:slug}/edit', UserEdit::class)->name('user-edit');
+
+            Route::get('/orders', OrderIndex::class)->name('order-index');
+            Route::get('/orders/{order}', OrderView::class)->name('order-view');
         });
 });
 

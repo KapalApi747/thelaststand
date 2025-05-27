@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Order extends Model
 {
     use SoftDeletes, HasFactory;
+    
     protected $fillable = [
         'customer_id',
         'order_number',
@@ -38,5 +39,20 @@ class Order extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(OrderAddress::class);
+    }
+
+    public function shippingAddress()
+    {
+        return $this->hasOne(OrderAddress::class)->where('type', 'shipping');
+    }
+
+    public function billingAddress()
+    {
+        return $this->hasOne(OrderAddress::class)->where('type', 'billing');
     }
 }

@@ -29,7 +29,7 @@ class OrderFactory extends Factory
             'total_amount' => round($subtotal + $tax + $shipping, 2),
             'tax_amount' => round($tax, 2),
             'shipping_cost' => round($shipping, 2),
-            'status' => $this->faker->randomElement(['pending', 'processing', 'completed', 'cancelled']),
+            'status' => $this->faker->randomElement(['pending', 'processing', 'completed', 'shipped', 'delivered', 'refunded', 'failed', 'cancelled']),
             'created_at' => $this->faker->dateTimeBetween('-3 months', 'now'),
         ];
     }
