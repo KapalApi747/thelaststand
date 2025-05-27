@@ -59,7 +59,7 @@
                     <th class="border p-2">Name</th>
                     <th class="border p-2">Email</th>
                     <th class="border p-2">Roles</th>
-                    <th class="border p-2">Active</th>
+                    <th class="border p-2">Status</th>
                     <th class="border p-2">Actions</th>
                 </tr>
                 </thead>
@@ -72,16 +72,35 @@
                         <td class="border p-2">{{ $user->name }}</td>
                         <td class="border p-2">{{ $user->email }}</td>
                         <td class="border p-2">{{ $user->roles->pluck('name')->implode(', ') }}</td>
-                        <td class="border p-2">{{ $user->is_active ? 'Yes' : 'No' }}</td>
+                        <td class="border p-2">{{ $user->is_active ? 'Active' : 'Inactive' }}</td>
                         <td class="border p-2">
-                            {{--<div>
-                                <a href="{{ route('tenant-dashboard.staff-view', $user) }}"
-                                   class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2">View</a>
+                            <div class="flex justify-evenly items-center">
+                                <div>
+                                    <a href="{{ route('tenant-dashboard.user-view', $user) }}"
+                                       class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2">View</a>
+                                </div>
+                                <div>
+                                    <a href="{{ route('tenant-dashboard.user-edit', $user) }}"
+                                       class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded mt-2">Edit</a>
+                                </div>
+                                <div>
+                                    @if ($user->is_active)
+                                        <button
+                                            type="button"
+                                            wire:click="activeToggle({{ $user->id }})"
+                                            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
+                                            Deactivate
+                                        </button>
+                                    @else
+                                        <button
+                                            type="button"
+                                            wire:click="activeToggle({{ $user->id }})"
+                                            class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                                            Reactivate
+                                        </button>
+                                    @endif
+                                </div>
                             </div>
-                            <div>
-                                <a href="{{ route('tenant-dashboard.staff-edit', $user) }}"
-                                   class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mt-2 ml-2">Edit</a>
-                            </div>--}}
                         </td>
                     </tr>
                 @endforeach

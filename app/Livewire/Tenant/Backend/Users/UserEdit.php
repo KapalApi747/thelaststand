@@ -4,9 +4,11 @@ namespace App\Livewire\Tenant\Backend\Users;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Spatie\Permission\Models\Role;
 
 #[Layout('t-dashboard-layout')]
 class UserEdit extends Component
@@ -18,20 +20,28 @@ class UserEdit extends Component
     public $email;
     public $password;
     public $password_confirmation;
-    public $roles = [];
+    public $userRoles = [];
+    public $allRoles = [];
     public $is_active;
     public $profile_picture;
     public $existingProfilePicture;
 
-    protected $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'nullable|string|min:8|confirmed',
-        'password_confirmation' => 'nullable|string|min:8',
-        'roles' => 'required|array|min:1',
-        'is_active' => 'required|boolean',
-        'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-    ];
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($this->user->id),
+            ],
+            'password' => 'nullable|string|min:8|confirmed',
+            'userRoles' => 'required|array|min:1',
+            'is_active' => 'required|boolean',
+            'profile_picture' => 'nullable|image|max:2048',
+        ];
+    }
+
 
     public function mount(User $user)
     {
@@ -42,7 +52,8 @@ class UserEdit extends Component
         $this->email = $user->email;
         $this->is_active = $user->is_active;
         $this->existingProfilePicture = $user->profile_picture_path;
-        $this->roles = $user->roles->pluck('id')->toArray();
+        $this->userRoles = $user->roles->pluck('id')->toArray();
+        $this->allRoles = Role::all();
     }
 
     public function updateUser()
@@ -67,7 +78,7 @@ class UserEdit extends Component
             $this->user->save();
         }
 
-        $this->user->syncRoles($this->roles);
+        $this->user->syncRoles($this->userRoles);
 
         session()->flash('message', 'User updated successfully!');
     }

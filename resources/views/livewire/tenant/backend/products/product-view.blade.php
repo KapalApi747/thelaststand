@@ -15,7 +15,6 @@
         </div>
     </div>
 
-
     <div class="mt-4">
         <strong>Categories:</strong>
         <ul class="list-disc ml-5">
