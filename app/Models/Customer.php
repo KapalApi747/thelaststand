@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
-class Customer extends Model
+class Customer extends Authenticatable
 {
-    use SoftDeletes, HasFactory;
+    use Notifiable, SoftDeletes, HasFactory;
+
+    protected $table = 'customers';
 
     protected $fillable = [
         'name',
@@ -22,6 +26,10 @@ class Customer extends Model
         'zip',
         'country',
         'is_active',
+    ];
+
+    protected $hidden = [
+        'password',
     ];
 
     protected $casts = [

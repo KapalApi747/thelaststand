@@ -1,10 +1,10 @@
-<div class="space-y-4">
+<div class="space-y-4 bg-black p-10">
     <div>
         <a
-            class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
+            class="bg-red-700 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
             href="{{ route('shop.shop-products') }}">Back To Shop</a>
     </div>
-    @forelse ($cart as $productId => $item)
+    @forelse ($cart as $itemKey => $item)
         <div class="flex items-center justify-between border p-2 rounded">
             <div class="flex items-center gap-2">
                 <img src="{{ asset('tenant' . tenant()->id . '/' . $item['image']) }}" class="w-12 h-12 rounded" />
@@ -14,13 +14,21 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <input type="number" min="1" wire:change="updateProductQuantity({{ $productId }}, $event.target.value)"
+                <input type="number" min="1" wire:change="updateProductQuantity('{{ $itemKey }}', $event.target.value)"
                        value="{{ $item['quantity'] }}" class="w-12 border rounded text-center">
-                <button wire:click="removeFromCart({{ $productId }})" class="text-red-500 hover:underline">Remove</button>
+                <button wire:click="removeFromCart('{{ $itemKey }}')" class="text-red-500 hover:underline">Remove</button>
             </div>
         </div>
     @empty
         <p>Your cart is empty.</p>
     @endforelse
-    <livewire:tenant.frontend.shopping.stripe-payment-button />
+    @if (count($cart) > 0)
+    <div>
+        <a href="{{ route('shop.checkout-form') }}"
+           class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
+        >
+            Checkout
+        </a>
+    </div>
+    @endif
 </div>

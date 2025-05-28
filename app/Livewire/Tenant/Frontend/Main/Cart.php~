@@ -19,26 +19,29 @@ class Cart extends Component
 
     public function refreshCart()
     {
-        $this->cart = session()->get('cart', []);
+        $cartTenantKey = 'cart_' . tenant()->id;
+        $this->cart = session()->get($cartTenantKey, []);
     }
 
     public function removeFromCart($productId)
     {
-        $cart = session()->get('cart', []);
+        $cartTenantKey = 'cart_' . tenant()->id;
+        $cart = session()->get($cartTenantKey, []);
         if (isset($cart[$productId])) {
             unset($cart[$productId]);
         }
-        session()->put('cart', $cart);
+        session()->put($cartTenantKey, $cart);
         $this->dispatch('cart-updated');
     }
 
     public function updateProductQuantity($productId, $quantity)
     {
-        $cart = session()->get('cart', []);
+        $cartTenantKey = 'cart_' . tenant()->id;
+        $cart = session()->get($cartTenantKey, []);
         if (isset($cart[$productId])) {
             $cart[$productId]['quantity'] = max(1, (int)$quantity);
         }
-        session()->put('cart', $cart);
+        session()->put($cartTenantKey, $cart);
         $this->dispatch('cart-updated');
     }
 

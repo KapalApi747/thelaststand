@@ -43,9 +43,9 @@
             </select>
 
             <select wire:model.live="pagination" class="border border-gray-300 rounded px-3 py-2">
-                <option value="10">10 per page</option>
                 <option value="20">20 per page</option>
                 <option value="50">50 per page</option>
+                <option value="100">100 per page</option>
             </select>
 
             <select wire:model.live="sortField" class="border border-gray-300 rounded px-3 py-2">

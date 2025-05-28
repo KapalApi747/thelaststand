@@ -1,5 +1,5 @@
-<div class="max-w-md mx-auto mt-10">
-    <form wire:submit.prevent="loginTenant" class="bg-white p-6 rounded shadow">
+<div class="max-w-md mx-auto mt-10 bg-blue-900">
+    <form wire:submit.prevent="loginTenant" class="p-6 rounded shadow">
         <h1 class="text-xl mb-4">Tenant Login</h1>
 
         <div class="mb-4">

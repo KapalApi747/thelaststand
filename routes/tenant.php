@@ -14,11 +14,15 @@ use App\Livewire\Tenant\Backend\Users\UserEdit;
 use App\Livewire\Tenant\Backend\Users\UserIndex;
 use App\Livewire\Tenant\Backend\Users\UserRegistration;
 use App\Livewire\Tenant\Backend\Users\UserView;
+use App\Livewire\CustomerLogin;
 use App\Livewire\Tenant\Frontend\Main\Cart;
 use App\Livewire\Tenant\Frontend\Main\ShopProducts;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutCancel;
+use App\Livewire\Tenant\Frontend\Shopping\CheckoutForm;
+use App\Livewire\Tenant\Frontend\Shopping\CheckoutPayment;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutSuccess;
 use App\Livewire\TenantLogin;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -50,11 +54,27 @@ Route::middleware([
     Route::prefix('shop')
         ->as('shop.')
         ->group(function () {
+
+            Route::get('login', CustomerLogin::class)->name('customer-login');
+            Route::post('/logout', function () {
+                Auth::guard('customer')->logout();
+                request()->session()->invalidate();
+                request()->session()->regenerateToken();
+                return redirect()->route('shop.shop-products');
+            })->name('customer-logout');
+
             Route::get('products', ShopProducts::class)->name('shop-products');
             Route::get('cart', Cart::class)->name('shop-cart');
 
+            Route::get('/checkout', CheckoutForm::class)->name('checkout-form');
+            Route::get('/checkout/payment', CheckoutPayment::class)->name('checkout-payment');
             Route::get('/checkout/success', CheckoutSuccess::class)->name('checkout-success');
             Route::get('/checkout/cancel', CheckoutCancel::class)->name('checkout-cancel');
+
+            Route::get('/debug/clear-cart', function () {
+                session()->forget('cart_' . tenant()->id);
+                return 'Cart cleared for tenant ' . tenant()->id;
+            });
         });
 
     Route::middleware(['web','tenant.auth'])

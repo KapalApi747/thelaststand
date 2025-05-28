@@ -1,0 +1,36 @@
+<div x-data x-show="{{ $showModal ? 'true' : 'false' }}" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-xl shadow max-w-xl w-full relative">
+        <button wire:click="closeModal" class="absolute top-3 right-3 text-gray-500 hover:text-black">&times;</button>
+
+        @if ($product)
+            <h2 class="text-xl font-bold mb-2">{{ $product->name }}</h2>
+            <p class="text-sm text-gray-600 mb-4">{{ $product->description }}</p>
+
+            <p><strong>SKU:</strong> {{ $product->sku }}</p>
+            <p><strong>Price:</strong> €{{ number_format($product->price, 2) }}</p>
+            <p><strong>Stock:</strong> {{ $product->available_stock }}</p>
+
+            <div class="my-4">
+                <h3 class="font-semibold">Images:</h3>
+                <div class="flex gap-2 mt-2">
+                    @foreach ($product->images as $image)
+                        <img src="{{ asset('tenant' . tenant()->id . '/' . $image->path) }}"
+                             alt="Product Image"
+                             class="w-16 h-16 object-cover rounded">
+                    @endforeach
+                </div>
+            </div>
+
+            @if ($product->variants->count())
+                <div class="mt-4">
+                    <h3 class="font-semibold">Variants:</h3>
+                    <ul class="list-disc pl-5 mt-2 text-sm text-gray-700">
+                        @foreach ($product->variants as $variant)
+                            <li>{{ $variant->name }} ({{ $variant->value }})</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        @endif
+    </div>
+</div>

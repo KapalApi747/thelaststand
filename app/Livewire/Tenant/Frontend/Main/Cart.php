@@ -23,24 +23,28 @@ class Cart extends Component
         $this->cart = session()->get($cartTenantKey, []);
     }
 
-    public function removeFromCart($productId)
+    public function removeFromCart($itemKey)
     {
         $cartTenantKey = 'cart_' . tenant()->id;
         $cart = session()->get($cartTenantKey, []);
-        if (isset($cart[$productId])) {
-            unset($cart[$productId]);
+
+        if (isset($cart[$itemKey])) {
+            unset($cart[$itemKey]);
         }
+
         session()->put($cartTenantKey, $cart);
         $this->dispatch('cart-updated');
     }
 
-    public function updateProductQuantity($productId, $quantity)
+    public function updateProductQuantity($itemKey, $quantity)
     {
         $cartTenantKey = 'cart_' . tenant()->id;
         $cart = session()->get($cartTenantKey, []);
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] = max(1, (int)$quantity);
+
+        if (isset($cart[$itemKey])) {
+            $cart[$itemKey]['quantity'] = max(1, (int)$quantity);
         }
+
         session()->put($cartTenantKey, $cart);
         $this->dispatch('cart-updated');
     }

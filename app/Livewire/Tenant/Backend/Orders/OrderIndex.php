@@ -14,7 +14,7 @@ class OrderIndex extends Component
 
     public $search = '';
     public $status = '';
-    public $pagination = 10;
+    public $pagination = 20;
     public $sortField = 'order_number';
     public $sortDirection = 'asc';
 
