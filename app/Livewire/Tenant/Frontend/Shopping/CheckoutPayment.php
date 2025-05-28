@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Livewire\Tenant\Frontend\Shopping;
+
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+
+#[Layout('t-shop-layout')]
+class CheckoutPayment extends Component
+{
+    public $customerInfo = [];
+
+    public function mount()
+    {
+        // Load customer info from session (assuming your checkout form saves it here)
+        $this->customerInfo = session('checkout_customer_info', []);
+
+        // You can also load logged-in customer data if needed, fallback to guest info
+        if (auth('customer')->check()) {
+            $this->customerInfo = array_merge($this->customerInfo, [
+                'name' => auth('customer')->user()->name,
+                'email' => auth('customer')->user()->email,
+            ]);
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.tenant.frontend.shopping.checkout-payment')->layout('layouts.app');
+    }
+}

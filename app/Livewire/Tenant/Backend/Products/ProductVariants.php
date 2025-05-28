@@ -3,13 +3,17 @@
 namespace App\Livewire\Tenant\Backend\Products;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\ProductVariant;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('t-dashboard-layout')]
 class ProductVariants extends Component
 {
+    use WithFileUploads;
+
     public Product $product;
     public $variants;
 
@@ -20,6 +24,7 @@ class ProductVariants extends Component
     public $stock;
     public $is_active = true;
 
+    public $images = [];
     public $variantEditId = null;
 
     protected $rules = [
@@ -28,6 +33,7 @@ class ProductVariants extends Component
         'price' => 'nullable|numeric|min:0',
         'stock' => 'nullable|integer|min:0',
         'is_active' => 'boolean',
+        'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
     ];
 
     public function mount(Product $product)
@@ -38,12 +44,12 @@ class ProductVariants extends Component
 
     public function loadVariants()
     {
-        $this->variants = $this->product->variants()->get();
+        $this->variants = $this->product->variants()->with('images')->get();
     }
 
     public function resetForm()
     {
-        $this->reset(['name', 'sku', 'description', 'price', 'stock', 'is_active', 'variantEditId']);
+        $this->reset(['name', 'sku', 'description', 'price', 'stock', 'is_active', 'variantEditId', 'images']);
     }
 
     public function editVariant(ProductVariant $variant)
@@ -76,9 +82,8 @@ class ProductVariants extends Component
                 'stock' => $this->stock,
                 'is_active' => $this->is_active,
             ]);
-            session()->flash('message', 'Variant updated successfully!');
         } else {
-            $this->product->variants()->create([
+            $variant = $this->product->variants()->create([
                 'name' => $this->name,
                 'sku' => $this->sku,
                 'description' => $this->description,
@@ -86,9 +91,19 @@ class ProductVariants extends Component
                 'stock' => $this->stock,
                 'is_active' => $this->is_active,
             ]);
-            session()->flash('message', 'Variant created successfully!');
         }
 
+        foreach ($this->images as $image) {
+            $storagePath = $image->store('assets/img/products/variants', 'tenancy');
+
+            ProductImage::create([
+                'product_id' => $this->product->id,
+                'product_variant_id' => $variant->id,
+                'path' => $storagePath,
+            ]);
+        }
+
+        session()->flash('message', $this->variantEditId ? 'Variant updated successfully!' : 'Variant created successfully!');
         $this->resetForm();
         $this->loadVariants();
     }

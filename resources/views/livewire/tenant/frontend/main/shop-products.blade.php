@@ -1,30 +1,137 @@
-<div>
-    <div class="flex justify-between">
+<div class="bg-black p-12">
+    <div class="text-center">
+        <h1 class="text-2xl font-bold mb-6">Available Products</h1>
+    </div>
+    <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-bold mb-6">Available Products</h1>
+            @auth('customer')
+                <p class="text-green-300 font-medium">
+                    Hello, {{ auth('customer')->user()->name }}!
+                </p>
+            @endauth
         </div>
-        <div>
-            <a
-                class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
-                href="{{ route('shop.shop-cart') }}">Shopping Cart</a>
+        <div class="flex items-center">
+            <div class="me-6">
+                <a
+                    class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
+                    href="{{ route('shop.shop-cart') }}"
+                >
+                    Shopping Cart
+                </a>
+            </div>
+            @auth('customer')
+                <div>
+                    <form method="POST" action="{{ route('shop.customer-logout') }}">
+                        @csrf
+                        <button
+                            type="submit"
+                            class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition"
+                        >
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            @else
+                <div>
+                    <a
+                        class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
+                        href="{{ route('shop.customer-login') }}"
+                    >
+                        Login
+                    </a>
+                </div>
+            @endauth
         </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
         @forelse ($products as $product)
             <div class="bg-white rounded-xl shadow p-4">
                 @php
                     $image = $product->images->first();
                     $imageUrl = $image ? asset('tenant' . tenant()->id . '/' . $image->path) : 'https://placehold.co/200x200?text=No+Image';
+                    $modalName = 'product-details-' . $product->id;
                 @endphp
                 <img src="{{ $imageUrl }}"
                      alt="{{ $product->name }}"
                      class="w-full h-48 object-cover rounded">
 
-                <h2 class="text-lg font-semibold mt-4">{{ $product->name }}</h2>
+                <h2 class="text-black text-lg font-semibold mt-4">{{ $product->name }}</h2>
                 <p class="text-teal-600 font-bold">€{{ number_format($product->price, 2) }}</p>
 
-                <livewire:tenant.frontend.shopping.add-to-cart-button :product="$product" />
+                <div class="mt-5">
+                    <flux:modal.trigger name="product-details-{{ $product->id }}">
+                        <flux:button variant="primary">
+                            View Details
+                        </flux:button>
+                    </flux:modal.trigger>
+
+                    <flux:modal name="product-details-{{ $product->id }}" class="md:w-full">
+                        <div>
+                            <flux:heading size="lg">{{ $product->name }}</flux:heading>
+                            <flux:text class="text-sm text-gray-300">{{ $product->description }}</flux:text>
+
+                            <div class="flex flex-col mt-5">
+                                <div>
+                                    <p><strong>SKU:</strong> {{ $product->sku }}</p>
+                                    <p><strong>Price:</strong> €{{ number_format($product->price, 2) }}</p>
+                                    <p><strong>Stock:</strong> {{ $product->stock }}</p>
+                                </div>
+                                <div class="grid grid-cols-3 gap-4 mt-5">
+                                    @foreach ($product->images as $img)
+                                        @if ($img->product_variant_id == null)
+                                        <img src="{{ asset('tenant' . tenant()->id . '/' . $img->path) }}"
+                                             alt="Image"
+                                             class="w-48 h-48 object-cover rounded mb-2"
+                                        >
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            @if ($product->variants->count())
+                                <div class="mt-5">
+                                    <flux:heading size="sm">Variants</flux:heading>
+                                    <ul class="list-disc list-inside text-sm text-gray-300">
+                                        @foreach ($product->variants as $variant)
+                                            <li class="flex my-3">
+                                                <div>
+                                                    <img
+                                                        src="{{ asset('tenant' . tenant()->id . '/' . $variant->images->first()->path) }}"
+                                                        alt="Variant Image"
+                                                        class="w-16 h-16 object-cover rounded mr-2"
+                                                    >
+                                                </div>
+                                                <div class="flex items-center">
+                                                    {{ $variant->name }} - €{{ number_format($variant->price, 2) }}
+                                                </div>
+                                                <div class="flex justify-end items-center">
+                                                    <livewire:tenant.frontend.shopping.add-to-cart-button
+                                                        :product="$product"
+                                                        :variant="$variant"
+                                                        :key=" 'variant-' . $variant->id"
+                                                    />
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                            <div class="flex justify-end">
+                                <flux:button
+                                    variant="primary"
+                                    x-on:click="$flux.modal('{{ $modalName }}').close()"
+                                    class="mt-6"
+                                >
+                                    Close
+                                </flux:button>
+                            </div>
+                        </div>
+                    </flux:modal>
+
+                    <livewire:tenant.frontend.shopping.add-to-cart-button :product="$product" />
+                </div>
+
             </div>
         @empty
             <p>No products available.</p>

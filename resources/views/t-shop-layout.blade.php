@@ -7,12 +7,14 @@
 
     <title>Welcome To The Last Stand!</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @fluxAppearance
 
 </head>
-<body class="bg-gray-100">
-<div class="container mx-auto p-4">
+<body class="bg-gray-800">
+<div class="container mx-auto">
     {{ $slot }}
 </div>
 
+@fluxScripts
 </body>
 </html>

@@ -17,6 +17,9 @@ class StripePaymentButton extends Component
             return;
         }
 
+        $customer = auth('customer')->user();
+        $guest = session('checkout_customer_info');
+
         $stripe = new StripeClient(config('services.stripe.secret'));
 
         $lineItems = [];
@@ -34,13 +37,27 @@ class StripePaymentButton extends Component
             ];
         }
 
-        $session = $stripe->checkout->sessions->create([
+        $checkoutData = [
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
             'mode' => 'payment',
             'success_url' => route('shop.checkout-success'),
             'cancel_url' => route('shop.checkout-cancel'),
-        ]);
+        ];
+
+        if ($customer) {
+            $checkoutData['customer_email'] = $customer->email;
+        } elseif (!empty($guest['email']) && filter_var($guest['email'], FILTER_VALIDATE_EMAIL)) {
+            $checkoutData['customer_email'] = $guest['email'];
+        }
+
+        $checkoutData['metadata'] = [
+            'tenant_id' => tenant()->id,
+            'customer_type' => $customer ? 'logged-in' : 'guest',
+            'customer_email' => $checkoutData['customer_email'] ?? 'unknown',
+        ];
+
+        $session = $stripe->checkout->sessions->create($checkoutData);
 
         return redirect()->away($session->url);
     }
