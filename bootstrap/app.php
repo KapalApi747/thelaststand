@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant.auth' => AuthenticateTenant::class,
             'tenant.onlytenancyontenant' => OnlyTenancyOnTenantDomain::class,
         ]);
+        $middleware->group('universal', []);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

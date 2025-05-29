@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Stancl\Tenancy\Tenancy;
+use Stripe\Webhook;
+
+class StripeWebhookController extends Controller
+{
+    public function handle(Request $request)
+    {
+        $payload = $request->getContent();
+        $sigHeader = $request->header('Stripe-Signature');
+        $secret = config('services.stripe.webhook_secret');
+
+        try {
+            $event = Webhook::constructEvent($payload, $sigHeader, $secret);
+        } catch (\Exception $e) {
+            Log::error('Stripe webhook error: ' . $e->getMessage());
+            return response('Invalid', 400);
+        }
+
+        // Handle checkout session completed
+        if ($event->type === 'checkout.session.completed') {
+            $session = $event->data->object;
+
+            // 🔑 Bootstrap tenancy manually using the tenant_id from metadata
+            $tenantId = $session->metadata->tenant_id ?? null;
+
+            if ($tenantId) {
+                Tenancy::initialize($tenantId); // manually load the tenant
+            } else {
+                Log::warning('Missing tenant_id in Stripe metadata');
+                return response('Missing tenant', 400);
+            }
+
+            // ✅ Now you're in the tenant context, safe to store order
+            // Use $session->customer, $session->metadata, etc. here
+        }
+
+        return response('ok', 200);
+    }
+}

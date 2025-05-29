@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\StripeWebhookController;
 use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
 use App\Livewire\Tenant\Backend\Orders\OrderIndex;
 use App\Livewire\Tenant\Backend\Orders\OrderView;
@@ -24,6 +25,7 @@ use App\Livewire\Tenant\Frontend\Shopping\CheckoutSuccess;
 use App\Livewire\TenantLogin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -38,17 +40,20 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 | Feel free to customize them however you want. Good luck!
 |
 */
-//Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe.webhook');
+
+Route::middleware(['universal', InitializeTenancyByDomain::class])->group(function () {
+    Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe-webhook');
+
+    Livewire::setScriptRoute(function ($handle) {
+        return Route::get('/livewire/livewire.js', $handle);
+    });
+});
 
 Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-
-    /*Livewire::setScriptRoute(function ($handle) {
-        return Route::get('/livewire/livewire.js', $handle);
-    });*/
 
     Route::get('/', TenantLogin::class)->name('tenant.login');
 
@@ -71,11 +76,6 @@ Route::middleware([
             Route::get('/checkout/payment', CheckoutPayment::class)->name('checkout-payment');
             Route::get('/checkout/success', CheckoutSuccess::class)->name('checkout-success');
             Route::get('/checkout/cancel', CheckoutCancel::class)->name('checkout-cancel');
-
-            Route::get('/debug/clear-cart', function () {
-                session()->forget('cart_' . tenant()->id);
-                return 'Cart cleared for tenant ' . tenant()->id;
-            });
         });
 
     Route::middleware(['web','tenant.auth'])
