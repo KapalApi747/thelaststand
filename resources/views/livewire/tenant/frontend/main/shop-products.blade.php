@@ -76,6 +76,7 @@
                                     <p><strong>SKU:</strong> {{ $product->sku }}</p>
                                     <p><strong>Price:</strong> €{{ number_format($product->price, 2) }}</p>
                                     <p><strong>Stock:</strong> {{ $product->stock }}</p>
+                                    <p><strong>Categories:</strong> {{ $product->categories->implode('name', ', ') }}</p>
                                 </div>
                                 <div class="grid grid-cols-3 gap-4 mt-5">
                                     @foreach ($product->images as $img)
@@ -94,16 +95,18 @@
                                     <flux:heading size="sm">Variants</flux:heading>
                                     <ul class="list-disc list-inside text-sm text-gray-300">
                                         @foreach ($product->variants as $variant)
-                                            <li class="flex my-3">
-                                                <div>
-                                                    <img
-                                                        src="{{ asset('tenant' . tenant()->id . '/' . $variant->images->first()->path) }}"
-                                                        alt="Variant Image"
-                                                        class="w-16 h-16 object-cover rounded mr-2"
-                                                    >
-                                                </div>
-                                                <div class="flex items-center">
-                                                    {{ $variant->name }} - €{{ number_format($variant->price, 2) }}
+                                            <li class="flex justify-between my-3">
+                                                <div class="flex me-4">
+                                                    <div>
+                                                        <img
+                                                            src="{{ asset('tenant' . tenant()->id . '/' . $variant->images->first()->path) }}"
+                                                            alt="Variant Image"
+                                                            class="w-16 h-16 object-cover rounded mr-2"
+                                                        >
+                                                    </div>
+                                                    <div class="flex items-center">
+                                                        {{ $variant->name }} - €{{ number_format($variant->price, 2) }}
+                                                    </div>
                                                 </div>
                                                 <div class="flex justify-end items-center">
                                                     <livewire:tenant.frontend.shopping.add-to-cart-button

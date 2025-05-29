@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -19,12 +18,6 @@ class Customer extends Authenticatable
         'email',
         'phone',
         'password',
-        'address_line1',
-        'address_line2',
-        'city',
-        'state',
-        'zip',
-        'country',
         'is_active',
     ];
 
@@ -39,5 +32,30 @@ class Customer extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function paymentAccounts()
+    {
+        return $this->hasMany(CustomerPaymentAccount::class);
+    }
+
+    public function getPaymentAccount(string $provider): ?CustomerPaymentAccount
+    {
+        return $this->paymentAccounts()->where('provider', $provider)->first();
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(CustomerAddress::class);
+    }
+
+    public function billingAddress(): ?CustomerAddress
+    {
+        return $this->addresses()->where('type', 'billing')->first();
+    }
+
+    public function shippingAddress(): ?CustomerAddress
+    {
+        return $this->addresses()->where('type', 'shipping')->first();
     }
 }
