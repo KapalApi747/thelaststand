@@ -24,7 +24,7 @@
                     >
                         <option value="" class="bg-gray-600">-- Choose a carrier --</option>
                         @foreach ($option['carriers'] as $carrier)
-                            <option value="{{ $carrier }}" class="bg-gray-600">{{ $carrier }}</option>
+                            <option value="{{ $carrier }}">{{ $carrier }}</option>
                         @endforeach
                     </select>
                     @error('carrier') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror

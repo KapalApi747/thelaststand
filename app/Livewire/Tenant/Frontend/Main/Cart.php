@@ -49,6 +49,22 @@ class Cart extends Component
         $this->dispatch('cart-updated');
     }
 
+    public function getTotal()
+    {
+        $total = 0;
+
+        foreach ($this->cart as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
+
+        return $total;
+    }
+
+    public function taxAmount()
+    {
+        return $this->getTotal() / 1.21 * 0.21;
+    }
+
     public function render()
     {
         return view('livewire.tenant.frontend.main.cart');

@@ -59,23 +59,14 @@ class CheckoutShipping extends Component
 
     public function sendShippingInfo()
     {
-        $shippingCost = $this->shippingMethod
-            ? $this->shippingOptions[$this->shippingMethod]['cost']
-            : 0;
-
         $shippingInfo = [
             'method' => $this->shippingMethod,
             'carrier' => $this->carrier,
-            'cost' => $shippingCost,
+            'cost' => $this->shippingMethod ? $this->shippingOptions[$this->shippingMethod]['cost'] : 0,
         ];
-
-        session()->put('shipping_cost', $shippingCost);
-        session()->put('shipping_method', $this->shippingMethod);
-        session()->put('shipping_carrier', $this->carrier);
 
         $this->dispatch('shippingUpdated', $shippingInfo);
     }
-
 
     public function render()
     {

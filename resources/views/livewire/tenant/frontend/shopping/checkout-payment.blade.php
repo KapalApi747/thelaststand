@@ -17,10 +17,26 @@
         @endif
     </section>
 
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold mb-2">Shipping Options</h2>
+        <livewire:tenant.frontend.shopping.checkout-shipping />
+    </section>
+
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold mb-2">Order Summary</h2>
+        <div class="text-white space-y-1">
+            <p><strong>Cart Subtotal:</strong> €{{ number_format($cartTotal, 2) }}</p>
+            <p><strong>Shipping:</strong> €{{ number_format($shippingCost, 2) }}</p>
+            <p><strong>Tax (21% BTW):</strong> €{{ number_format($taxAmount, 2) }}</p>
+        </div>
+        <div class="mt-10">
+            <p class="text-xl font-bold mt-2"><strong>Total (incl. BTW):</strong> €{{ number_format($grandTotal, 2) }}</p>
+        </div>
+    </section>
+
+
     <section>
         <h2 class="text-lg font-semibold mb-2">Select Payment Method</h2>
-
-        {{-- Stripe Payment Button Component --}}
         <livewire:tenant.frontend.shopping.stripe-payment-button />
     </section>
 </div>

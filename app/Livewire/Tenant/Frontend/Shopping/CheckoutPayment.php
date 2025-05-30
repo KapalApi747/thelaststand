@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Tenant\Frontend\Shopping;
 
+use App\Livewire\Tenant\Frontend\Main\Cart;
+use App\Services\CartService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -9,6 +11,13 @@ use Livewire\Component;
 class CheckoutPayment extends Component
 {
     public $customerInfo = [];
+    public $cartTotal = 0;
+    public $shippingCost = 0;
+    public $taxRate = 0.21;
+    public $taxAmount = 0;
+    public $grandTotal = 0;
+
+    protected $listeners = ['shippingUpdated'];
 
     public function mount()
     {
@@ -22,6 +31,26 @@ class CheckoutPayment extends Component
                 'email' => auth('customer')->user()->email,
             ]);
         }
+
+        $this->cartTotal = $this->retrieveCartTotal();
+        $this->calculateTotal();
+    }
+
+    public function shippingUpdated($shippingInfo)
+    {
+        $this->shippingCost = $shippingInfo['cost'] ?? 0;
+        $this->calculateTotal();
+    }
+
+    protected function calculateTotal()
+    {
+        $this->grandTotal = $this->cartTotal + $this->shippingCost;
+        $this->taxAmount = round($this->grandTotal / 1.21 * $this->taxRate, 2);
+    }
+
+    protected function retrieveCartTotal()
+    {
+        return CartService::cartTotal();
     }
 
     public function render()

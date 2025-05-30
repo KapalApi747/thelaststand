@@ -23,6 +23,14 @@
         <p>Your cart is empty.</p>
     @endforelse
     @if (count($cart) > 0)
+        <div>
+            <p class="text-right font-semibold mb-3">
+                BTW Tax (21%): €{{ number_format($this->taxAmount(), 2) }}
+            </p>
+            <p class="text-right font-semibold">
+                Subtotal (incl. BTW): €{{ number_format($this->getTotal(), 2) }}
+            </p>
+        </div>
     <div>
         <a href="{{ route('shop.checkout-form') }}"
            class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
