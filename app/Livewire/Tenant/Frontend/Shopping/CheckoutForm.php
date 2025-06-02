@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Tenant\Frontend\Shopping;
 
+use App\Models\Customer;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -29,9 +31,13 @@ class CheckoutForm extends Component
         $billing_zip,
         $billing_country;
 
+    public bool $askForAccount = false;
+    public string $password = '';
+    public string $password_confirmation = '';
+
     protected function rules()
     {
-        return [
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'nullable|string|max:20',
@@ -49,6 +55,12 @@ class CheckoutForm extends Component
             'billing_zip' => $this->billingDifferent ? 'required|string|max:20' : 'nullable',
             'billing_country' => $this->billingDifferent ? 'required|string|max:100' : 'nullable',
         ];
+
+        if ($this->askForAccount && !$this->loggedInCustomer) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+
+        return $rules;
     }
 
     public function mount()
@@ -88,8 +100,36 @@ class CheckoutForm extends Component
             $this->billing_country = $this->country;
         }
 
-        // Save to session for use in Stripe checkout & order saving
-        session()->put('checkout_customer_info', [
+        if ($this->askForAccount && !$this->loggedInCustomer) {
+            // Create customer account
+            // Assuming you have a Customer model with the necessary fillable attributes
+            $existingCustomer = Customer::where('email', $this->email)->first();
+
+            if ($existingCustomer) {
+                $this->addError('email', 'An account with this email already exists.');
+                return;
+            }
+
+            $customer = Customer::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'address_line1' => $this->address_line1,
+                'address_line2' => $this->address_line2,
+                'city' => $this->city,
+                'state' => $this->state,
+                'zip' => $this->zip,
+                'country' => $this->country,
+                'password' => Hash::make($this->password),
+            ]);
+
+            // Log in the new customer
+            auth('customer')->login($customer);
+
+            $this->loggedInCustomer = true;
+        }
+
+        $customerData = [
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
@@ -99,10 +139,27 @@ class CheckoutForm extends Component
             'state' => $this->state,
             'zip' => $this->zip,
             'country' => $this->country,
-        ]);
+        ];
 
-        // Redirect to the payment page (where StripePaymentButton is)
-        return redirect()->route('shop.checkout-payment');
+        if ($this->billingDifferent) {
+            $customerData = array_merge($customerData, [
+                'billing_different' => true,
+                'billing_address_line1' => $this->billing_address_line1,
+                'billing_address_line2' => $this->billing_address_line2,
+                'billing_city' => $this->billing_city,
+                'billing_state' => $this->billing_state,
+                'billing_zip' => $this->billing_zip,
+                'billing_country' => $this->billing_country,
+            ]);
+        } else {
+            $customerData = array_merge($customerData, [
+                'billing_different' => false,
+            ]);
+        }
+
+        session()->put('checkout_customer_info', $customerData);
+
+        return redirect()->route('shop.checkout-shipping');
     }
 
     public function render()

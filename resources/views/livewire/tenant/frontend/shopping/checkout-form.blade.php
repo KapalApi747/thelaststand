@@ -16,10 +16,32 @@
                 <input wire:model.lazy="email" type="email" id="email" class="w-full border rounded px-3 py-2"/>
                 @error('email') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             </div>
+
+            <div class="mb-4">
+                <label class="inline-flex items-center">
+                    <input type="checkbox" wire:model.live="askForAccount" class="mr-2" />
+                    <span>Create an account for faster checkout next time</span>
+                </label>
+            </div>
+
+            @if ($askForAccount)
+                <div class="mb-4">
+                    <label for="password" class="block font-medium mb-1">Password</label>
+                    <input wire:model.lazy="password" type="password" id="password" class="w-full border rounded px-3 py-2" />
+                    @error('password') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label for="password_confirmation" class="block font-medium mb-1">Confirm Password</label>
+                    <input wire:model.lazy="password_confirmation" type="password" id="password_confirmation" class="w-full border rounded px-3 py-2" />
+                </div>
+            @endif
         @else
             <p class="mb-4"><strong>Name:</strong> {{ $name }}</p>
             <p class="mb-4"><strong>Email:</strong> {{ $email }}</p>
         @endif
+
+        <h2 class="text-xl font-bold mb-4">Phone & Address</h2>
 
         <div class="mb-4">
             <label for="phone" class="block font-medium mb-1">Phone</label>
@@ -126,7 +148,7 @@
             type="submit"
             class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
         >
-            Continue to Payment
+            Continue to Shipping
         </button>
 
     </form>

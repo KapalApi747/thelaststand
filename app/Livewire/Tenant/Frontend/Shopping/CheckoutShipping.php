@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Tenant\Frontend\Shopping;
 
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('t-shop-layout')]
 class CheckoutShipping extends Component
 {
     public $shippingMethod = null;
@@ -76,6 +78,12 @@ class CheckoutShipping extends Component
         $this->dispatch('shippingUpdated', $shippingInfo);
     }
 
+    public function confirmShipping()
+    {
+        $this->sendShippingInfo();
+
+        return redirect()->route('shop.checkout-payment');
+    }
 
     public function render()
     {

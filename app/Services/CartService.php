@@ -38,4 +38,10 @@ class CartService
     {
         return round((self::grandTotal() * 21) / 121, 2);
     }
+
+    public static function clearCart(): void
+    {
+        session()->forget('cart_' . tenant()->id);
+    }
+
 }

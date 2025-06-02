@@ -8,18 +8,18 @@
             <p><strong>Name:</strong> {{ $customerInfo['name'] ?? 'Guest' }}</p>
             <p><strong>Email:</strong> {{ $customerInfo['email'] ?? 'Not provided' }}</p>
             @if(!empty($customerInfo['address_line1']))
-                <p><strong>Address:</strong> {{ $customerInfo['address_line1'] }} {{ $customerInfo['address_line2'] ?? '' }}</p>
+                <p><strong>Shipping Address:</strong> {{ $customerInfo['address_line1'] }} {{ $customerInfo['address_line2'] ?? '' }}</p>
                 <p>{{ $customerInfo['city'] ?? '' }}, {{ $customerInfo['state'] ?? '' }} {{ $customerInfo['zip'] ?? '' }}</p>
                 <p>{{ $customerInfo['country'] ?? '' }}</p>
+            @endif
+            @if(($customerInfo['billing_different' ?? false]))
+                <p><strong>Billing Address:</strong> {{ $customerInfo['billing_address_line1'] }} {{ $customerInfo['billing_address_line2'] ?? '' }}</p>
+                <p>{{ $customerInfo['billing_city'] ?? '' }}, {{ $customerInfo['billing_state'] ?? '' }} {{ $customerInfo['billing_zip'] ?? '' }}</p>
+                <p>{{ $customerInfo['billing_country'] ?? '' }}</p>
             @endif
         @else
             <p>Guest checkout</p>
         @endif
-    </section>
-
-    <section class="mb-8">
-        <h2 class="text-lg font-semibold mb-2">Shipping Options</h2>
-        <livewire:tenant.frontend.shopping.checkout-shipping />
     </section>
 
     <section class="mb-8">

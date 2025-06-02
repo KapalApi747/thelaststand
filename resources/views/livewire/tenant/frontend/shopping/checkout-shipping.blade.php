@@ -1,5 +1,5 @@
-<div>
-    <h3 class="font-semibold mb-4">Shipping Options</h3>
+<div class="max-w-3xl mx-auto p-6 bg-black rounded shadow">
+    <h1 class="font-semibold mb-8">Shipping Options</h1>
 
     <div class="space-y-4">
         @foreach ($shippingOptions as $key => $option)
@@ -19,7 +19,7 @@
                     <label for="carrier" class="block text-sm font-medium text-white mb-3">Select Carrier:</label>
                     <select
                         id="carrier"
-                        wire:model="carrier"
+                        wire:model.live="carrier"
                         class="form-select border rounded text-white px-2 py-1"
                     >
                         <option value="" class="bg-gray-600">-- Choose a carrier --</option>
@@ -36,4 +36,8 @@
     @error('shippingMethod')
     <div class="text-red-600 mt-2">{{ $message }}</div>
     @enderror
+
+    <button wire:click="confirmShipping" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+        Continue to Payment
+    </button>
 </div>

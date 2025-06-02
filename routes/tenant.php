@@ -21,6 +21,7 @@ use App\Livewire\Tenant\Frontend\Main\ShopProducts;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutCancel;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutForm;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutPayment;
+use App\Livewire\Tenant\Frontend\Shopping\CheckoutShipping;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutSuccess;
 use App\Livewire\TenantLogin;
 use Illuminate\Support\Facades\Auth;
@@ -73,6 +74,7 @@ Route::middleware([
             Route::get('cart', Cart::class)->name('shop-cart');
 
             Route::get('/checkout', CheckoutForm::class)->name('checkout-form');
+            Route::get('/checkout/shipping', CheckoutShipping::class)->name('checkout-shipping');
             Route::get('/checkout/payment', CheckoutPayment::class)->name('checkout-payment');
             Route::get('/checkout/success', CheckoutSuccess::class)->name('checkout-success');
             Route::get('/checkout/cancel', CheckoutCancel::class)->name('checkout-cancel');

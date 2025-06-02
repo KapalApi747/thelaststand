@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Tenant\Frontend\Shopping;
 
-use App\Livewire\Tenant\Frontend\Main\Cart;
 use App\Services\CartService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -13,7 +12,6 @@ class CheckoutPayment extends Component
     public $customerInfo = [];
     public $cartTotal = 0;
     public $shippingCost = 0;
-    public $taxRate = 0.21;
     public $taxAmount = 0;
     public $grandTotal = 0;
 
@@ -21,10 +19,8 @@ class CheckoutPayment extends Component
 
     public function mount()
     {
-        // Load customer info from session (assuming your checkout form saves it here)
         $this->customerInfo = session('checkout_customer_info', []);
 
-        // You can also load logged-in customer data if needed, fallback to guest info
         if (auth('customer')->check()) {
             $this->customerInfo = array_merge($this->customerInfo, [
                 'name' => auth('customer')->user()->name,
@@ -32,29 +28,32 @@ class CheckoutPayment extends Component
             ]);
         }
 
-        $this->cartTotal = $this->retrieveCartTotal();
-        $this->calculateTotal();
+        if (!session()->has('shipping_method')) {
+            return redirect()->route('shop.checkout-shipping');
+        }
+
+        $this->updateCartTotals();
     }
 
     public function shippingUpdated($shippingInfo)
     {
-        $this->shippingCost = $shippingInfo['cost'] ?? 0;
-        $this->calculateTotal();
+        session()->put('shipping_cost', $shippingInfo['cost'] ?? 0);
+        session()->put('shipping_method', $shippingInfo['method'] ?? null);
+        session()->put('shipping_carrier', $shippingInfo['carrier'] ?? null);
+
+        $this->updateCartTotals();
     }
 
-    protected function calculateTotal()
+    protected function updateCartTotals()
     {
-        $this->grandTotal = $this->cartTotal + $this->shippingCost;
-        $this->taxAmount = round($this->grandTotal / 1.21 * $this->taxRate, 2);
-    }
-
-    protected function retrieveCartTotal()
-    {
-        return CartService::cartTotal();
+        $this->cartTotal = CartService::cartTotal();
+        $this->shippingCost = CartService::shippingCost();
+        $this->grandTotal = CartService::grandTotal();
+        $this->taxAmount = CartService::taxAmount();
     }
 
     public function render()
     {
-        return view('livewire.tenant.frontend.shopping.checkout-payment')->layout('layouts.app');
+        return view('livewire.tenant.frontend.shopping.checkout-payment');
     }
 }
