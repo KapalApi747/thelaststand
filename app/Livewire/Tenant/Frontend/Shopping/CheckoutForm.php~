@@ -110,7 +110,6 @@ class CheckoutForm extends Component
 
             if ($existingCustomer) {
                 $this->addError('email', 'An account with this email already exists. Please log in!');
-                $this->showLoginButton = true;
                 return;
             }
 
@@ -136,7 +135,6 @@ class CheckoutForm extends Component
 
             if ($existingCustomer && !$this->loggedInCustomer) {
                 $this->addError('email', 'An account with this email already exists. Please log in or reset your password!');
-                $this->showLoginButton = true;
                 return;
             }
         }

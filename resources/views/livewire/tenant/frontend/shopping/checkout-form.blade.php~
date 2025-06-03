@@ -17,6 +17,16 @@
                 @error('email') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             </div>
 
+            @if($showLoginButton)
+                <div class="mt-2">
+                    <a
+                        href="{{ route('shop.customer-login') }}"
+                        class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition">
+                        Already have an account? Log in
+                    </a>
+                </div>
+            @endif
+
             <div class="mb-4">
                 <label class="inline-flex items-center">
                     <input type="checkbox" wire:model.live="askForAccount" class="mr-2" />
@@ -41,7 +51,7 @@
             <p class="mb-4"><strong>Email:</strong> {{ $email }}</p>
         @endif
 
-        <h2 class="text-xl font-bold mb-4">Address Information</h2>
+        <h2 class="text-xl font-bold mb-4">Phone & Address</h2>
 
         <div class="mb-4">
             <label for="phone" class="block font-medium mb-1">Phone</label>
@@ -65,22 +75,22 @@
 
         <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
+                <label for="zip" class="block font-medium mb-1">ZIP / Postal Code</label>
+                <input wire:model.lazy="zip" type="text" id="zip" class="w-full border rounded px-3 py-2"/>
+                @error('zip') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+            </div>
+            <div>
                 <label for="city" class="block font-medium mb-1">City</label>
                 <input wire:model.lazy="city" type="text" id="city" class="w-full border rounded px-3 py-2"/>
                 @error('city') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-            </div>
-            <div>
-                <label for="state" class="block font-medium mb-1">State / Province</label>
-                <input wire:model.lazy="state" type="text" id="state" class="w-full border rounded px-3 py-2"/>
-                @error('state') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-                <label for="zip" class="block font-medium mb-1">ZIP / Postal Code</label>
-                <input wire:model.lazy="zip" type="text" id="zip" class="w-full border rounded px-3 py-2"/>
-                @error('zip') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                <label for="state" class="block font-medium mb-1">State / Province</label>
+                <input wire:model.lazy="state" type="text" id="state" class="w-full border rounded px-3 py-2"/>
+                @error('state') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             </div>
             <div>
                 <label for="country" class="block font-medium mb-1">Country</label>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: sans-serif; font-size: 12px; }
+        .invoice { page-break-after: always; margin-bottom: 40px; }
+        .invoice:last-child { page-break-after: auto; }
+    </style>
+</head>
+<body>
+@foreach($orders as $order)
+    <div class="invoice">
+        <h2>Invoice #{{ $order->order_number }}</h2>
+        <p><strong>Customer:</strong> {{ $order->customer->name ?? 'N/A' }}</p>
+        <p><strong>Total:</strong> €{{ number_format($order->total_amount, 2) }}</p>
+        <p><strong>Status:</strong> {{ ucfirst($order->status) }}</p>
+        <p><strong>Date:</strong> {{ $order->created_at->format('Y-m-d') }}</p>
+    </div>
+@endforeach
+</body>
+</html>

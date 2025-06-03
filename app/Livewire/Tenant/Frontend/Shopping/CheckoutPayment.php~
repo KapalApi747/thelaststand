@@ -21,8 +21,6 @@ class CheckoutPayment extends Component
     {
         $this->customerInfo = session('checkout_customer_info', []);
 
-        dd($this->customerInfo);
-
         if (auth('customer')->check()) {
             $this->customerInfo = array_merge($this->customerInfo, [
                 'name' => auth('customer')->user()->name,

@@ -2,66 +2,13 @@
 
 namespace App\Livewire\Tenant\Frontend\Shopping;
 
+use App\Models\Product;
+use App\Models\ProductVariant;
 use Livewire\Component;
 use Stripe\StripeClient;
 
 class StripePaymentButton extends Component
 {
-    /*public function checkoutStripe()
-    {
-        $cartTenantKey = 'cart_' . tenant()->id;
-        $cart = session($cartTenantKey, []);
-
-        if (empty($cart)) {
-            $this->dispatch('notify', ['type' => 'error', 'message' => 'Your cart is empty.']);
-            return;
-        }
-
-        $customer = auth('customer')->user();
-        $guest = session('checkout_customer_info');
-
-        $stripe = new StripeClient(config('services.stripe.secret'));
-
-        $lineItems = [];
-
-        foreach($cart as $item) {
-            $lineItems[] = [
-                'price_data' => [
-                    'currency' => 'eur',
-                    'product_data' => [
-                        'name' => $item['name'],
-                    ],
-                    'unit_amount' => $item['price'] * 100,
-                ],
-                'quantity' => $item['quantity'],
-            ];
-        }
-
-        $checkoutData = [
-            'payment_method_types' => ['card'],
-            'line_items' => $lineItems,
-            'mode' => 'payment',
-            'success_url' => route('shop.checkout-success'),
-            'cancel_url' => route('shop.checkout-cancel'),
-        ];
-
-        if ($customer) {
-            $checkoutData['customer_email'] = $customer->email;
-        } elseif (!empty($guest['email']) && filter_var($guest['email'], FILTER_VALIDATE_EMAIL)) {
-            $checkoutData['customer_email'] = $guest['email'];
-        }
-
-        $checkoutData['metadata'] = [
-            'tenant_id' => tenant()->id,
-            'customer_type' => $customer ? 'logged-in' : 'guest',
-            'customer_email' => $checkoutData['customer_email'] ?? 'unknown',
-        ];
-
-        $session = $stripe->checkout->sessions->create($checkoutData);
-
-        return redirect()->away($session->url);
-    }*/
-
     public function checkoutStripe()
     {
         $cartTenantKey = 'cart_' . tenant()->id;
@@ -70,6 +17,29 @@ class StripePaymentButton extends Component
         if (empty($cart)) {
             $this->dispatch('notify', ['type' => 'error', 'message' => 'Your cart is empty.']);
             return;
+        }
+
+        // STOCK CHECK
+        foreach ($cart as $item) {
+            $quantity = $item['quantity'];
+
+            if (!empty($item['product_variant_id'])) {
+                $variant = ProductVariant::find($item['product_variant_id']);
+                if (!$variant || $variant->stock < $quantity) {
+                    $this->dispatch('notify-error', [
+                        'message' => "Sorry, not enough stock for variant of: {$item['name']}."
+                    ]);
+                    return;
+                }
+            } else {
+                $product = Product::find($item['product_id']);
+                if (!$product || $product->stock < $quantity) {
+                    $this->dispatch('notify-error', [
+                        'message' => "Sorry, not enough stock for: {$item['name']}."
+                    ]);
+                    return;
+                }
+            }
         }
 
         $authCustomer = auth('customer')->user();
@@ -133,8 +103,6 @@ class StripePaymentButton extends Component
                 'metadata' => ['tenant_id' => tenant()->id],
             ]);
 
-            //dd($stripeCustomer);
-
             $customerId = $stripeCustomer->id;
         }
 
@@ -166,12 +134,15 @@ class StripePaymentButton extends Component
             ],
         ];
 
-
         $session = $stripe->checkout->sessions->create($checkoutData);
 
         return redirect()->away($session->url);
     }
 
+    public function testDispatch()
+    {
+        $this->dispatch('notify-error', ['message' => 'Test error from StripePaymentButton']);
+    }
 
     public function render()
     {

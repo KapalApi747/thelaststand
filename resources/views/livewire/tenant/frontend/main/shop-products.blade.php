@@ -75,8 +75,8 @@
                                 <div>
                                     <p><strong>SKU:</strong> {{ $product->sku }}</p>
                                     <p><strong>Price:</strong> €{{ number_format($product->price, 2) }}</p>
-                                    <p><strong>Stock:</strong> {{ $product->stock }}</p>
                                     <p><strong>Categories:</strong> {{ $product->categories->implode('name', ', ') }}</p>
+                                    <p class="text-green-600"><strong>Stock:</strong> {{ $product->stock }}</p>
                                 </div>
                                 <div class="grid grid-cols-3 gap-4 mt-5">
                                     @foreach ($product->images as $img)
@@ -105,7 +105,14 @@
                                                         >
                                                     </div>
                                                     <div class="flex items-center">
-                                                        {{ $variant->name }} - €{{ number_format($variant->price, 2) }}
+                                                        @if ($variant->stock > 0)
+                                                            <div>
+                                                                <p>{{ $variant->name }} - €{{ number_format($variant->price, 2) }}</p>
+                                                                <p class="text-green-600">In Stock: {{ $variant->stock }}</p>
+                                                            </div>
+                                                        @else
+                                                            <p class="text-red-600">Out of Stock</p>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="flex justify-end items-center">

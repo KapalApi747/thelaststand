@@ -15,7 +15,7 @@ class CheckoutPayment extends Component
     public $taxAmount = 0;
     public $grandTotal = 0;
 
-    protected $listeners = ['shippingUpdated'];
+    protected $listeners = ['shippingUpdated', 'notify-error' => 'handleError'];
 
     public function mount()
     {
@@ -42,6 +42,11 @@ class CheckoutPayment extends Component
         session()->put('shipping_carrier', $shippingInfo['carrier'] ?? null);
 
         $this->updateCartTotals();
+    }
+
+    public function handleError($payload)
+    {
+        session()->flash('stockError', $payload['message']);
     }
 
     protected function updateCartTotals()

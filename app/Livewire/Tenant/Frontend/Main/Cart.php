@@ -2,15 +2,18 @@
 
 namespace App\Livewire\Tenant\Frontend\Main;
 
+use App\Models\Product;
+use App\Models\ProductVariant;
+use App\Services\CartService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[layout('t-shop-layout')]
+#[Layout('t-shop-layout')]
 class Cart extends Component
 {
     public $cart = [];
 
-    protected $listeners = ['cart-updated' => 'refreshCart'];
+    protected $listeners = ['cart-updated' => 'refreshCart', 'notify-error' => 'handleError'];
 
     public function mount()
     {
@@ -41,32 +44,72 @@ class Cart extends Component
         $cartTenantKey = 'cart_' . tenant()->id;
         $cart = session()->get($cartTenantKey, []);
 
-        if (isset($cart[$itemKey])) {
-            $cart[$itemKey]['quantity'] = max(1, (int)$quantity);
+        if (!isset($cart[$itemKey])) return;
+
+        $quantity = max(1, (int)$quantity);
+        $item = $cart[$itemKey];
+
+        if (isset($item['variant_id'])) {
+            $variant = ProductVariant::find($item['variant_id']);
+            $stock = $variant?->stock ?? 0;
+        } else {
+            $product = Product::find($item['product_id']);
+            $stock = $product?->stock ?? 0;
         }
 
+        if ($stock === 0) {
+            $this->dispatch('notify-error', [
+                'message' => "{$item['name']} is currently out of stock."
+            ]);
+            return;
+        }
+
+        if ($quantity > $stock) {
+            $quantity = $stock;
+            $this->dispatch('notify-error', [
+                'message' => "Only $stock in stock for {$item['name']}."
+            ]);
+        }
+
+        $cart[$itemKey]['quantity'] = $quantity;
         session()->put($cartTenantKey, $cart);
         $this->dispatch('cart-updated');
     }
 
-    public function getTotal()
+    public function handleError($payload)
     {
-        $total = 0;
-
-        foreach ($this->cart as $item) {
-            $total += $item['price'] * $item['quantity'];
-        }
-
-        return $total;
+        session()->flash('stockError', $payload['message']);
     }
 
-    public function taxAmount()
+    public function checkForStockIssues(): bool
     {
-        return $this->getTotal() / 1.21 * 0.21;
+        foreach ($this->cart as $item) {
+            $stock = 0;
+            if (isset($item['variant_id'])) {
+                $variant = ProductVariant::find($item['variant_id']);
+                $stock = $variant?->stock ?? 0;
+            } else {
+                $product = Product::find($item['product_id']);
+                $stock = $product?->stock ?? 0;
+            }
+
+            if ($item['quantity'] > $stock || $stock === 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function goToCheckout()
+    {
+        return redirect()->route('shop.checkout-form');
     }
 
     public function render()
     {
-        return view('livewire.tenant.frontend.main.cart');
+        return view('livewire.tenant.frontend.main.cart', [
+            'cartTotal' => CartService::cartTotal(),
+            'taxAmount' => CartService::taxAmount(),
+        ]);
     }
 }

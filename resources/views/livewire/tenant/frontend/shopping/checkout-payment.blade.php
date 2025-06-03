@@ -34,9 +34,13 @@
         </div>
     </section>
 
-
     <section>
         <h2 class="text-lg font-semibold mb-2">Select Payment Method</h2>
         <livewire:tenant.frontend.shopping.stripe-payment-button />
+        @if (session('stockError'))
+            <div class="text-red-600 font-bold mt-4">
+                {{ session('stockError') }}
+            </div>
+        @endif
     </section>
 </div>

@@ -34,7 +34,7 @@ class CustomerLogin extends Component
 
         session()->regenerate();
 
-        return redirect()->intended(route('shop.shop-products')); // Adjust as needed
+        return redirect()->intended(route('shop.shop-products'));
     }
 
     public function render()

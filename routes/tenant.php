@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\StripeWebhookController;
 use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
+use App\Livewire\Tenant\Backend\Orders\OrderEdit;
 use App\Livewire\Tenant\Backend\Orders\OrderIndex;
 use App\Livewire\Tenant\Backend\Orders\OrderView;
 use App\Livewire\Tenant\Backend\Products\ProductEdit;
@@ -100,6 +101,7 @@ Route::middleware([
 
             Route::get('/orders', OrderIndex::class)->name('order-index');
             Route::get('/orders/{order}', OrderView::class)->name('order-view');
+            Route::get('orders/{order}/edit', OrderEdit::class)->name('order-edit');
         });
 });
 
