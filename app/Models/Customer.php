@@ -58,4 +58,9 @@ class Customer extends Authenticatable
     {
         return $this->addresses()->where('type', 'shipping')->first();
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class);
+    }
 }

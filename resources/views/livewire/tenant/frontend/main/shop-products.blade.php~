@@ -44,6 +44,32 @@
         </div>
     </div>
 
+    <div
+        x-data="{
+            show: false,
+            message: '',
+            type: '',
+        }"
+        x-on:notify.window="
+            message = $event.detail[0].message ?? '';
+            type = $event.detail[0].type ?? 'info';
+            show = true;
+            setTimeout(() => show = false, 2000);
+            "
+        x-show="show"
+        x-transition
+        class=" my-5 px-4 py-3 rounded shadow-lg text-white"
+        :class="{
+            'bg-green-600': type === 'success',
+            'bg-red-600': type === 'error',
+            'bg-blue-600': type === 'info',
+        }"
+        style="display: none;"
+    >
+        <p x-text="message" class="text-sm font-semibold"></p>
+    </div>
+
+
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
         @forelse ($products as $product)
             <div class="bg-white rounded-xl shadow p-4">
@@ -59,6 +85,18 @@
                 <h2 class="text-black text-lg font-semibold mt-4">{{ $product->name }}</h2>
                 <p class="text-teal-600 font-bold">€{{ number_format($product->price, 2) }}</p>
 
+                @if ($product->average_rating > 0)
+                    <div class="flex items-center text-yellow-400 text-sm mt-1">
+                        ★ {{ number_format($product->average_rating, 1) }}
+                        <span class="text-gray-400 text-xs ms-2">({{ $product->rating_count }} reviews)</span>
+                    </div>
+                @else
+                    <div class="flex items-center text-yellow-400 text-sm mt-1">
+                        ☆ 0
+                        <span class="text-gray-400 text-xs ms-2">({{ $product->rating_count }} reviews)</span>
+                    </div>
+                @endif
+
                 <div class="mt-5">
                     <flux:modal.trigger name="product-details-{{ $product->id }}">
                         <flux:button variant="primary">
@@ -68,6 +106,19 @@
 
                     <flux:modal name="product-details-{{ $product->id }}" class="md:w-full">
                         <div>
+                            <div
+                                x-data="{ show: false, message: '', type: '' }"
+                                x-on:notify.window="message = $event.detail.message; type = $event.detail.type; show = true; setTimeout(() => show = false, 3000)"
+                                x-show="show"
+                                x-text="message"
+                                :class="{
+                                    'bg-green-500 text-white': type === 'success',
+                                    'bg-red-500 text-white': type === 'error'
+                                }"
+                                class="fixed top-4 right-4 p-3 rounded shadow"
+                                style="display: none;"
+                            ></div>
+
                             <flux:heading size="lg">{{ $product->name }}</flux:heading>
                             <flux:text class="text-sm text-gray-300">{{ $product->description }}</flux:text>
 
@@ -75,8 +126,8 @@
                                 <div>
                                     <p><strong>SKU:</strong> {{ $product->sku }}</p>
                                     <p><strong>Price:</strong> €{{ number_format($product->price, 2) }}</p>
-                                    <p class="text-green-600"><strong>Stock:</strong> {{ $product->stock }}</p>
                                     <p><strong>Categories:</strong> {{ $product->categories->implode('name', ', ') }}</p>
+                                    <p class="text-green-600"><strong>Stock:</strong> {{ $product->stock }}</p>
                                 </div>
                                 <div class="grid grid-cols-3 gap-4 mt-5">
                                     @foreach ($product->images as $img)
@@ -127,6 +178,12 @@
                                     </ul>
                                 </div>
                             @endif
+
+                            {{-- Product Reviews Section --}}
+                            <div class="mt-8 border-t pt-6">
+                                <livewire:tenant.frontend.main.product-reviews :product="$product" :key="'reviews-' . $product->id" />
+                            </div>
+
                             <div class="flex justify-end">
                                 <flux:button
                                     variant="primary"
@@ -141,7 +198,6 @@
 
                     <livewire:tenant.frontend.shopping.add-to-cart-button :product="$product" />
                 </div>
-
             </div>
         @empty
             <p>No products available.</p>

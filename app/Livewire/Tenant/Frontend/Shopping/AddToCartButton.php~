@@ -26,10 +26,9 @@ class AddToCartButton extends Component
                     'name' => $this->product->name . ' - ' . $this->variant->name,
                     'price' => $this->variant->price ?? $this->product->price,
                     'quantity' => 1,
-                    'image' => $variant->images()->first()?->path
-                        ?? $this->product->images()->where('is_main_image', true)->first()?->path
-                            ?? $this->product->images->first()?->path,
-                    'variant_id' => $variant->id,
+                    'image' => $this->variant->images()->first()?->path
+                        ?? $this->product->images()->where('is_main_image', true)->first()?->path,
+                    'variant_id' => $this->variant->id,
                     'product_id' => $this->product->id,
                 ];
             }
@@ -43,8 +42,7 @@ class AddToCartButton extends Component
                     'name' => $this->product->name,
                     'price' => $this->product->price,
                     'quantity' => 1,
-                    'image' => $this->product->images()->where('is_main_image', true)->first()?->path
-                        ?? $this->product->images->first()?->path,
+                    'image' => $this->product->images()->where('is_main_image', true)->first()?->path,
                     'product_id' => $this->product->id,
                 ];
             }
@@ -53,7 +51,7 @@ class AddToCartButton extends Component
         session()->put($cartTenantKey, $cart);
 
         $this->dispatch('cart-updated');
-        $this->dispatch('notify', ['type' => 'success', 'message' => 'Product added to cart successfully!']);
+        $this->dispatchBrowserEvent('notify', ['type' => 'success', 'message' => 'Product added to cart successfully!']);
     }
 
     public function render()
