@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,6 +25,7 @@ class PaymentFactory extends Factory
 
         return [
             'order_id' => Order::factory(), // create or associate an order
+            'customer_id' => Customer::factory(),
             'payment_method' => $this->faker->randomElement($paymentMethods),
             'transaction_id' => $this->faker->uuid(),
             'amount' => $this->faker->randomFloat(2, 5, 500), // realistic payment amount

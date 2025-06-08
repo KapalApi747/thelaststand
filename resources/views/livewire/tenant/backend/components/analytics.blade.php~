@@ -45,7 +45,7 @@
                 <div class="py-3 px-4 flex flex-row justify-between">
                     <h1 class="h6">
                         <span class="num-4"></span>k
-                        <p>Page views</p>
+                        <p>page view</p>
                     </h1>
 
                     <div class="bg-teal-200 text-teal-700 border-teal-300 border w-10 h-10 rounded-full flex justify-center items-center">

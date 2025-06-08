@@ -128,6 +128,17 @@
                                     <p><strong>Price:</strong> €{{ number_format($product->price, 2) }}</p>
                                     <p><strong>Categories:</strong> {{ $product->categories->implode('name', ', ') }}</p>
                                     <p class="text-green-600"><strong>Stock:</strong> {{ $product->stock }}</p>
+                                    @if ($product->average_rating > 0)
+                                        <div class="flex items-center text-yellow-400 text-sm mt-1">
+                                            ★ {{ number_format($product->average_rating, 1) . ' ' . '/' . ' ' . '5' }}
+                                            <span class="text-gray-400 text-xs ms-2">({{ $product->rating_count }} reviews)</span>
+                                        </div>
+                                    @else
+                                        <div class="flex items-center text-yellow-400 text-sm mt-1">
+                                            ☆ 0
+                                            <span class="text-gray-400 text-xs ms-2">({{ $product->rating_count }} reviews)</span>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="grid grid-cols-3 gap-4 mt-5">
                                     @foreach ($product->images as $img)

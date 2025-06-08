@@ -24,7 +24,7 @@ class CustomerFactory extends Factory
             'email'         => $this->faker->unique()->safeEmail(),
             'phone'         => $this->faker->phoneNumber(),
             'password'      => Hash::make('password'),
-            'is_active'     => $this->faker->boolean(95),
+            'is_active'     => $this->faker->boolean(90),
         ];
     }
 }

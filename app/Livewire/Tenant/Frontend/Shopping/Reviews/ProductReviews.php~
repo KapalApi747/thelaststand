@@ -1,18 +1,23 @@
 <?php
 
-namespace App\Livewire\Tenant\Frontend\Main;
+namespace App\Livewire\Tenant\Frontend\Shopping\Reviews;
 
 use App\Models\Product;
 use App\Models\ProductReview;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('t-shop-layout')]
 class ProductReviews extends Component
 {
+    use WithPagination;
+
     public $product;
     public $rating;
     public $comment;
+
+    public $showReplies = [];
 
     public function mount(Product $product)
     {
@@ -52,6 +57,11 @@ class ProductReviews extends Component
 
     public function render()
     {
-        return view('livewire.tenant.frontend.main.product-reviews');
+        $reviews = $this->product->reviews()
+            ->where('is_approved', true)
+            ->latest()
+            ->paginate(10);
+
+        return view('livewire.tenant.frontend.shopping.reviews.product-reviews', compact('reviews'));
     }
 }

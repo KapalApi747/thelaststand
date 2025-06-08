@@ -6,13 +6,18 @@ use App\Models\Product;
 use App\Models\ProductReview;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('t-shop-layout')]
 class ProductReviews extends Component
 {
+    use WithPagination;
+
     public $product;
     public $rating;
     public $comment;
+
+    public $showReplies = [];
 
     public function mount(Product $product)
     {
@@ -50,8 +55,22 @@ class ProductReviews extends Component
         $this->reset(['rating', 'comment']);
     }
 
+    public function toggleReplies(int $reviewId)
+    {
+        if (in_array($reviewId, $this->showReplies)) {
+            $this->showReplies = array_diff($this->showReplies, [$reviewId]);
+        } else {
+            $this->showReplies[] = $reviewId;
+        }
+    }
+
     public function render()
     {
-        return view('livewire.tenant.frontend.shopping.reviews.product-reviews');
+        $reviews = $this->product->reviews()
+            ->where('is_approved', true)
+            ->latest()
+            ->paginate(10);
+
+        return view('livewire.tenant.frontend.shopping.reviews.product-reviews', compact('reviews'));
     }
 }

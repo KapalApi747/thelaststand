@@ -50,46 +50,61 @@
                 </form>
             </div>
         @endif
-            @else
-                <p class="text-sm text-gray-400">
-                    <a href="{{ route('shop.customer-login') }}" class="underline text-blue-500">Log in</a> to leave a
-                    review.
-                </p>
-        @endauth
+    @else
+        <p class="text-sm text-gray-400">
+            <a href="{{ route('shop.customer-login') }}" class="underline text-blue-500">Log in</a> to leave a
+            review or reply.
+        </p>
+    @endauth
 
-        {{-- Approved Reviews List --}}
-        <div class="bg-black p-6 rounded-xl shadow">
-            <h3 class="text-lg font-semibold mb-4">Customer Reviews</h3>
+    {{-- Approved Reviews List --}}
+    <div class="bg-black p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-4">Customer Reviews</h3>
 
-            @forelse ($product->reviews()->where('is_approved', true)->latest()->take(10)->get() as $review)
-                <div class="border-b py-4">
-                    {{-- Stars --}}
-                    <div class="text-yellow-500">
-                        @for ($i = 1; $i <= 5; $i++)
-                            @if ($review->rating >= $i)
-                                ⭐
-                            @else
-                                ☆
-                            @endif
-                        @endfor
-                    </div>
-
-                    {{-- Comment --}}
-                    <div class="mt-2 text-gray-300">{{ $review->comment }}</div>
-
-                    {{-- Meta --}}
-                    <div class="mt-1 text-sm text-gray-500">
-                        @if ($review->customer)
-                            {{ $review->customer->name }}
+        @forelse ($reviews as $review)
+            <div class="border-b py-4">
+                {{-- Stars --}}
+                <div class="text-yellow-500">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @if ($review->rating >= $i)
+                            ⭐
                         @else
-                            Anonymous
-                            @endif
-                            &bullet;
-                            {{ $review->created_at->diffForHumans() }}
-                    </div>
+                            ☆
+                        @endif
+                    @endfor
                 </div>
-            @empty
-                <p class="text-gray-500">No reviews yet.</p>
-            @endforelse
+
+                {{-- Comment --}}
+                <div class="mt-2 text-gray-300">{{ $review->comment }}</div>
+
+                {{-- Meta --}}
+                <div class="mt-1 text-sm text-gray-500">
+                    @if ($review->customer)
+                        {{ $review->customer->name }}
+                    @else
+                        Anonymous
+                        @endif
+                        &bullet;
+                        {{ $review->created_at->diffForHumans() }}
+                </div>
+                {{-- Toggle replies button --}}
+                <button wire:click="toggleReplies({{ $review->id }})"
+                        class="text-blue-500 underline mt-2">
+                    {{ in_array($review->id, $showReplies) ? 'Hide Replies' : 'Show Replies' }}
+                </button>
+
+                {{-- Conditionally show replies --}}
+                @if(in_array($review->id, $showReplies))
+                    <livewire:tenant.frontend.shopping.reviews.review-replies :review="$review" :key="'review-'.$review->id"/>
+                @endif
+            </div>
+            {{--<livewire:tenant.frontend.shopping.reviews.review-replies :review="$review" :key="'review-'.$review->id"/>--}}
+        @empty
+            <p class="text-gray-500">No reviews yet.</p>
+        @endforelse
+        <div class="mt-6">
+            {{ $reviews->links() }}
         </div>
+
+    </div>
 </div>

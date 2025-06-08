@@ -26,9 +26,9 @@ class ShipmentFactory extends Factory
             'order_id' => Order::factory(), // Can be overridden in seeder
             'tracking_number' => strtoupper($this->faker->bothify('TRK########')),
             'carrier' => $this->faker->randomElement(['UPS', 'FedEx', 'DHL', 'USPS', 'GLS']),
-            'shipping_method' => $this->faker->randomElement(['standard', 'express', 'overnight']),
-            'shipping_cost' => $this->faker->randomFloat(2, 4.99, 19.99),
             'status' => $deliveredAt ? 'delivered' : 'shipped',
+            'shipping_cost' => $this->faker->randomFloat(2, 5, 25),
+            'shipping_method' => $this->faker->randomElement(['parcel', 'mail', 'pickup', 'express', 'courier']),
             'shipped_at' => $shippedAt,
             'delivered_at' => $deliveredAt,
         ];

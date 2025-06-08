@@ -1,7 +1,7 @@
 <div class="max-w-3xl mx-auto p-6 bg-black rounded shadow">
     <h1 class="font-semibold mb-8">Shipping Options</h1>
 
-    <div class="space-y-4">
+    <div class="space-y-4 mb-6">
         @foreach ($shippingOptions as $key => $option)
             <label class="flex items-center space-x-3">
                 <input
