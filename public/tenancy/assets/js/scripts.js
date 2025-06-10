@@ -329,7 +329,7 @@ var options = function(type, height, numbers , color){
       chart_1.render();
   }*/
 
-var buildChartOptions = function(type, height, numbers , color, seriesName = 'Data', categories = []){
+var buildChartOptions = function(type, height, numbers , color, seriesName = 'Data', categories = [], isCurrency = false){
     return {
         chart: {
             height: height,
@@ -391,7 +391,12 @@ var buildChartOptions = function(type, height, numbers , color, seriesName = 'Da
             enabled: true,
             x: {
                 show: true,
-            }
+            },
+            y: {
+                formatter: isCurrency
+                    ? function(val) { return '€' + val.toFixed(2); }
+                    : undefined
+            },
         },
     };
 };
@@ -404,11 +409,11 @@ document.addEventListener('DOMContentLoaded', function () {
           analyticsElements[0],
           buildChartOptions(
               "area",
-              '51px',                  // increased height for better readability
+              '51px',
               window.analyticsChartData.data,
               '#4fd1c5',
               'New Orders (past 30 days)',
-              window.analyticsChartData.labels  // pass date labels here
+              window.analyticsChartData.labels
           )
       );
 
@@ -420,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function () {
               window.analyticsCustomerChartData.data,
               '#4c51bf',
               'New Customers (past 6 months)',
-              window.analyticsCustomerChartData.labels
+              window.analyticsCustomerChartData.labels,
           )
       );
     chart1.render();
@@ -437,10 +442,18 @@ document.addEventListener('DOMContentLoaded', function () {
   // Seals overview chart (if still needed)
   const sealsOverviewEl = document.getElementById('sealsOverview');
   if (sealsOverviewEl) {
-    const sealsOverviewChart = new ApexCharts(
-      sealsOverviewEl,
-      buildChartOptions('bar', '100%', numArr(20, 999), '#30aba0')
-    );
+      const sealsOverviewChart = new ApexCharts(
+          sealsOverviewEl,
+          buildChartOptions(
+              'bar',
+              '100%',
+              window.salesChartData,
+              '#30aba0',
+              'Revenue',
+              window.salesChartLabels,
+              true,
+          )
+      );
     sealsOverviewChart.render();
   }
 });

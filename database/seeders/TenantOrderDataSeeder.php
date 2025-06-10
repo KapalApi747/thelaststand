@@ -12,6 +12,7 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Shipment;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class TenantOrderDataSeeder extends Seeder
 {
@@ -28,17 +29,29 @@ class TenantOrderDataSeeder extends Seeder
         Customer::factory(100)->create()->each(function ($customer) use ($products) {
             // Biased signup dates (recent-heavy)
             $signupDate = now()->subDays(
-                fake()->biasedNumberBetween(0, 180, fn($x) => (1 - $x) ** 1.5)
+                fake()->biasedNumberBetween(0, 180, fn($x) => (1 - $x) ** 1.1)
             );
             $customer->update(['created_at' => $signupDate]);
 
-            CustomerAddress::factory(rand(1, 2))->create(['customer_id' => $customer->id]);
+            // Every customer gets a shipping address
+            CustomerAddress::factory()->create([
+                'customer_id' => $customer->id,
+                'type' => 'shipping',
+            ]);
+
+            // 50% chance of also getting a billing address
+            if (rand(0, 1)) {
+                CustomerAddress::factory()->create([
+                    'customer_id' => $customer->id,
+                    'type' => 'billing',
+                ]);
+            }
 
             if (rand(0, 1)) {
                 CustomerPaymentAccount::factory()->create(['customer_id' => $customer->id]);
             }
 
-            $ordersCount = rand(1, 5);
+            $ordersCount = rand(1, 3);
             for ($i = 0; $i < $ordersCount; $i++) {
                 // Ensure order is after signup but before now
                 $orderCreatedAt = fake()->dateTimeBetween($signupDate, now());
@@ -58,7 +71,7 @@ class TenantOrderDataSeeder extends Seeder
      */
     protected function createOrderDetails($order, $products)
     {
-        $orderItemsCount = rand(1, 5);
+        $orderItemsCount = rand(1, 2);
         for ($j = 0; $j < $orderItemsCount; $j++) {
             $product = $products->random();
 
@@ -71,14 +84,27 @@ class TenantOrderDataSeeder extends Seeder
             ]);
         }
 
-        $paymentsCount = rand(1, 2);
-        for ($k = 0; $k < $paymentsCount; $k++) {
-            Payment::factory()->create([
-                'order_id' => $order->id,
-                'customer_id' => $order->customer_id,
-                'amount' => $order->total_amount / $paymentsCount,
-            ]);
-        }
+        $totalAmount = OrderItem::where('order_id', $order->id)
+            ->sum(DB::raw('price * quantity'));
+
+        $taxRate = 0.21;
+        $taxAmount = round($totalAmount * $taxRate, 2);
+
+        $order->update([
+            'total_amount' => $totalAmount,
+            'tax_amount' => $taxAmount
+        ]);
+
+        $paymentStatus = in_array($order->status, ['refunded', 'failed', 'cancelled'])
+            ? $order->status
+            : ($order->status === 'pending' ? 'pending' : 'completed');
+
+        Payment::factory()->create([
+            'order_id' => $order->id,
+            'customer_id' => $order->customer_id,
+            'amount' => $totalAmount,
+            'status' => $paymentStatus,
+        ]);
 
         OrderAddress::factory()->create(['order_id' => $order->id, 'type' => 'billing']);
         OrderAddress::factory()->create(['order_id' => $order->id, 'type' => 'shipping']);

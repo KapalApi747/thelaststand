@@ -28,6 +28,7 @@ class Analytics extends Component
 
         // Fetch counts grouped by date in a single query
         $ordersByDate = Order::whereBetween('created_at', [$startDate, $endDate])
+            ->where('status', 'completed')
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->groupBy('date')
             ->orderBy('date')

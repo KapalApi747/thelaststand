@@ -14,7 +14,7 @@ class ShopProducts extends Component
 
     public function mount()
     {
-        $this->products = Product::with(['images', 'categories', 'variants'])->where('is_active', 1)->get();
+        $this->products = Product::with(['images', 'categories', 'variants', 'reviews'])->where('is_active', 1)->get();
     }
 
     public function showProductModal($productId)

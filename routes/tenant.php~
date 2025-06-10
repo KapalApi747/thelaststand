@@ -11,7 +11,6 @@ use App\Livewire\Tenant\Backend\Products\ProductEdit;
 use App\Livewire\Tenant\Backend\Products\ProductManagement;
 use App\Livewire\Tenant\Backend\Products\ProductView;
 use App\Livewire\Tenant\Backend\Profile\StoreSettings;
-use App\Livewire\Tenant\Backend\Statistics\ShopStatistics;
 use App\Livewire\Tenant\Backend\TenantDashboard;
 use App\Livewire\Tenant\Backend\Users\UserEdit;
 use App\Livewire\Tenant\Backend\Users\UserIndex;
@@ -103,8 +102,6 @@ Route::middleware([
             Route::get('/orders', OrderIndex::class)->name('order-index');
             Route::get('/orders/{order}', OrderView::class)->name('order-view');
             Route::get('orders/{order}/edit', OrderEdit::class)->name('order-edit');
-
-            Route::get('/statistics', ShopStatistics::class)->name('shop-statistics');
         });
 });
 

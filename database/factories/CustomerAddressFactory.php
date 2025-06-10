@@ -15,7 +15,7 @@ class CustomerAddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'type'           => $this->faker->randomElement(['billing', 'shipping']),
+            'type'           => 'shipping',
             'address_line1'  => $this->faker->streetAddress(),
             'address_line2'  => $this->faker->optional()->secondaryAddress(),
             'city'           => $this->faker->city(),

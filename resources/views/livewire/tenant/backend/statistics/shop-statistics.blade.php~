@@ -1,0 +1,53 @@
+<div class="p-6 space-y-10">
+    <h2 class="text-xl font-semibold">Shop Statistics</h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="text-lg font-medium mb-2">Monthly Revenue</h3>
+            <ul class="space-y-1">
+                @foreach($monthlyRevenue as $row)
+                    <li class="flex justify-between text-sm">
+                        <span>{{ $row['label'] }}</span>
+                        <span class="font-medium">€{{ number_format($row['revenue'], 2) }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="text-lg font-medium mb-2">Top Products by Revenue</h3>
+            <ul class="space-y-1">
+                @foreach($productRevenue->take(5) as $row)
+                    <li class="flex justify-between text-sm">
+                        <span>{{ $row['product'] }}</span>
+                        <span class="font-medium">€{{ number_format($row['revenue'], 2) }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="text-lg font-medium mb-2">Top Customers</h3>
+            <ul class="space-y-1">
+                @foreach($customerRevenue->take(5) as $row)
+                    <li class="flex justify-between text-sm">
+                        <span>{{ $row['customer'] }} ({{ $row['orders_count'] }} orders)</span>
+                        <span class="font-medium">€{{ number_format($row['total_spent'], 2) }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+
+    <div class="bg-white p-4 rounded shadow">
+        <h3 class="text-lg font-medium mb-2">Best Selling Products</h3>
+        <ul class="space-y-1">
+            @foreach($bestSelling as $row)
+                <li class="flex justify-between text-sm">
+                    <span>{{ $row['product'] }}</span>
+                    <span>{{ $row['total_sold'] }} sold</span>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</div>
