@@ -27,13 +27,19 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <input type="number"
-                       min="1"
-                       max="{{ $stock }}"
-                       @disabled($stock === 0)
-                       wire:change="updateProductQuantity('{{ $itemKey }}', $event.target.value)"
-                       value="{{ $item['quantity'] }}"
-                       class="w-12 border rounded text-center">
+                <input
+                    type="number"
+                    min="1"
+                    max="{{ $stock }}"
+                    inputmode="numeric"
+                    pattern="\d+"
+                    @disabled($stock === 0)
+                    wire:change="updateProductQuantity('{{ $itemKey }}', $event.target.value)"
+                    value="{{ $item['quantity'] }}"
+                    oninput="if (this.value === '' || this.value === '0') this.value = 1; this.value = this.value.replace(/[^0-9]/g, '')"
+                    class="w-12 border rounded text-center"
+                >
+
                 <button wire:click="removeFromCart('{{ $itemKey }}')" class="text-red-500 hover:underline">Remove</button>
             </div>
         </div>

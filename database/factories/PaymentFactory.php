@@ -25,7 +25,6 @@ class PaymentFactory extends Factory
 
         return [
             'order_id' => Order::factory(), // create or associate an order
-            'customer_id' => Customer::factory(),
             'payment_method' => $this->faker->randomElement($paymentMethods),
             'transaction_id' => $this->faker->uuid(),
             'amount' => $this->faker->randomFloat(2, 5, 500), // realistic payment amount

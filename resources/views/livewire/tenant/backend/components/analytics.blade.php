@@ -44,8 +44,8 @@
             <div class="card">
                 <div class="py-3 px-4 flex flex-row justify-between">
                     <h1 class="h6">
-                        <span class="num-4"></span>k
-                        <p>Page views</p>
+                        <span>{{ $totalOrders }}</span>
+                        <p>Total Orders</p>
                     </h1>
 
                     <div class="bg-teal-200 text-teal-700 border-teal-300 border w-10 h-10 rounded-full flex justify-center items-center">
@@ -58,8 +58,8 @@
             <div class="card">
                 <div class="py-3 px-4 flex flex-row justify-between">
                     <h1 class="h6">
-                        <span class="num-2"></span>k
-                        <p>Unique Users</p>
+                        <span>{{ $totalCustomers }}</span>
+                        <p>Unique Customers</p>
                     </h1>
 
                     <div class="bg-indigo-200 text-indigo-700 border-indigo-300 border w-10 h-10 rounded-full flex justify-center items-center">
@@ -75,6 +75,9 @@
     </div>
     <!-- end charts -->
 
-
+    <script>
+        window.analyticsChartData = @json($orderChartData);
+        window.analyticsCustomerChartData = @json($customerChartData);
+    </script>
 </div>
 <!-- end Analytics -->

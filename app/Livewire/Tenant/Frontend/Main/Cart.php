@@ -46,9 +46,16 @@ class Cart extends Component
 
         if (!isset($cart[$itemKey])) return;
 
-        $quantity = max(1, (int)$quantity);
+        // 🔒 Strictly sanitize input
+        if (!is_numeric($quantity) || $quantity < 1) {
+            $quantity = 1;
+        } else {
+            $quantity = (int) $quantity;
+        }
+
         $item = $cart[$itemKey];
 
+        // 🔍 Determine stock
         if (isset($item['variant_id'])) {
             $variant = ProductVariant::find($item['variant_id']);
             $stock = $variant?->stock ?? 0;
@@ -57,6 +64,7 @@ class Cart extends Component
             $stock = $product?->stock ?? 0;
         }
 
+        // ⛔ Handle out of stock
         if ($stock === 0) {
             $this->dispatch('notify-error', [
                 'message' => "{$item['name']} is currently out of stock."
@@ -64,6 +72,7 @@ class Cart extends Component
             return;
         }
 
+        // ⚠ Cap to available stock and notify
         if ($quantity > $stock) {
             $quantity = $stock;
             $this->dispatch('notify-error', [
@@ -71,6 +80,7 @@ class Cart extends Component
             ]);
         }
 
+        // ✅ Save updated quantity
         $cart[$itemKey]['quantity'] = $quantity;
         session()->put($cartTenantKey, $cart);
         $this->dispatch('cart-updated');

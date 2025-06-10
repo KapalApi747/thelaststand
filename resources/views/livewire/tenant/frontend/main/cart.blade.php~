@@ -1,7 +1,7 @@
 <div class="space-y-4 bg-black p-10">
     <div class="my-6">
         <a
-            class="bg-red-700 text-white py-2 px-4 rounded hover:bg-red-200 transition"
+            class="bg-red-700 text-white py-2 px-4 rounded hover:bg-red-400 transition"
             href="{{ route('shop.shop-products') }}">Back To Shop</a>
     </div>
 
@@ -27,13 +27,17 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <input type="number"
-                       min="1"
-                       max="{{ $stock }}"
-                       @disabled($stock === 0)
-                       wire:change="updateProductQuantity('{{ $itemKey }}', $event.target.value)"
-                       value="{{ $item['quantity'] }}"
-                       class="w-12 border rounded text-center">
+                <input
+                    type="number"
+                    min="1"
+                    max="{{ $stock }}"
+                    pattern="\d+"
+                    @disabled($stock === 0)
+                    wire:change="updateProductQuantity('{{ $itemKey }}', $event.target.value)"
+                    value="{{ $item['quantity'] }}"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^0+/, '1')"
+                    class="w-12 border rounded text-center"
+                >
                 <button wire:click="removeFromCart('{{ $itemKey }}')" class="text-red-500 hover:underline">Remove</button>
             </div>
         </div>

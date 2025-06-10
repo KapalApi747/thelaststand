@@ -102,7 +102,6 @@ class Cart extends Component
 
     public function goToCheckout()
     {
-        dd(session()->all());
         return redirect()->route('shop.checkout-form');
     }
 

@@ -52,7 +52,7 @@
                     <h1 class="h5">
                         {{ $newOrders }}
                     </h1>
-                    <p>New orders this month</p>
+                    <p>New orders this past month</p>
                 </div>
                 <!-- end bottom -->
 

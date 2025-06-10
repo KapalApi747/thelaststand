@@ -23,7 +23,6 @@ class ShipmentFactory extends Factory
         $deliveredAt = $this->faker->boolean(70) ? $this->faker->dateTimeBetween($shippedAt, 'now') : null;
 
         return [
-            'order_id' => Order::factory(), // Can be overridden in seeder
             'tracking_number' => strtoupper($this->faker->bothify('TRK########')),
             'carrier' => $this->faker->randomElement(['UPS', 'FedEx', 'DHL', 'USPS', 'GLS']),
             'status' => $deliveredAt ? 'delivered' : 'shipped',

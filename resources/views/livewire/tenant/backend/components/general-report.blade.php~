@@ -83,7 +83,7 @@
                     <h1 class="h5">
                         {{ $totalProducts }}
                     </h1>
-                    <p>Total Products</p>
+                    <p>Total products</p>
                 </div>
                 <!-- end bottom -->
 

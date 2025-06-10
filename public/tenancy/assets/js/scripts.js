@@ -257,6 +257,7 @@ var btn     = document.getElementById('sliderBtn'),
     });
 // end with sidebar
 
+/*
 var options = function(type, height, numbers , color){
   return {
     chart: {
@@ -323,13 +324,126 @@ var options = function(type, height, numbers , color){
   if (analytics_1 != null && typeof(analytics_1) != 'undefined') {
       var chart = new ApexCharts(analytics_1[0], options("area" , '51px' , numArr(10,99) , '#4fd1c5'));
       var chart_1 = new ApexCharts(analytics_1[1], options("area" , '51px' , numArr(10,99) , '#4c51bf'));
+
       chart.render();
       chart_1.render();
+  }*/
+
+var buildChartOptions = function(type, height, numbers , color, seriesName = 'Data', categories = []){
+    return {
+        chart: {
+            height: height,
+            width: '100%',
+            type: type,
+            sparkline: {
+                enabled: true
+            },
+            toolbar: {
+                show: false,
+            },
+        },
+        grid: {
+            show: false,
+            padding: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        legend: {
+            show: false,
+        },
+        series: [
+            {
+                name: seriesName,
+                data: numbers
+            }
+        ],
+        fill: {
+            colors: [color],
+        },
+        stroke: {
+            colors: [color],
+            width: 3
+        },
+        yaxis: {
+            show: false,
+        },
+        xaxis: {
+            categories: categories,  // <-- here is your date labels
+            show: true,
+            labels: {
+                show: true,
+                rotate: -45,          // rotate labels if they are long dates
+                style: {
+                    fontSize: '10px'
+                }
+            },
+            axisBorder: {
+                show: true,
+            },
+        },
+        tooltip: {
+            enabled: true,
+            x: {
+                show: true,
+            }
+        },
+    };
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Mini sparkline-style analytics cards
+  const analyticsElements = document.getElementsByClassName("analytics_1");
+  if (analyticsElements?.length > 1) {
+      const chart1 = new ApexCharts(
+          analyticsElements[0],
+          buildChartOptions(
+              "area",
+              '51px',                  // increased height for better readability
+              window.analyticsChartData.data,
+              '#4fd1c5',
+              'New Orders (past 30 days)',
+              window.analyticsChartData.labels  // pass date labels here
+          )
+      );
+
+      const chart2 = new ApexCharts(
+          analyticsElements[1],
+          buildChartOptions(
+              "area",
+              '51px',
+              window.analyticsCustomerChartData.data,
+              '#4c51bf',
+              'New Customers (past 6 months)',
+              window.analyticsCustomerChartData.labels
+          )
+      );
+    chart1.render();
+    chart2.render();
   }
 
+  // Summary chart
+  const summaryChartEl = document.getElementById("SummaryChart");
+  if (summaryChartEl) {
+    const summaryChart = new ApexCharts(summaryChartEl, summaryChartOptions);
+    summaryChart.render();
+  }
 
-
-
+  // Seals overview chart (if still needed)
+  const sealsOverviewEl = document.getElementById('sealsOverview');
+  if (sealsOverviewEl) {
+    const sealsOverviewChart = new ApexCharts(
+      sealsOverviewEl,
+      buildChartOptions('bar', '100%', numArr(20, 999), '#30aba0')
+    );
+    sealsOverviewChart.render();
+  }
+});
 
 var sealsOptions = {
     chart: {
@@ -413,13 +527,11 @@ var sealsOptions = {
     }
   };
 
-
-
-
-var sealsOverview = document.getElementById('sealsOverview');
+/*var sealsOverview = document.getElementById('sealsOverview');
 var sealsOverviewChart = new ApexCharts(sealsOverview, options('bar' , '100%', numArr(20,999) , '#30aba0'));
-sealsOverviewChart.render();
-var options = {
+sealsOverviewChart.render();*/
+
+var summaryChartOptions = {
     chart: {
     //   height: 280,
       width: '100%',
@@ -486,12 +598,12 @@ var options = {
   };
 
 
-  var SummaryChart =  document.getElementById("SummaryChart");
+/*  var SummaryChart =  document.getElementById("SummaryChart");
 
   if (SummaryChart != null && typeof(SummaryChart) != 'undefined') {
     var chart = new ApexCharts(document.querySelector("#SummaryChart"), options);
     chart.render();
-  }
+  }*/
 
 
 /* PrismJS 1.19.0
