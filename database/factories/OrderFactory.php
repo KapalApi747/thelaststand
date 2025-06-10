@@ -22,14 +22,16 @@ class OrderFactory extends Factory
         $subtotal = $this->faker->randomFloat(2, 10, 500); // subtotal before tax & shipping
         $tax = $subtotal * 0.1;  // 10% tax
         $shipping = $this->faker->randomFloat(2, 5, 20);
+        $status = $this->faker->randomFloat(2, 0, 1) < 0.9
+            ? 'completed'
+            : $this->faker->randomElement(['pending', 'processing', 'shipped', 'delivered', 'refunded', 'failed', 'cancelled']);
 
         return [
-            'customer_id' => Customer::factory(), // create or link to a customer
             'order_number' => strtoupper('ORD-' . $this->faker->unique()->bothify('#######')), // e.g. ORD-1234567
             'total_amount' => round($subtotal + $tax + $shipping, 2),
             'tax_amount' => round($tax, 2),
             'shipping_cost' => round($shipping, 2),
-            'status' => $this->faker->randomElement(['pending', 'processing', 'completed', 'shipped', 'delivered', 'refunded', 'failed', 'cancelled']),
+            'status' => $status,
             'created_at' => $this->faker->dateTimeBetween('-3 months', 'now'),
         ];
     }

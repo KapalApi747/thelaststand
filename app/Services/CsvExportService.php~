@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
+class CsvExportService
+{
+    /**
+     * Create a new class instance.
+     */
+    public function export(array $headers, Collection $data, \Closure $rowMapper, string $filename = 'export.csv'): StreamedResponse
+    {
+        $responseHeaders = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        return response()->stream(function () use ($headers, $data, $rowMapper) {
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, $headers);
+
+            foreach ($data as $item) {
+                fputcsv($handle, $rowMapper($item));
+            }
+
+            fclose($handle);
+        }, 200, $responseHeaders);
+    }
+}

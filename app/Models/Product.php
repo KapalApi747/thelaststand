@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'sku',
         'name',
@@ -54,5 +56,20 @@ class Product extends Model
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class);
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviews()->where('is_approved', true)->avg('rating') ?? 0;
+    }
+
+    public function getRatingCountAttribute()
+    {
+        return $this->reviews()->where('is_approved', true)->count();
     }
 }

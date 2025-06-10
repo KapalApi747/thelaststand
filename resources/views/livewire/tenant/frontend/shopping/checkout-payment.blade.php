@@ -8,19 +8,39 @@
             <p><strong>Name:</strong> {{ $customerInfo['name'] ?? 'Guest' }}</p>
             <p><strong>Email:</strong> {{ $customerInfo['email'] ?? 'Not provided' }}</p>
             @if(!empty($customerInfo['address_line1']))
-                <p><strong>Address:</strong> {{ $customerInfo['address_line1'] }} {{ $customerInfo['address_line2'] ?? '' }}</p>
+                <p><strong>Shipping Address:</strong> {{ $customerInfo['address_line1'] }} {{ $customerInfo['address_line2'] ?? '' }}</p>
                 <p>{{ $customerInfo['city'] ?? '' }}, {{ $customerInfo['state'] ?? '' }} {{ $customerInfo['zip'] ?? '' }}</p>
                 <p>{{ $customerInfo['country'] ?? '' }}</p>
+            @endif
+            @if(($customerInfo['billing_different' ?? false]))
+                <p><strong>Billing Address:</strong> {{ $customerInfo['billing_address_line1'] }} {{ $customerInfo['billing_address_line2'] ?? '' }}</p>
+                <p>{{ $customerInfo['billing_city'] ?? '' }}, {{ $customerInfo['billing_state'] ?? '' }} {{ $customerInfo['billing_zip'] ?? '' }}</p>
+                <p>{{ $customerInfo['billing_country'] ?? '' }}</p>
             @endif
         @else
             <p>Guest checkout</p>
         @endif
     </section>
 
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold mb-2">Order Summary</h2>
+        <div class="text-white space-y-1">
+            <p><strong>Cart Subtotal:</strong> €{{ number_format($cartTotal, 2) }}</p>
+            <p><strong>Shipping:</strong> €{{ number_format($shippingCost, 2) }}</p>
+            <p><strong>Tax (21% BTW):</strong> €{{ number_format($taxAmount, 2) }}</p>
+        </div>
+        <div class="mt-10">
+            <p class="text-xl font-bold mt-2"><strong>Total (incl. BTW):</strong> €{{ number_format($grandTotal, 2) }}</p>
+        </div>
+    </section>
+
     <section>
         <h2 class="text-lg font-semibold mb-2">Select Payment Method</h2>
-
-        {{-- Stripe Payment Button Component --}}
         <livewire:tenant.frontend.shopping.stripe-payment-button />
+        @if (session('stockError'))
+            <div class="text-red-600 font-bold mt-4">
+                {{ session('stockError') }}
+            </div>
+        @endif
     </section>
 </div>

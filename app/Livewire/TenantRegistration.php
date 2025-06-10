@@ -54,13 +54,14 @@ class TenantRegistration extends Component
 
             $permissionSeeder = new TenantPermissionSeeder();
             $roleSeeder = new TenantRoleSeeder();
-            $productSeeder = new TenantProductSeeder();
-            $orderSeeder = new TenantOrderDataSeeder();
 
             Category::create(['name' => 'Category 1']);
             Category::create(['name' => 'Category 2']);
             Category::create(['name' => 'Category 3']);
             Category::create(['name' => 'Category 4']);
+
+            //$productSeeder = new TenantProductSeeder();
+            //$orderSeeder = new TenantOrderDataSeeder();
 
             TenantProfile::create([
                 'tenant_id' => tenant()->id,
@@ -78,8 +79,8 @@ class TenantRegistration extends Component
 
             $permissionSeeder->run();
             $roleSeeder->run();
-            $productSeeder->run();
-            $orderSeeder->run();
+            //$productSeeder->run();
+            //$orderSeeder->run();
         });
 
         // Step 3: Create a default user for the tenant

@@ -3,6 +3,8 @@
 namespace App\Livewire\Tenant\Backend\Orders;
 
 use App\Models\Order;
+use App\Services\CsvExportService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -21,13 +23,18 @@ class OrderIndex extends Component
     public $orderCount;
     public $totalRevenue;
 
+    public bool $selectAllOrders = false;
+    public array $selectedOrders = [];
+    public string $bulkAction = '';
+    public string $newStatus = '';
+
     public function mount()
     {
         $this->orderCount = Order::count();
         $this->totalRevenue = Order::where('status', 'completed')->sum('total_amount');
     }
 
-    public function getStatus(string $status): string
+    public function allStatuses(string $status): string
     {
         return match ($status) {
             'pending'    => 'bg-yellow-100 text-yellow-800 border border-yellow-800',
@@ -42,6 +49,96 @@ class OrderIndex extends Component
         };
     }
 
+    public function updateBulkStatus()
+    {
+        if (empty($this->selectedOrders) || empty($this->newStatus)) {
+            session()->flash('message', 'Please select orders and a new status.');
+            return;
+        }
+
+        Order::whereIn('id', $this->selectedOrders)
+            ->update(['status' => $this->newStatus]);
+
+        session()->flash('message', 'Order statuses updated successfully.');
+
+        $this->reset(['selectedOrders', 'selectAllOrders', 'bulkAction', 'newStatus']);
+    }
+
+
+    public function updatedSelectAllOrders($value)
+    {
+        $ordersQuery = Order::query()
+            ->join('customers', 'orders.customer_id', '=', 'customers.id')
+            ->select('orders.id') // Only fetch IDs for performance
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('customers.name', 'like', '%' . $this->search . '%')
+                        ->orWhere('orders.order_number', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->when($this->status, function ($query) {
+                $query->where('orders.status', $this->status);
+            })
+            ->orderBy(
+                $this->sortField === 'customer.name' ? 'customers.name' : $this->sortField,
+                $this->sortDirection
+            );
+
+        $paginated = $ordersQuery->paginate($this->pagination);
+
+        $this->selectedOrders = $value
+            ? $paginated->pluck('id')->toArray()
+            : [];
+    }
+
+
+    public function updatedSelectedOrders()
+    {
+        $this->selectAllOrders = false;
+    }
+
+    public function applyBulkAction()
+    {
+        if (empty($this->selectedOrders)) return;
+
+        switch ($this->bulkAction) {
+            case 'update_status':
+                $this->emit('openBulkStatusModal', $this->selectedOrders);
+                break;
+            case 'export':
+                return $this->exportCsv(app(CsvExportService::class));
+            case 'print_invoices':
+                $orders = Order::whereIn('id', $this->selectedOrders)->get();
+
+                $pdf = Pdf::loadView('orders.bulk-invoices', compact('orders'))
+                    ->setPaper('a4', 'portrait');
+
+                return response()->streamDownload(
+                    fn () => print($pdf->output()),
+                    'bulk-invoices.pdf'
+                );
+        }
+    }
+
+    public function exportCsv(CsvExportService $csv)
+    {
+        $orders = Order::with('customer')
+            ->whereIn('id', $this->selectedOrders)
+            ->get();
+
+        return $csv->export(
+            ['Order ID', 'Customer', 'Status', 'Total (€)', 'Date'],
+            $orders,
+            fn ($order) => [
+                $order->order_number,
+                optional($order->customer)->name ?? 'N/A',
+                ucfirst($order->status),
+                number_format($order->total_amount, 2),
+                $order->created_at->format('Y-m-d'),
+            ],
+            'orders.csv'
+        );
+    }
 
     public function render()
     {

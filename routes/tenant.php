@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\StripeWebhookController;
 use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
+use App\Livewire\Tenant\Backend\Orders\OrderEdit;
 use App\Livewire\Tenant\Backend\Orders\OrderIndex;
 use App\Livewire\Tenant\Backend\Orders\OrderView;
 use App\Livewire\Tenant\Backend\Products\ProductEdit;
@@ -20,10 +22,12 @@ use App\Livewire\Tenant\Frontend\Main\ShopProducts;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutCancel;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutForm;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutPayment;
+use App\Livewire\Tenant\Frontend\Shopping\CheckoutShipping;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutSuccess;
 use App\Livewire\TenantLogin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -39,15 +43,19 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 |
 */
 
+Route::middleware(['universal', InitializeTenancyByDomain::class])->group(function () {
+    Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe-webhook');
+
+    Livewire::setScriptRoute(function ($handle) {
+        return Route::get('/livewire/livewire.js', $handle);
+    });
+});
+
 Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-
-    /*Livewire::setScriptRoute(function ($handle) {
-        return Route::get('/livewire/livewire.js', $handle);
-    });*/
 
     Route::get('/', TenantLogin::class)->name('tenant.login');
 
@@ -67,14 +75,10 @@ Route::middleware([
             Route::get('cart', Cart::class)->name('shop-cart');
 
             Route::get('/checkout', CheckoutForm::class)->name('checkout-form');
+            Route::get('/checkout/shipping', CheckoutShipping::class)->name('checkout-shipping');
             Route::get('/checkout/payment', CheckoutPayment::class)->name('checkout-payment');
             Route::get('/checkout/success', CheckoutSuccess::class)->name('checkout-success');
             Route::get('/checkout/cancel', CheckoutCancel::class)->name('checkout-cancel');
-
-            Route::get('/debug/clear-cart', function () {
-                session()->forget('cart_' . tenant()->id);
-                return 'Cart cleared for tenant ' . tenant()->id;
-            });
         });
 
     Route::middleware(['web','tenant.auth'])
@@ -97,6 +101,7 @@ Route::middleware([
 
             Route::get('/orders', OrderIndex::class)->name('order-index');
             Route::get('/orders/{order}', OrderView::class)->name('order-view');
+            Route::get('orders/{order}/edit', OrderEdit::class)->name('order-edit');
         });
 });
 

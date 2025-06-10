@@ -1,10 +1,23 @@
 <div class="space-y-4 bg-black p-10">
-    <div>
+    <div class="my-6">
         <a
-            class="bg-red-700 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
+            class="bg-red-700 text-white py-2 px-4 rounded hover:bg-red-400 transition"
             href="{{ route('shop.shop-products') }}">Back To Shop</a>
     </div>
+
     @forelse ($cart as $itemKey => $item)
+        @php
+            $stock = 0;
+
+            if (isset($item['variant_id'])) {
+                $variant = \App\Models\ProductVariant::find($item['variant_id']);
+                $stock = $variant?->stock ?? 0;
+            } else {
+                $product = \App\Models\Product::find($item['product_id']);
+                $stock = $product?->stock ?? 0;
+            }
+        @endphp
+
         <div class="flex items-center justify-between border p-2 rounded">
             <div class="flex items-center gap-2">
                 <img src="{{ asset('tenant' . tenant()->id . '/' . $item['image']) }}" class="w-12 h-12 rounded" />
@@ -14,8 +27,19 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <input type="number" min="1" wire:change="updateProductQuantity('{{ $itemKey }}', $event.target.value)"
-                       value="{{ $item['quantity'] }}" class="w-12 border rounded text-center">
+                <input
+                    type="number"
+                    min="1"
+                    max="{{ $stock }}"
+                    inputmode="numeric"
+                    pattern="\d+"
+                    @disabled($stock === 0)
+                    wire:change="updateProductQuantity('{{ $itemKey }}', $event.target.value)"
+                    value="{{ $item['quantity'] }}"
+                    oninput="if (this.value === '' || this.value === '0') this.value = 1; this.value = this.value.replace(/[^0-9]/g, '')"
+                    class="w-12 border rounded text-center"
+                >
+
                 <button wire:click="removeFromCart('{{ $itemKey }}')" class="text-red-500 hover:underline">Remove</button>
             </div>
         </div>
@@ -23,12 +47,34 @@
         <p>Your cart is empty.</p>
     @endforelse
     @if (count($cart) > 0)
+        <div>
+            <p class="text-right font-semibold mb-3">
+                BTW Tax (21%): €{{ number_format($taxAmount, 2) }}
+            </p>
+            <p class="text-right font-semibold">
+                Subtotal (incl. BTW): €{{ number_format($cartTotal, 2) }}
+            </p>
+
+            @if ($this->checkForStockIssues())
+                <p class="text-red-600 mb-3 font-semibold">
+                    Some items in your cart are out of stock or exceed available quantity. Please adjust before checkout.
+                </p>
+            @endif
+
+        </div>
     <div>
-        <a href="{{ route('shop.checkout-form') }}"
-           class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
+        <button
+            wire:click.prevent="{{ $this->checkForStockIssues() ? '' : 'goToCheckout' }}"
+            {{ $this->checkForStockIssues() ? 'disabled' : '' }}
+            class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
             Checkout
-        </a>
+        </button>
     </div>
+    @endif
+    @if (session('stockError'))
+        <div class="text-red-600 font-bold mt-4">
+            {{ session('stockError') }}
+        </div>
     @endif
 </div>

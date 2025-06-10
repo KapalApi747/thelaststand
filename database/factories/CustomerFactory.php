@@ -23,14 +23,8 @@ class CustomerFactory extends Factory
             'name'          => $this->faker->name(),
             'email'         => $this->faker->unique()->safeEmail(),
             'phone'         => $this->faker->phoneNumber(),
-            'password'      => Hash::make('password'), // default password for testing
-            'address_line1' => $this->faker->streetAddress(),
-            'address_line2' => $this->faker->optional()->secondaryAddress(),
-            'city'          => $this->faker->city(),
-            'state'         => $this->faker->stateAbbr(),
-            'zip'           => $this->faker->postcode(),
-            'country'       => $this->faker->country(),
-            'is_active'     => $this->faker->boolean(90), // 90% chance to be active
+            'password'      => Hash::make('password'),
+            'is_active'     => $this->faker->boolean(95),
         ];
     }
 }

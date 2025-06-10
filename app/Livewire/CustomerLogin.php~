@@ -15,6 +15,12 @@ class CustomerLogin extends Component
     public $password;
     public $errorMessage;
     public bool $remember = false;
+    public $redirect;
+
+    public function mount()
+    {
+        $this->redirect = request()->query('redirect', route('shop.checkout-form'));
+    }
 
     public function loginCustomer()
     {
@@ -34,7 +40,7 @@ class CustomerLogin extends Component
 
         session()->regenerate();
 
-        return redirect()->intended(route('shop.product-index')); // Adjust as needed
+        return redirect()->intended($this->redirect);
     }
 
     public function render()

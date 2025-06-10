@@ -7,13 +7,13 @@
 
             <!-- image -->
             <div class="img-wrapper w-40 h-40 flex justify-center items-center">
-                <img src="./img/happy.svg" alt="img title">
+                <img src="{{ asset('tenant' . tenant()->id . '/' . auth()->user()->profile_picture_path) }}" alt="profile picture">
             </div>
             <!-- end image -->
 
             <!-- info -->
             <div class="py-2 ml-10">
-                <h1 class="h6">Good Job, Mohamed!</h1>
+                <h1 class="h6">Good Job, {{ auth()->user()->name }}!</h1>
                 <p class="text-white text-xs">You've finished all of your tasks for this week.</p>
 
                 <ul class="mt-4">
@@ -44,8 +44,8 @@
             <div class="card">
                 <div class="py-3 px-4 flex flex-row justify-between">
                     <h1 class="h6">
-                        <span class="num-4"></span>k
-                        <p>page view</p>
+                        <span>{{ $totalOrders }}</span>
+                        <p>Total Orders</p>
                     </h1>
 
                     <div class="bg-teal-200 text-teal-700 border-teal-300 border w-10 h-10 rounded-full flex justify-center items-center">
@@ -58,8 +58,8 @@
             <div class="card">
                 <div class="py-3 px-4 flex flex-row justify-between">
                     <h1 class="h6">
-                        <span class="num-2"></span>k
-                        <p>Unique Users</p>
+                        <span>{{ $totalCustomers }}</span>
+                        <p>Unique Customers</p>
                     </h1>
 
                     <div class="bg-indigo-200 text-indigo-700 border-indigo-300 border w-10 h-10 rounded-full flex justify-center items-center">
@@ -75,6 +75,9 @@
     </div>
     <!-- end charts -->
 
-
+    <script>
+        window.analyticsChartData = @json($orderChartData);
+        window.analyticsCustomerChartData = @json($customerChartData);
+    </script>
 </div>
 <!-- end Analytics -->

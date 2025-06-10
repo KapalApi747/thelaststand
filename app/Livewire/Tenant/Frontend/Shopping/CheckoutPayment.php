@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Tenant\Frontend\Shopping;
 
+use App\Services\CartService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -9,23 +10,55 @@ use Livewire\Component;
 class CheckoutPayment extends Component
 {
     public $customerInfo = [];
+    public $cartTotal = 0;
+    public $shippingCost = 0;
+    public $taxAmount = 0;
+    public $grandTotal = 0;
+
+    protected $listeners = ['shippingUpdated', 'notify-error' => 'handleError'];
 
     public function mount()
     {
-        // Load customer info from session (assuming your checkout form saves it here)
         $this->customerInfo = session('checkout_customer_info', []);
 
-        // You can also load logged-in customer data if needed, fallback to guest info
         if (auth('customer')->check()) {
             $this->customerInfo = array_merge($this->customerInfo, [
                 'name' => auth('customer')->user()->name,
                 'email' => auth('customer')->user()->email,
             ]);
         }
+
+        if (!session()->has('shipping_method')) {
+            return redirect()->route('shop.checkout-shipping');
+        }
+
+        $this->updateCartTotals();
+    }
+
+    public function shippingUpdated($shippingInfo)
+    {
+        session()->put('shipping_cost', $shippingInfo['cost'] ?? 0);
+        session()->put('shipping_method', $shippingInfo['method'] ?? null);
+        session()->put('shipping_carrier', $shippingInfo['carrier'] ?? null);
+
+        $this->updateCartTotals();
+    }
+
+    public function handleError($payload)
+    {
+        session()->flash('stockError', $payload['message']);
+    }
+
+    protected function updateCartTotals()
+    {
+        $this->cartTotal = CartService::cartTotal();
+        $this->shippingCost = CartService::shippingCost();
+        $this->grandTotal = CartService::grandTotal();
+        $this->taxAmount = CartService::taxAmount();
     }
 
     public function render()
     {
-        return view('livewire.tenant.frontend.shopping.checkout-payment')->layout('layouts.app');
+        return view('livewire.tenant.frontend.shopping.checkout-payment');
     }
 }

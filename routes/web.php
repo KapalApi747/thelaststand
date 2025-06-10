@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\StripeWebhookController;
 use App\Livewire\Admin\EditTenantProfile;
 use App\Livewire\Admin\TenantProfilePage;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
+
+
 foreach (config('tenancy.central_domains') as $domain) {
+
     Route::middleware('web')->domain($domain)->group(function () {
 
         Route::get('/', function () {

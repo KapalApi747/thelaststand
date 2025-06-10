@@ -10,17 +10,19 @@
                 <!-- top -->
                 <div class="flex flex-row justify-between items-center">
                     <div class="h6 text-indigo-700 fad fa-shopping-cart"></div>
-                    <span class="rounded-full text-white badge bg-teal-400 text-xs">
-                        12%
-                        <i class="fal fa-chevron-up ml-1"></i>
+                    <span class="rounded-full text-white badge {{ $itemsSoldChevron === 'up' ? 'bg-teal-400' : 'bg-red-400' }} text-xs">
+                        {{ abs($itemsSoldChange) }}%
+                        <i class="fal fa-chevron-{{ $itemsSoldChevron }} ml-1"></i>
                     </span>
                 </div>
                 <!-- end top -->
 
                 <!-- bottom -->
                 <div class="mt-8">
-                    <h1 class="h5 num-4"></h1>
-                    <p>items sales</p>
+                    <h1 class="h5">
+                        {{ $itemsSold }}
+                    </h1>
+                    <p>Total item sales this past month</p>
                 </div>
                 <!-- end bottom -->
 
@@ -30,7 +32,6 @@
     </div>
     <!-- end card -->
 
-
     <!-- card -->
     <div class="report-card">
         <div class="card">
@@ -39,17 +40,19 @@
                 <!-- top -->
                 <div class="flex flex-row justify-between items-center">
                     <div class="h6 text-red-700 fad fa-store"></div>
-                    <span class="rounded-full text-white badge bg-red-400 text-xs">
-                        6%
-                        <i class="fal fa-chevron-down ml-1"></i>
+                    <span class="rounded-full text-white badge {{ $newOrdersChevron === 'up' ? 'bg-teal-400' : 'bg-red-400' }} text-xs">
+                        {{ abs($newOrdersChange) }}%
+                        <i class="fal fa-chevron-{{ $newOrdersChevron }} ml-1"></i>
                     </span>
                 </div>
                 <!-- end top -->
 
                 <!-- bottom -->
                 <div class="mt-8">
-                    <h1 class="h5 num-4"></h1>
-                    <p>new orders</p>
+                    <h1 class="h5">
+                        {{ $newOrders }}
+                    </h1>
+                    <p>New orders this past month</p>
                 </div>
                 <!-- end bottom -->
 
@@ -68,17 +71,19 @@
                 <!-- top -->
                 <div class="flex flex-row justify-between items-center">
                     <div class="h6 text-yellow-600 fad fa-sitemap"></div>
-                    <span class="rounded-full text-white badge bg-teal-400 text-xs">
-                        72%
-                        <i class="fal fa-chevron-up ml-1"></i>
+                    <span class="rounded-full text-white badge {{ $totalProductsChevron === 'up' ? 'bg-teal-400' : 'bg-red-400' }} text-xs">
+                        {{ abs($totalProductsChange) }}%
+                        <i class="fal fa-chevron-{{ $totalProductsChevron }} ml-1"></i>
                     </span>
                 </div>
                 <!-- end top -->
 
                 <!-- bottom -->
                 <div class="mt-8">
-                    <h1 class="h5 num-4"></h1>
-                    <p>total Products</p>
+                    <h1 class="h5">
+                        {{ $totalProducts }}
+                    </h1>
+                    <p>Total products</p>
                 </div>
                 <!-- end bottom -->
 
@@ -97,17 +102,19 @@
                 <!-- top -->
                 <div class="flex flex-row justify-between items-center">
                     <div class="h6 text-green-700 fad fa-users"></div>
-                    <span class="rounded-full text-white badge bg-teal-400 text-xs">
-                        150%
-                        <i class="fal fa-chevron-up ml-1"></i>
+                    <span class="rounded-full text-white badge {{ $newCustomersChevron === 'up' ? 'bg-teal-400' : 'bg-red-400' }} text-xs">
+                        {{ abs($newCustomersChange) }}%
+                        <i class="fal fa-chevron-{{ $newCustomersChevron }} ml-1"></i>
                     </span>
                 </div>
                 <!-- end top -->
 
                 <!-- bottom -->
                 <div class="mt-8">
-                    <h1 class="h5 num-4"></h1>
-                    <p>new Visitor</p>
+                    <h1 class="h5">
+                        {{ $newCustomers }}
+                    </h1>
+                    <p>New customers this month</p>
                 </div>
                 <!-- end bottom -->
 

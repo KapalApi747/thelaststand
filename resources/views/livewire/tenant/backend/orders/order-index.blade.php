@@ -1,11 +1,5 @@
 <div class="p-6">
 
-    @if (session()->has('message'))
-        <div class="p-2 bg-green-200 text-green-800 rounded">
-            {{ session('message') }}
-        </div>
-    @endif
-
     <h2 class="text-2xl font-bold mb-4">All Orders</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -20,6 +14,14 @@
     </div>
 
     <div class="bg-white shadow rounded p-4">
+
+        <div class="mb-6">
+            @if (session()->has('message'))
+                <div class="p-2 bg-green-200 text-green-800 rounded">
+                    {{ session('message') }}
+                </div>
+            @endif
+        </div>
 
         <div class="flex flex-wrap gap-4 mb-6">
 
@@ -62,9 +64,55 @@
 
         </div>
 
+        @if (count($selectedOrders) > 0)
+            <div class="mb-4 p-2 bg-green-100 text-green-800 rounded">
+                {{ count($selectedOrders) }} order{{ count($selectedOrders) === 1 ? '' : 's' }} selected.
+            </div>
+        @endif
+
+        <div class="my-5 flex items-center">
+            <div>
+                <input type="checkbox" wire:model.live="selectAllOrders">
+                <label for="selectAll" class="ml-1">Select All Orders</label>
+            </div>
+            <div class="flex items-center gap-2 ml-3">
+                <select wire:model.live="bulkAction" class="form-select">
+                    <option value="">Bulk Actions</option>
+                    <option value="update_status">Update Status</option>
+                    <option value="export">Export Selected</option>
+                    <option value="print_invoices">Print Invoices</option>
+                </select>
+
+                @if ($bulkAction === 'update_status')
+                    <div class="flex items-center gap-2">
+                        <select wire:model.live="newStatus" class="form-select">
+                            <option value="">Choose new status</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                            <option value="refunded">Refunded</option>
+                            <option value="failed">Failed</option>
+                        </select>
+
+                        <button wire:click="updateBulkStatus" class="btn btn-success">
+                            Update
+                        </button>
+                    </div>
+                @endif
+
+
+                <button wire:click="applyBulkAction" class="btn btn-primary">Apply</button>
+            </div>
+
+        </div>
+
         <table class="min-w-full text-left">
             <thead class="bg-gray-200">
             <tr>
+                <th class="border p-2 text-center">Select</th>
                 <th class="border p-2">#</th>
                 <th class="border p-2">Customer</th>
                 <th class="border p-2">Amount</th>
@@ -76,21 +124,26 @@
             <tbody>
             @foreach ($orders as $order)
                 <tr>
+                    <td class="border p-2 text-center">
+                        <input type="checkbox" wire:model.live="selectedOrders" value="{{ $order->id }}">
+                    </td>
                     <td class="border p-2">{{ $order->order_number }}</td>
                     <td class="border p-2">{{ $order->customer->name ?? 'N/A' }}</td>
                     <td class="border p-2">€{{ number_format($order->total_amount, 2) }}</td>
                     <td class="border p-2">{{ $order->created_at->format('Y-m-d') }}</td>
 
                     <td class="border p-2 text-center">
-                        <span class="px-2 py-1 font-semibold rounded-full {{ $this->getStatus($order->status) }}">
+                        <span class="px-2 py-1 font-semibold rounded-full {{ $this->allStatuses($order->status) }}">
                             {{ ucfirst($order->status) }}
                         </span>
                     </td>
 
                     <td class="border p-2">
-                        <div class="flex justify-center items-center">
+                        <div class="flex justify-evenly items-center">
                             <a href="{{ route('tenant-dashboard.order-view', $order) }}"
                                class="text-blue-600"><i class="fa-solid fa-eye"></i></a>
+                            <a href="{{ route('tenant-dashboard.order-edit', $order) }}"
+                               class="text-orange-600"><i class="fa-solid fa-pencil"></i></a>
                         </div>
                     </td>
                 </tr>

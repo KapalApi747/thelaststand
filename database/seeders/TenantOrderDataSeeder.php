@@ -3,21 +3,20 @@
 namespace Database\Seeders;
 
 use App\Models\Customer;
+use App\Models\CustomerAddress;
+use App\Models\CustomerPaymentAccount;
 use App\Models\Order;
 use App\Models\OrderAddress;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\Shipment;
 use Illuminate\Database\Seeder;
 
 class TenantOrderDataSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        // Fetch all products once to assign to order items
         $products = Product::all();
 
         if ($products->isEmpty()) {
@@ -25,49 +24,67 @@ class TenantOrderDataSeeder extends Seeder
             return;
         }
 
-        // Create 20 customers, each with 1-3 orders
-        Customer::factory(20)->create()->each(function ($customer) use ($products) {
-            $ordersCount = rand(1, 3);
+        // Create 100 customers over the past 6 months
+        Customer::factory(100)->create()->each(function ($customer) use ($products) {
+            // Biased signup dates (recent-heavy)
+            $signupDate = now()->subDays(
+                fake()->biasedNumberBetween(0, 180, fn($x) => (1 - $x) ** 1.5)
+            );
+            $customer->update(['created_at' => $signupDate]);
+
+            CustomerAddress::factory(rand(1, 2))->create(['customer_id' => $customer->id]);
+
+            if (rand(0, 1)) {
+                CustomerPaymentAccount::factory()->create(['customer_id' => $customer->id]);
+            }
+
+            $ordersCount = rand(1, 5);
             for ($i = 0; $i < $ordersCount; $i++) {
+                // Ensure order is after signup but before now
+                $orderCreatedAt = fake()->dateTimeBetween($signupDate, now());
+
                 $order = Order::factory()->create([
                     'customer_id' => $customer->id,
+                    'created_at' => $orderCreatedAt,
                 ]);
 
-                // Create 1-5 order items per order
-                $orderItemsCount = rand(1, 5);
-                for ($j = 0; $j < $orderItemsCount; $j++) {
-                    // Pick a random product
-                    $product = $products->random();
-
-                    OrderItem::factory()->create([
-                        'order_id' => $order->id,
-                        'product_id' => $product->id,
-                        'product_name' => $product->name,
-                        'price' => $product->price,
-                        'quantity' => rand(1, 3),
-                    ]);
-                }
-
-                // Create 1-2 payments per order
-                $paymentsCount = rand(1, 2);
-                for ($k = 0; $k < $paymentsCount; $k++) {
-                    Payment::factory()->create([
-                        'order_id' => $order->id,
-                        'amount' => $order->total_amount / $paymentsCount, // split amount evenly
-                    ]);
-                }
-
-                // Create billing and shipping addresses
-                OrderAddress::factory()->create([
-                    'order_id' => $order->id,
-                    'type' => 'billing',
-                ]);
-
-                OrderAddress::factory()->create([
-                    'order_id' => $order->id,
-                    'type' => 'shipping',
-                ]);
+                $this->createOrderDetails($order, $products);
             }
         });
+    }
+
+    /**
+     * Helper method to create order details (items, payments, addresses, shipment).
+     */
+    protected function createOrderDetails($order, $products)
+    {
+        $orderItemsCount = rand(1, 5);
+        for ($j = 0; $j < $orderItemsCount; $j++) {
+            $product = $products->random();
+
+            OrderItem::factory()->create([
+                'order_id' => $order->id,
+                'product_id' => $product->id,
+                'product_name' => $product->name,
+                'price' => $product->price,
+                'quantity' => rand(1, 3),
+            ]);
+        }
+
+        $paymentsCount = rand(1, 2);
+        for ($k = 0; $k < $paymentsCount; $k++) {
+            Payment::factory()->create([
+                'order_id' => $order->id,
+                'customer_id' => $order->customer_id,
+                'amount' => $order->total_amount / $paymentsCount,
+            ]);
+        }
+
+        OrderAddress::factory()->create(['order_id' => $order->id, 'type' => 'billing']);
+        OrderAddress::factory()->create(['order_id' => $order->id, 'type' => 'shipping']);
+
+        if (rand(0, 1)) {
+            Shipment::factory()->create(['order_id' => $order->id]);
+        }
     }
 }
