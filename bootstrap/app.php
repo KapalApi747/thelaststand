@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AuthenticateCustomer;
 use App\Http\Middleware\AuthenticateTenant;
 use App\Http\Middleware\OnlyTenancyOnTenantDomain;
 use App\Http\Middleware\SetLivewireUpdateRoute;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(SetLivewireUpdateRoute::class);
         $middleware->alias([
             'tenant.auth' => AuthenticateTenant::class,
+            'customer.auth' => AuthenticateCustomer::class,
             'tenant.onlytenancyontenant' => OnlyTenancyOnTenantDomain::class,
         ]);
         $middleware->group('universal', []);

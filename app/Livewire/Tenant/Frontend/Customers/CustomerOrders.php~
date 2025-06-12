@@ -8,26 +8,26 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('t-shop-layout')]
-class CustomerOrderView extends Component
+class CustomerOrders extends Component
 {
     public $order;
+    public $orders;
 
     public function mount(Order $order)
     {
-        $customerId = auth('customer')->id();
-
-        if ($order->customer_id !== $customerId) {
-            abort(403, 'Unauthorized access to this order.');
-        }
-        
         $this->order = $order;
+
+        $this->orders = Order::with(['items', 'shipments', 'payments'])
+            ->where('customer_id', auth('customer')->user()->id)
+            ->latest()
+            ->get();
     }
 
-    public function exportPDF()
+    public function exportPDF($orderId)
     {
         $order = Order::with(['items', 'addresses', 'payments', 'shipments'])
             ->where('customer_id', auth('customer')->id())
-            ->findOrFail($this->order->id);
+            ->findOrFail($orderId);
 
         $pdf = Pdf::loadView('orders.order-invoice', compact('order'));
 
@@ -38,6 +38,6 @@ class CustomerOrderView extends Component
 
     public function render()
     {
-        return view('livewire.tenant.frontend.customers.customer-order-view');
+        return view('livewire.tenant.frontend.customers.customer-orders');
     }
 }

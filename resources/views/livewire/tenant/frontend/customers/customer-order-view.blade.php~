@@ -1,8 +1,22 @@
-<div class="bg-black text-white rounded-lg p-12 space-y-8">
+<div class="bg-black text-white p-12 space-y-8">
 
     {{-- Order Summary --}}
     <div>
-        <h2 class="text-2xl font-bold mb-4">Order Summary</h2>
+        <div class="flex justify-between mb-6">
+            <a
+                class="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700"
+                href=" {{ route('shop.customer-orders') }}">
+                Back
+            </a>
+            <button wire:click="exportPDF"
+                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+                Download PDF
+            </button>
+        </div>
+
+        <h2 class="text-2xl font-bold mb-6">Order Summary</h2>
+
         <table class="w-full table-auto text-left border-collapse">
             <tbody>
             <tr><th class="py-2 w-1/4">Order Number:</th><td>{{ $order->order_number }}</td></tr>
@@ -84,20 +98,47 @@
     </div>
 
     {{-- Shipment Info --}}
-    @if ($order->shipment)
+    @if ($order->shipments->count())
         <div>
-            <h2 class="text-xl font-semibold mb-4">Shipment</h2>
-            <table class="w-full table-auto text-left border-collapse">
-                <tbody>
-                <tr><th class="py-2 w-1/4">Tracking Number:</th><td>{{ $order->shipment->tracking_number ?? 'N/A' }}</td></tr>
-                <tr><th class="py-2">Carrier:</th><td>{{ $order->shipment->carrier ?? 'N/A' }}</td></tr>
-                <tr><th class="py-2">Status:</th><td>{{ ucfirst($order->shipment->status) ?? 'Pending' }}</td></tr>
-                <tr><th class="py-2">Shipping Method:</th><td class="uppercase">{{ $order->shipment->shipping_method }}</td></tr>
-                <tr><th class="py-2">Shipping Cost:</th><td>€{{ number_format($order->shipment->shipping_cost, 2) }}</td></tr>
-                <tr><th class="py-2">Shipped At:</th><td>{{ optional($order->shipment->shipped_at)->format('Y-m-d H:i') ?? 'Not yet shipped' }}</td></tr>
-                <tr><th class="py-2">Delivered At:</th><td>{{ optional($order->shipment->delivered_at)->format('Y-m-d H:i') ?? 'Not yet delivered' }}</td></tr>
-                </tbody>
-            </table>
+            <h2 class="text-xl font-semibold mb-4">Shipments ({{ $order->shipments->count() }})</h2>
+
+            @foreach ($order->shipments as $index => $shipment)
+                <div class="mb-6 border border-gray-600 rounded p-4 bg-gray-900">
+                    <h3 class="font-bold text-lg mb-2">Shipment #{{ $index + 1 }}</h3>
+                    <table class="w-full table-auto text-left border-collapse">
+                        <tbody>
+                        <tr>
+                            <th class="py-2 w-1/4">Tracking Number:</th>
+                            <td>{{ $shipment->tracking_number ?? 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <th class="py-2">Carrier:</th>
+                            <td>{{ $shipment->carrier ?? 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <th class="py-2">Status:</th>
+                            <td>{{ ucfirst($shipment->status) ?? 'Pending' }}</td>
+                        </tr>
+                        <tr>
+                            <th class="py-2">Shipping Method:</th>
+                            <td class="uppercase">{{ $shipment->shipping_method ?? 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <th class="py-2">Shipping Cost:</th>
+                            <td>€{{ number_format($shipment->shipping_cost, 2) }}</td>
+                        </tr>
+                        <tr>
+                            <th class="py-2">Shipped At:</th>
+                            <td>{{ optional($shipment->shipped_at)->format('Y-m-d H:i') ?? 'Not yet shipped' }}</td>
+                        </tr>
+                        <tr>
+                            <th class="py-2">Delivered At:</th>
+                            <td>{{ optional($shipment->delivered_at)->format('Y-m-d H:i') ?? 'Not yet delivered' }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            @endforeach
         </div>
     @endif
 

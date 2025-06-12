@@ -3,6 +3,7 @@
 namespace App\Livewire\Tenant\Frontend\Customers;
 
 use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -13,7 +14,26 @@ class CustomerOrderView extends Component
 
     public function mount(Order $order)
     {
+        $customerId = auth('customer')->id();
+
+        if ($order->customer_id !== $customerId) {
+            abort(403, 'Unauthorized access to this order.');
+        }
+
         $this->order = $order;
+    }
+
+    public function exportPDF()
+    {
+        $order = Order::with(['items', 'addresses', 'payments', 'shipments'])
+            ->where('customer_id', auth('customer')->id())
+            ->findOrFail($this->order->id);
+
+        $pdf = Pdf::loadView('orders.order-invoice', compact('order'));
+
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, 'invoice-' . $order->order_number . '.pdf');
     }
 
     public function render()
