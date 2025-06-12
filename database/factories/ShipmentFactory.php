@@ -26,7 +26,7 @@ class ShipmentFactory extends Factory
             'tracking_number' => strtoupper($this->faker->bothify('TRK########')),
             'carrier' => $this->faker->randomElement(['UPS', 'FedEx', 'DHL', 'USPS', 'GLS']),
             'status' => $deliveredAt ? 'delivered' : 'shipped',
-            'shipping_cost' => $this->faker->randomFloat(2, 5, 25),
+            'shipping_cost' => null,
             'shipping_method' => $this->faker->randomElement(['parcel', 'mail', 'pickup', 'express', 'courier']),
             'shipped_at' => $shippedAt,
             'delivered_at' => $deliveredAt,

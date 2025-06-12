@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Livewire\Tenant\Frontend\Customers;
+
+use Livewire\Component;
+
+class CustomerOrderView extends Component
+{
+    public function render()
+    {
+        return view('livewire.tenant.frontend.customers.customer-order-view');
+    }
+}

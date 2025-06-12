@@ -84,17 +84,15 @@ class TenantOrderDataSeeder extends Seeder
             ]);
         }
 
-        $itemTotal = OrderItem::where('order_id', $order->id)
-            ->sum(DB::raw('price * quantity'));
-
-        $totalAmount = $itemTotal + $order->shipping_cost;
+        $totalAmount = OrderItem::where('order_id', $order->id)
+            ->sum(DB::raw('price * quantity + shipping_cost'));
 
         $taxRate = 0.21;
         $taxAmount = round($totalAmount * $taxRate, 2);
 
         $order->update([
             'total_amount' => $totalAmount,
-            'tax_amount' => $taxAmount,
+            'tax_amount' => $taxAmount
         ]);
 
         $paymentStatus = in_array($order->status, ['refunded', 'failed', 'cancelled'])

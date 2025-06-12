@@ -19,8 +19,8 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
-        $subtotal = $this->faker->randomFloat(2, 10, 500); // subtotal before tax & shipping
-        $tax = $subtotal * 0.1;  // 10% tax
+        $subtotal = $this->faker->randomFloat(2, 10, 500);
+        $tax = $subtotal * 0.21;
         $shipping = $this->faker->randomFloat(2, 5, 20);
         $status = $this->faker->randomFloat(2, 0, 1) < 0.9
             ? 'completed'

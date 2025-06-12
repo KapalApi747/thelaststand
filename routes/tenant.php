@@ -18,6 +18,8 @@ use App\Livewire\Tenant\Backend\Users\UserIndex;
 use App\Livewire\Tenant\Backend\Users\UserRegistration;
 use App\Livewire\Tenant\Backend\Users\UserView;
 use App\Livewire\CustomerLogin;
+use App\Livewire\Tenant\Frontend\Customers\CustomerOrders;
+use App\Livewire\Tenant\Frontend\Customers\CustomerOrderView;
 use App\Livewire\Tenant\Frontend\Main\Cart;
 use App\Livewire\Tenant\Frontend\Main\ShopProducts;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutCancel;
@@ -71,6 +73,8 @@ Route::middleware([
                 request()->session()->regenerateToken();
                 return redirect()->route('shop.shop-products');
             })->name('customer-logout');
+            Route::get('my-orders', CustomerOrders::class)->name('customer-orders');
+            Route::get('my-orders/{order:order_number}', CustomerOrderView::class)->name('customer-order-view');
 
             Route::get('products', ShopProducts::class)->name('shop-products');
             Route::get('cart', Cart::class)->name('shop-cart');

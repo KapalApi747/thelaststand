@@ -18,9 +18,7 @@ class ShopProducts extends Component
             'images',
             'categories',
             'variants.images',
-            'reviews' => function ($query) {
-                $query->where('is_approved', true);
-            }
+            'approvedReviews'
         ])
             ->withCount([
                 'reviews as approved_reviews_count' => fn ($query) => $query->where('is_approved', true)

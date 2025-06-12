@@ -1,4 +1,4 @@
-<div class="space-y-4 bg-black p-10">
+<div class="space-y-4 bg-black p-12">
     <div class="my-6">
         <a
             class="bg-red-700 text-white py-2 px-4 rounded hover:bg-red-400 transition"

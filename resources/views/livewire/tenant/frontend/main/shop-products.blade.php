@@ -1,47 +1,7 @@
-<div class="bg-black p-12">
+<div class="bg-black px-12">
+
     <div class="text-center">
         <h1 class="text-2xl font-bold mb-6">Available Products</h1>
-    </div>
-    <div class="flex justify-between items-center">
-        <div>
-            @auth('customer')
-                <p class="text-green-300 font-medium">
-                    Hello, {{ auth('customer')->user()->name }}!
-                </p>
-            @endauth
-        </div>
-        <div class="flex items-center">
-            <div class="me-6">
-                <a
-                    class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
-                    href="{{ route('shop.shop-cart') }}"
-                >
-                    Shopping Cart
-                </a>
-            </div>
-            @auth('customer')
-                <div>
-                    <form method="POST" action="{{ route('shop.customer-logout') }}">
-                        @csrf
-                        <button
-                            type="submit"
-                            class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition"
-                        >
-                            Logout
-                        </button>
-                    </form>
-                </div>
-            @else
-                <div>
-                    <a
-                        class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
-                        href="{{ route('shop.customer-login') }}"
-                    >
-                        Login
-                    </a>
-                </div>
-            @endauth
-        </div>
     </div>
 
     <div
@@ -88,12 +48,12 @@
                 @if ($product->average_rating > 0)
                     <div class="flex items-center text-yellow-400 text-sm mt-1">
                         ★ {{ number_format($product->average_rating, 1) }}
-                        <span class="text-gray-400 text-xs ms-2">({{ $product->rating_count }} reviews)</span>
+                        <span class="text-gray-400 text-xs ms-2">({{ $product->approved_reviews_count }} reviews)</span>
                     </div>
                 @else
                     <div class="flex items-center text-yellow-400 text-sm mt-1">
                         ☆ 0
-                        <span class="text-gray-400 text-xs ms-2">({{ $product->rating_count }} reviews)</span>
+                        <span class="text-gray-400 text-xs ms-2">({{ $product->approved_reviews_count }} reviews)</span>
                     </div>
                 @endif
 
@@ -131,12 +91,12 @@
                                     @if ($product->average_rating > 0)
                                         <div class="flex items-center text-yellow-400 text-sm mt-1">
                                             ★ {{ number_format($product->average_rating, 1) . ' ' . '/' . ' ' . '5' }}
-                                            <span class="text-gray-400 text-xs ms-2">({{ $product->rating_count }} reviews)</span>
+                                            <span class="text-gray-400 text-xs ms-2">({{ $product->approved_reviews_count }} reviews)</span>
                                         </div>
                                     @else
                                         <div class="flex items-center text-yellow-400 text-sm mt-1">
                                             ☆ 0
-                                            <span class="text-gray-400 text-xs ms-2">({{ $product->rating_count }} reviews)</span>
+                                            <span class="text-gray-400 text-xs ms-2">({{ $product->approved_reviews_count }} reviews)</span>
                                         </div>
                                     @endif
                                 </div>
