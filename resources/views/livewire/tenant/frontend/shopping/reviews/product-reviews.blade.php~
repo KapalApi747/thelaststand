@@ -1,8 +1,8 @@
 <div class="space-y-6">
     @auth('customer')
-        @php
+        {{--@php
             $hasReviewed = $product->reviews->where('customer_id', auth('customer')->id())->isNotEmpty();
-        @endphp
+        @endphp--}}
 
         @if ($hasReviewed)
             <p class="text-sm text-yellow-400">You have already reviewed this product.</p>
@@ -95,10 +95,10 @@
 
                 {{-- Conditionally show replies --}}
                 @if(in_array($review->id, $showReplies))
-                    <livewire:tenant.frontend.shopping.reviews.review-replies :review="$review" :key="'review-'.$review->id"/>
+                    <livewire:tenant.frontend.shopping.reviews.review-replies :review="$review"
+                                                                              :key="'review-'.$review->id"/>
                 @endif
             </div>
-            {{--<livewire:tenant.frontend.shopping.reviews.review-replies :review="$review" :key="'review-'.$review->id"/>--}}
         @empty
             <p class="text-gray-500">No reviews yet.</p>
         @endforelse

@@ -3,6 +3,7 @@
 namespace App\Livewire\Tenant\Frontend\Main;
 
 use App\Models\Product;
+use App\Models\ProductReview;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -11,8 +12,15 @@ class ShopProducts extends Component
 {
     public $products;
     public $selectedProduct;
+    public $customerReviewedProductIds = [];
 
     public function mount()
+    {
+        $this->loadProducts();
+        $this->loadCustomerReviews();
+    }
+
+    protected function loadProducts()
     {
         $this->products = Product::with([
             'images',
@@ -32,19 +40,20 @@ class ShopProducts extends Component
             ->get();
     }
 
-    public function showProductModal($productId)
+    protected function loadCustomerReviews()
     {
-        $this->selectedProduct = Product::with(['images', 'categories', 'variants'])->findOrFail($productId);
-        $this->modal('product-details')->show();
-    }
-
-    public function closeModal()
-    {
-        $this->modal('product-details')->close();
+        if ($customerId = auth('customer')->id()) {
+            $this->customerReviewedProductIds = ProductReview::where('customer_id', $customerId)
+                ->pluck('product_id')
+                ->toArray();
+        }
     }
 
     public function render()
     {
-        return view('livewire.tenant.frontend.main.shop-products');
+        return view('livewire.tenant.frontend.main.shop-products', [
+            'products' => $this->products,
+            'customerReviewedProductIds' => $this->customerReviewedProductIds,
+        ]);
     }
 }

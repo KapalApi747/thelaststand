@@ -17,6 +17,8 @@ class ProductReviews extends Component
     public $rating;
     public $comment;
 
+    public bool $hasReviewed = false;
+
     public $showReplies = [];
 
     public function mount(Product $product)

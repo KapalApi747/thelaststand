@@ -1,8 +1,5 @@
 <div class="space-y-6">
     @auth('customer')
-        @php
-            $hasReviewed = $product->reviews->where('customer_id', auth('customer')->id())->isNotEmpty();
-        @endphp
 
         @if ($hasReviewed)
             <p class="text-sm text-yellow-400">You have already reviewed this product.</p>

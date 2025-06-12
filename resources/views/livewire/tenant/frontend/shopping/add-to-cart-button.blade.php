@@ -1,3 +1,3 @@
-<button wire:click="addToCart" class="bg-teal-600 text-white py-1 px-3 rounded hover:bg-teal-700 transition">
+<button wire:click="addToCart" class="bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-400 transition cursor-pointer">
     Add to Cart
 </button>
