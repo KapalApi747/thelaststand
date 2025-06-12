@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\StripeWebhookController;
-use App\Livewire\Tenant\Frontend\Customers\CustomerSettings;
 use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
 use App\Livewire\Tenant\Backend\Orders\OrderEdit;
 use App\Livewire\Tenant\Backend\Orders\OrderIndex;
@@ -18,10 +17,13 @@ use App\Livewire\Tenant\Backend\Users\UserEdit;
 use App\Livewire\Tenant\Backend\Users\UserIndex;
 use App\Livewire\Tenant\Backend\Users\UserRegistration;
 use App\Livewire\Tenant\Backend\Users\UserView;
-use App\Livewire\CustomerLogin;
+use App\Livewire\Tenant\Frontend\Customers\CustomerAddresses;
+use App\Livewire\Tenant\Frontend\Customers\CustomerLogin;
 use App\Livewire\Tenant\Frontend\Customers\CustomerOrders;
 use App\Livewire\Tenant\Frontend\Customers\CustomerOrderView;
 use App\Livewire\Tenant\Frontend\Customers\CustomerProfile;
+use App\Livewire\Tenant\Frontend\Customers\CustomerRegistration;
+use App\Livewire\Tenant\Frontend\Customers\CustomerSettings;
 use App\Livewire\Tenant\Frontend\Main\Cart;
 use App\Livewire\Tenant\Frontend\Main\ShopProducts;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutCancel;
@@ -69,6 +71,7 @@ Route::middleware([
         ->group(function () {
 
             Route::get('login', CustomerLogin::class)->name('customer-login');
+            Route::get('register', CustomerRegistration::class)->name('customer-register');
 
             Route::middleware(['customer.auth'])->group(function () {
                 Route::post('/logout', function () {
@@ -80,6 +83,7 @@ Route::middleware([
 
                 Route::get('my-orders', CustomerOrders::class)->name('customer-orders');
                 Route::get('my-orders/{order:order_number}', CustomerOrderView::class)->name('customer-order-view');
+                Route::get('my-addresses', CustomerAddresses::class)->name('customer-addresses');
                 Route::get('my-profile', CustomerProfile::class)->name('customer-profile');
                 Route::get('my-settings', CustomerSettings::class)->name('customer-settings');
             });

@@ -37,21 +37,6 @@
 
         <hr class="my-12" />
 
-        <h3 class="text-lg font-semibold mb-3">Change Password (Leave blank to keep the same password)</h3>
-
-        <div>
-            <label class="block font-semibold mb-1">New Password</label>
-            <input type="password" wire:model.defer="password" class="w-full border px-3 py-2 rounded" autocomplete="new-password" />
-            @error('password') <span class="text-red-600">{{ $message }}</span> @enderror
-        </div>
-
-        <div>
-            <label class="block font-semibold mb-1">Confirm New Password</label>
-            <input type="password" wire:model.defer="password_confirmation" class="w-full border px-3 py-2 rounded" autocomplete="new-password" />
-        </div>
-
-        <hr class="my-12" />
-
         <h3 class="text-lg font-semibold mb-3">Billing Address</h3>
 
         <div>

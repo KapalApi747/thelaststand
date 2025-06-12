@@ -37,83 +37,12 @@
 
         <hr class="my-12" />
 
-        <h3 class="text-lg font-semibold mb-3">Billing Address</h3>
+        <h3 class="text-lg font-semibold mb-3">Addresses</h3>
 
-        <div>
-            <label class="block mb-1">Address Line 1</label>
-            <input type="text" wire:model.defer="billingAddress.address_line1" class="w-full border px-3 py-2 rounded" />
-            @error('billingAddress.address_line1') <span class="text-red-600">{{ $message }}</span> @enderror
-        </div>
+        <a href="{{ route('shop.customer-addresses') }}" class="text-blue-500 hover:underline">
+            Manage your addresses
+        </a>
 
-        <div>
-            <label class="block mb-1">Address Line 2</label>
-            <input type="text" wire:model.defer="billingAddress.address_line2" class="w-full border px-3 py-2 rounded" />
-            @error('billingAddress.address_line2') <span class="text-red-600">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="grid grid-cols-3 gap-4">
-            <div>
-                <label class="block mb-1">City</label>
-                <input type="text" wire:model.defer="billingAddress.city" class="w-full border px-3 py-2 rounded" />
-                @error('billingAddress.city') <span class="text-red-600">{{ $message }}</span> @enderror
-            </div>
-            <div>
-                <label class="block mb-1">State</label>
-                <input type="text" wire:model.defer="billingAddress.state" class="w-full border px-3 py-2 rounded" />
-                @error('billingAddress.state') <span class="text-red-600">{{ $message }}</span> @enderror
-            </div>
-            <div>
-                <label class="block mb-1">ZIP</label>
-                <input type="text" wire:model.defer="billingAddress.zip" class="w-full border px-3 py-2 rounded" />
-                @error('billingAddress.zip') <span class="text-red-600">{{ $message }}</span> @enderror
-            </div>
-        </div>
-
-        <div>
-            <label class="block mb-1">Country</label>
-            <input type="text" wire:model.defer="billingAddress.country" class="w-full border px-3 py-2 rounded" />
-            @error('billingAddress.country') <span class="text-red-600">{{ $message }}</span> @enderror
-        </div>
-
-        <hr class="my-12" />
-
-        <h3 class="text-lg font-semibold mb-3">Shipping Address</h3>
-
-        <div>
-            <label class="block mb-1">Address Line 1</label>
-            <input type="text" wire:model.defer="shippingAddress.address_line1" class="w-full border px-3 py-2 rounded" />
-            @error('shippingAddress.address_line1') <span class="text-red-600">{{ $message }}</span> @enderror
-        </div>
-
-        <div>
-            <label class="block mb-1">Address Line 2</label>
-            <input type="text" wire:model.defer="shippingAddress.address_line2" class="w-full border px-3 py-2 rounded" />
-            @error('shippingAddress.address_line2') <span class="text-red-600">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="grid grid-cols-3 gap-4">
-            <div>
-                <label class="block mb-1">City</label>
-                <input type="text" wire:model.defer="shippingAddress.city" class="w-full border px-3 py-2 rounded" />
-                @error('shippingAddress.city') <span class="text-red-600">{{ $message }}</span> @enderror
-            </div>
-            <div>
-                <label class="block mb-1">State</label>
-                <input type="text" wire:model.defer="shippingAddress.state" class="w-full border px-3 py-2 rounded" />
-                @error('shippingAddress.state') <span class="text-red-600">{{ $message }}</span> @enderror
-            </div>
-            <div>
-                <label class="block mb-1">ZIP</label>
-                <input type="text" wire:model.defer="shippingAddress.zip" class="w-full border px-3 py-2 rounded" />
-                @error('shippingAddress.zip') <span class="text-red-600">{{ $message }}</span> @enderror
-            </div>
-        </div>
-
-        <div>
-            <label class="block mb-1">Country</label>
-            <input type="text" wire:model.defer="shippingAddress.country" class="w-full border px-3 py-2 rounded" />
-            @error('shippingAddress.country') <span class="text-red-600">{{ $message }}</span> @enderror
-        </div>
 
         <hr class="my-12" />
 

@@ -18,7 +18,7 @@
                     @keydown.escape.window="open = false"
                     @click.outside="open = false"
                     type="button"
-                    class="flex items-center py-2 px-4 text-green-300 font-medium focus:outline-none"
+                    class="flex items-center py-2 px-4 text-green-300 font-medium focus:outline-none cursor-pointer"
                     aria-haspopup="true"
                     :aria-expanded="open"
                 >
@@ -35,6 +35,7 @@
                     @click.outside="open = false"
                 >
                     <a href="{{ route('shop.customer-orders') }}" class="block px-4 py-2 hover:bg-gray-100">My Orders</a>
+                    <a href="{{ route('shop.customer-addresses') }}" class="block px-4 py-2 hover:bg-gray-100">My Addresses</a>
                     <a href="{{ route('shop.customer-profile') }}" class="block px-4 py-2 hover:bg-gray-100">My Profile</a>
                     <a href="{{ route('shop.customer-settings') }}" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
                     <form method="POST" action="{{ route('shop.customer-logout') }}">

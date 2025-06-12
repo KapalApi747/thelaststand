@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Tenant\Frontend\Customers;
 
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +39,6 @@ class CustomerLogin extends Component
 
     public function render()
     {
-        return view('livewire.customer-login');
+        return view('livewire.tenant.frontend.customers.customer-login');
     }
 }

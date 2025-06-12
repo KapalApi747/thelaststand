@@ -24,10 +24,13 @@
 
 <table>
     <tr>
+        @if($billing)
         <th>Billing Address</th>
+        @endif
         <th>Shipping Address</th>
     </tr>
     <tr>
+        @if($billing)
         <td>
             {{ $billing->full_name }}<br>
             {{ $billing->address_line1 }} {{ $billing->address_line2 }}<br>
@@ -35,6 +38,7 @@
             {{ $billing->country }}<br>
             Phone: {{ $billing->phone }}
         </td>
+        @endif
         <td>
             {{ $shipping->full_name }}<br>
             {{ $shipping->address_line1 }} {{ $shipping->address_line2 }}<br>
