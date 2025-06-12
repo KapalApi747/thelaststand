@@ -14,7 +14,22 @@ class ShopProducts extends Component
 
     public function mount()
     {
-        $this->products = Product::with(['images', 'categories', 'variants'])->where('is_active', 1)->get();
+        $this->products = Product::with([
+            'images',
+            'categories',
+            'variants.images',
+            'reviews' => function ($query) {
+                $query->where('is_approved', true);
+            }
+        ])
+            ->withCount([
+                'reviews as approved_reviews_count' => fn ($query) => $query->where('is_approved', true)
+            ])
+            ->withAvg([
+                'reviews as average_rating' => fn ($query) => $query->where('is_approved', true)
+            ], 'rating')
+            ->where('is_active', 1)
+            ->get();
     }
 
     public function showProductModal($productId)

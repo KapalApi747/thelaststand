@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Livewire\Tenant\Frontend\Customers;
+
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+
+#[Layout('t-shop-layout')]
+class CustomerSettings extends Component
+{
+    public $current_password;
+    public $new_password;
+    public $new_password_confirmation;
+
+    public function updatePassword()
+    {
+        $this->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $customer = auth('customer')->user();
+
+        if (!Hash::check($this->current_password, $customer->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => 'The existing password is incorrect.',
+            ]);
+        }
+
+        $customer->password = Hash::make($this->new_password);
+        $customer->save();
+
+        // Clear form fields after successful update
+        $this->reset(['current_password', 'new_password', 'new_password_confirmation']);
+
+        session()->flash('message', 'Password updated successfully.');
+    }
+
+    public function render()
+    {
+        return view('livewire.tenant.frontend.customers.customer-settings');
+    }
+}

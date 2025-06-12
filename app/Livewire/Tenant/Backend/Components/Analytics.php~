@@ -51,10 +51,9 @@ class Analytics extends Component
 
     public function newCustomerMonthlyChartData()
     {
-        $startDate = now()->subMonths(5)->startOfMonth(); // start of month 5 months ago
-        $endDate = now()->endOfMonth();
+        $startDate = now()->startOfMonth()->subMonths(6);
+        $endDate = now()->startOfMonth()->subDay();
 
-        // Fetch counts grouped by month (YYYY-MM)
         $customersByMonth = Customer::whereBetween('created_at', [$startDate, $endDate])
             ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count")
             ->groupBy('month')
@@ -64,10 +63,9 @@ class Analytics extends Component
         $months = collect();
         $values = collect();
 
-        // Fill last 6 months with data, 0 if no customers in month
-        for ($i = 5; $i >= 0; $i--) {
-            $month = now()->subMonths($i)->format('Y-m');
-            $months->push(now()->subMonths($i)->format('M Y')); // e.g. "Apr 2025"
+        for ($i = 6; $i > 0; $i--) {
+            $month = now()->startOfMonth()->subMonths($i)->format('Y-m');
+            $months->push($month);
             $values->push($customersByMonth->get($month, 0));
         }
 

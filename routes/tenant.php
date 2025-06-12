@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\StripeWebhookController;
+use App\Livewire\Tenant\Frontend\Customers\CustomerSettings;
 use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
 use App\Livewire\Tenant\Backend\Orders\OrderEdit;
 use App\Livewire\Tenant\Backend\Orders\OrderIndex;
@@ -11,12 +12,16 @@ use App\Livewire\Tenant\Backend\Products\ProductEdit;
 use App\Livewire\Tenant\Backend\Products\ProductManagement;
 use App\Livewire\Tenant\Backend\Products\ProductView;
 use App\Livewire\Tenant\Backend\Profile\StoreSettings;
+use App\Livewire\Tenant\Backend\Statistics\ShopStatistics;
 use App\Livewire\Tenant\Backend\TenantDashboard;
 use App\Livewire\Tenant\Backend\Users\UserEdit;
 use App\Livewire\Tenant\Backend\Users\UserIndex;
 use App\Livewire\Tenant\Backend\Users\UserRegistration;
 use App\Livewire\Tenant\Backend\Users\UserView;
 use App\Livewire\CustomerLogin;
+use App\Livewire\Tenant\Frontend\Customers\CustomerOrders;
+use App\Livewire\Tenant\Frontend\Customers\CustomerOrderView;
+use App\Livewire\Tenant\Frontend\Customers\CustomerProfile;
 use App\Livewire\Tenant\Frontend\Main\Cart;
 use App\Livewire\Tenant\Frontend\Main\ShopProducts;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutCancel;
@@ -64,12 +69,20 @@ Route::middleware([
         ->group(function () {
 
             Route::get('login', CustomerLogin::class)->name('customer-login');
-            Route::post('/logout', function () {
-                Auth::guard('customer')->logout();
-                request()->session()->invalidate();
-                request()->session()->regenerateToken();
-                return redirect()->route('shop.shop-products');
-            })->name('customer-logout');
+
+            Route::middleware(['customer.auth'])->group(function () {
+                Route::post('/logout', function () {
+                    Auth::guard('customer')->logout();
+                    request()->session()->invalidate();
+                    request()->session()->regenerateToken();
+                    return redirect()->route('shop.shop-products');
+                })->name('customer-logout');
+
+                Route::get('my-orders', CustomerOrders::class)->name('customer-orders');
+                Route::get('my-orders/{order:order_number}', CustomerOrderView::class)->name('customer-order-view');
+                Route::get('my-profile', CustomerProfile::class)->name('customer-profile');
+                Route::get('my-settings', CustomerSettings::class)->name('customer-settings');
+            });
 
             Route::get('products', ShopProducts::class)->name('shop-products');
             Route::get('cart', Cart::class)->name('shop-cart');
@@ -102,6 +115,8 @@ Route::middleware([
             Route::get('/orders', OrderIndex::class)->name('order-index');
             Route::get('/orders/{order}', OrderView::class)->name('order-view');
             Route::get('orders/{order}/edit', OrderEdit::class)->name('order-edit');
+
+            Route::get('/statistics', ShopStatistics::class)->name('shop-statistics');
         });
 });
 

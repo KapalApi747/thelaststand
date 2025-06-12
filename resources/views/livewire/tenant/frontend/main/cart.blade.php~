@@ -31,13 +31,15 @@
                     type="number"
                     min="1"
                     max="{{ $stock }}"
+                    inputmode="numeric"
                     pattern="\d+"
                     @disabled($stock === 0)
                     wire:change="updateProductQuantity('{{ $itemKey }}', $event.target.value)"
                     value="{{ $item['quantity'] }}"
-                    oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^0+/, '1')"
+                    oninput="if (this.value === '' || this.value === '0') this.value = 1; this.value = this.value.replace(/[^0-9]/g, '')"
                     class="w-12 border rounded text-center"
                 >
+
                 <button wire:click="removeFromCart('{{ $itemKey }}')" class="text-red-500 hover:underline">Remove</button>
             </div>
         </div>

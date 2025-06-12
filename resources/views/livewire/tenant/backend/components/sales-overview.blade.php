@@ -24,26 +24,91 @@
     <div class="card-body grid grid-cols-2 gap-6 lg:grid-cols-1">
 
         <div class="p-8">
-            <h1 class="h2">5,337</h1>
+            <h1 class="h2">{{ number_format($salesThisMonth) }}</h1>
             <p class="text-black font-medium">Sales this month</p>
 
             <div class="mt-20 mb-2 flex items-center">
-                <div class="py-1 px-3 rounded bg-green-200 text-green-900 mr-3">
-                    <i class="fa fa-caret-up"></i>
+                <div
+                    class="py-1 px-3 rounded mr-3"
+                    @class([
+                        'bg-green-200 text-green-900' => $salesGrowth > 0,
+                        'bg-red-200 text-red-900' => $salesGrowth < 0,
+                        'bg-gray-200 text-gray-600' => $salesGrowth === 0 || $salesGrowth === null,
+                    ])
+                >
+                    <i
+                        @class([
+                            'fa fa-caret-up' => $salesGrowth > 0,
+                            'fa fa-caret-down' => $salesGrowth < 0,
+                            'fa fa-minus' => $salesGrowth === 0 || $salesGrowth === null,
+                        ])
+                    ></i>
                 </div>
-                <p class="text-black"><span class="num-2 text-green-400"></span><span class="text-green-400">% more sales</span> in comparison to last month.</p>
+                <p class="text-black">
+            <span
+                @class([
+                    'text-green-400' => $salesGrowth > 0,
+                    'text-red-400' => $salesGrowth < 0,
+                    'text-gray-400' => $salesGrowth === 0 || $salesGrowth === null,
+                ])
+            >
+                {{ $salesGrowth !== null ? abs($salesGrowth) . '%' : 'N/A' }}
+            </span>
+                    <span
+                @class([
+                    'text-green-400' => $salesGrowth > 0,
+                    'text-red-400' => $salesGrowth < 0,
+                    'text-gray-400' => $salesGrowth === 0 || $salesGrowth === null,
+                ])
+            >
+                {{ $salesGrowth > 0 ? 'more sales' : ($salesGrowth < 0 ? 'fewer sales' : 'sales') }}
+            </span> in comparison to last month so far.
+                </p>
             </div>
 
             <div class="flex items-center">
-                <div class="py-1 px-3 rounded bg-red-200 text-red-900 mr-3">
-                    <i class="fa fa-caret-down"></i>
+                <div
+                    class="py-1 px-3 rounded mr-3"
+                    @class([
+                        'bg-green-200 text-green-900' => $avgRevenue > 0,
+                        'bg-red-200 text-red-900' => $avgRevenue < 0,
+                        'bg-gray-200 text-gray-600' => $avgRevenue === 0 || $avgRevenue === null,
+                    ])
+                >
+                    <i
+                        @class([
+                            'fa fa-caret-up' => $avgRevenue > 0,
+                            'fa fa-caret-down' => $avgRevenue < 0,
+                            'fa fa-minus' => $avgRevenue === 0 || $avgRevenue === null,
+                        ])
+                    ></i>
                 </div>
-                <p class="text-black"><span class="num-2 text-red-400"></span><span class="text-red-400">% revenue per sale</span> in comparison to last month.</p>
+                <p class="text-black">
+            <span
+                @class([
+                    'text-green-400' => $avgRevenue > 0,
+                    'text-red-400' => $avgRevenue < 0,
+                    'text-gray-400' => $avgRevenue === 0 || $avgRevenue === null,
+                ])
+            >
+                {{ $avgRevenue !== null ? abs($avgRevenue) . '%' : 'N/A' }}
+            </span>
+                    <span
+                @class([
+                    'text-green-400' => $avgRevenue > 0,
+                    'text-red-400' => $avgRevenue < 0,
+                    'text-gray-400' => $avgRevenue === 0 || $avgRevenue === null,
+                ])
+            >
+                {{ $avgRevenue > 0 ? 'more revenue' : ($avgRevenue < 0 ? 'less revenue' : 'revenue') }}
+            </span> per sale in comparison to last month so far.
+                </p>
             </div>
 
-            <a href="#" class="btn-shadow mt-6">view details</a>
-
+            <a href="{{ route('tenant-dashboard.shop-statistics') }}" class="btn-shadow mt-6">view details</a>
         </div>
+
+
 
         <div class="">
             <div id="sealsOverview"></div>
@@ -51,6 +116,9 @@
 
     </div>
     <!-- end body -->
-
+    <script>
+        window.salesChartLabels = @json($salesChartLabels);
+        window.salesChartData = @json($salesChartData);
+    </script>
 </div>
 <!-- end Sales Overview -->

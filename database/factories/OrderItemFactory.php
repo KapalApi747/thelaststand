@@ -23,7 +23,7 @@ class OrderItemFactory extends Factory
             'product_id' => null,
             'product_name' => 'Unknown Product',
             'price' => 0.00,
-            'quantity' => $this->faker->numberBetween(1, 5),
+            'quantity' => $this->faker->numberBetween(1, 3),
         ];
     }
 }
