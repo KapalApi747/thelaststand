@@ -4,6 +4,7 @@ namespace App\Livewire\Tenant\Frontend\Shopping;
 
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\CartService;
 use Livewire\Component;
 
 class AddToCartButton extends Component
@@ -13,7 +14,7 @@ class AddToCartButton extends Component
 
     public function addToCart()
     {
-        $cartTenantKey = 'cart_' . tenant()->id;
+        /*$cartTenantKey = 'cart_' . tenant()->id;
         $cart = session()->get($cartTenantKey, []);
 
         if ($this->variant) {
@@ -48,7 +49,9 @@ class AddToCartButton extends Component
             }
         }
 
-        session()->put($cartTenantKey, $cart);
+        session()->put($cartTenantKey, $cart);*/
+
+        CartService::addProductToCart($this->product, $this->variant);
 
         $this->dispatch('cart-updated');
         $this->dispatch('notify', ['type' => 'success', 'message' => 'Product added to cart successfully!']);

@@ -102,6 +102,5 @@
         <div class="mt-6">
             {{ $reviews->links() }}
         </div>
-
     </div>
 </div>

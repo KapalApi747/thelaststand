@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Services;
+
+class CartService
+{
+    
+
+    public static function retrieveCart(): array
+    {
+        $key = 'cart_' . tenant()->id;
+        return session()->get($key, []);
+    }
+
+    public static function cartTotal(): float
+    {
+        $total = 0;
+
+        foreach (self::retrieveCart() as $item) {
+            $total += ($item['price'] ?? 0) * ($item['quantity'] ?? 1);
+        }
+
+        return round($total, 2);
+    }
+
+    public static function shippingCost(): float
+    {
+        return session()->get('shipping_cost', 0);
+    }
+
+    public static function grandTotal(): float
+    {
+        return self::cartTotal() + self::shippingCost();
+    }
+
+    public static function taxAmount(): float
+    {
+        return round((self::grandTotal() * 21) / 121, 2);
+    }
+
+    public static function clearCart(): void
+    {
+        session()->forget('cart_' . tenant()->id);
+    }
+
+}

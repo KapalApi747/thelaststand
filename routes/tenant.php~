@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
 use App\Livewire\Tenant\Backend\Orders\OrderEdit;
@@ -91,7 +90,6 @@ Route::middleware([
 
             Route::get('products', ShopProducts::class)->name('shop-products');
             Route::get('cart', Cart::class)->name('shop-cart');
-            Route::post('cart/add', [CartController::class, 'add'])->name('add-to-cart');
 
             Route::get('/checkout', CheckoutForm::class)->name('checkout-form');
             Route::get('/checkout/shipping', CheckoutShipping::class)->name('checkout-shipping');

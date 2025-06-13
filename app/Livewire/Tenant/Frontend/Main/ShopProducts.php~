@@ -127,7 +127,7 @@ class ShopProducts extends Component
         $this->product = Product::with('reviews.customer')->find($productId);
     }
 
-    public function toggleReplies($reviewId)
+    public function toggleReplies(int $reviewId)
     {
         if (in_array($reviewId, $this->showReplies)) {
             $this->showReplies = array_diff($this->showReplies, [$reviewId]);
