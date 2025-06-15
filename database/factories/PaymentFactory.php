@@ -19,7 +19,7 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         $paymentMethods = ['credit_card', 'paypal', 'stripe', 'bank_transfer'];
-        $statuses = ['pending', 'completed', 'failed'];
+        $statuses = ['pending', 'paid', 'failed'];
 
         return [
             'payment_method' => $this->faker->randomElement($paymentMethods),

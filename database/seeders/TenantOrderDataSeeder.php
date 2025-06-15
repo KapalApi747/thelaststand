@@ -78,6 +78,7 @@ class TenantOrderDataSeeder extends Seeder
             OrderItem::factory()->create([
                 'order_id' => $order->id,
                 'product_id' => $product->id,
+                'product_variant_id' => $product->variants->id ?? null,
                 'product_name' => $product->name,
                 'price' => $product->price,
                 'quantity' => rand(1, 3),
