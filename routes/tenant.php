@@ -32,6 +32,7 @@ use App\Livewire\Tenant\Frontend\Shopping\CheckoutForm;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutPayment;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutShipping;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutSuccess;
+use App\Livewire\Tenant\Frontend\Shopping\Products\ProductShow;
 use App\Livewire\TenantLogin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -90,6 +91,8 @@ Route::middleware([
             });
 
             Route::get('products', ShopProducts::class)->name('shop-products');
+            Route::get('products/{slug}', ProductShow::class)->name('shop-product-show');
+
             Route::get('cart', Cart::class)->name('shop-cart');
             Route::post('cart/add', [CartController::class, 'add'])->name('add-to-cart');
 

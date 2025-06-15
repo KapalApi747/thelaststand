@@ -5,6 +5,7 @@ namespace App\Livewire\Tenant\Frontend\Main;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductReview;
+use App\Models\ProductReviewReply;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -25,6 +26,9 @@ class ShopProducts extends Component
     public $showReplies = [];
     public $customerReviewedProductIds = [];
 
+    public $replyBodies = [];
+    public $replies = [];
+
     public function mount(Product $product)
     {
         $this->product = $product;
@@ -32,11 +36,12 @@ class ShopProducts extends Component
         $this->loadProducts();
 
         if (auth('customer')->check()) {
-            $customerReviewedProductIds = ProductReview::where('customer_id', auth('customer')->id())
+            $this->customerReviewedProductIds = ProductReview::where('customer_id', auth('customer')->id())
                 ->pluck('product_id')
                 ->toArray();
+        } else {
+            $this->customerReviewedProductIds = [];
         }
-        $this->customerReviewedProductIds = $customerReviewedProductIds;
     }
 
     public function updatedSelectedCategories()
@@ -71,9 +76,11 @@ class ShopProducts extends Component
             ->where('is_active', 1);
 
         if (!empty($this->selectedCategories)) {
-            $query->whereHas('categories', function ($q) {
-                $q->whereIn('categories.id', $this->selectedCategories);
-            });
+            foreach ($this->selectedCategories as $categoryId) {
+                $query->whereHas('categories', function ($q) use ($categoryId) {
+                    $q->where('categories.id', $categoryId);
+                });
+            }
         }
 
         if ($this->minPrice !== null) {
@@ -124,16 +131,56 @@ class ShopProducts extends Component
 
     protected function refreshProductReviews($productId)
     {
-        $this->product = Product::with('reviews.customer')->find($productId);
+        $this->product = Product::withCount([
+            'reviews as approved_reviews_count' => fn ($q) => $q->where('is_approved', true),
+        ])
+            ->withAvg([
+                'reviews as average_rating' => fn ($q) => $q->where('is_approved', true),
+            ], 'rating')
+            ->with([
+                'reviews' => fn ($q) => $q->where('is_approved', true)->with('customer'),
+            ])
+            ->findOrFail($productId);
     }
 
     public function toggleReplies($reviewId)
     {
         if (in_array($reviewId, $this->showReplies)) {
             $this->showReplies = array_diff($this->showReplies, [$reviewId]);
+            unset($this->replies[$reviewId]);
         } else {
             $this->showReplies[] = $reviewId;
+            $this->loadReplies($reviewId);
         }
+
+        $this->loadProducts();
+    }
+
+    protected function loadReplies($reviewId)
+    {
+        $this->replies[$reviewId] = ProductReviewReply::with('customer')
+            ->where('product_review_id', $reviewId)
+            ->latest()
+            ->get();
+    }
+
+    public function submitReply($reviewId)
+    {
+        $this->validate([
+            "replyBodies.$reviewId" => 'required|string|max:1000',
+        ]);
+
+        ProductReviewReply::create([
+            'product_review_id' => $reviewId,
+            'customer_id' => auth('customer')->id(),
+            'body' => $this->replyBodies[$reviewId],
+        ]);
+
+        $this->replyBodies[$reviewId] = '';
+        $this->loadProducts();
+        $this->loadReplies($reviewId);
+
+        session()->flash('review_message', 'Your reply has been submitted!');
     }
 
     public function render()

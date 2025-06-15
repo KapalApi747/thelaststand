@@ -55,7 +55,9 @@
             </div>
         </form>
     @else
-        <button wire:click="addAddress" class="mb-6 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Add New Address</button>
+        <button wire:click="addAddress" class="mb-6 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors duration-300 cursor-pointer">
+            Add New Address
+        </button>
 
         @if (count($addresses) > 0)
             <ul class="space-y-4">

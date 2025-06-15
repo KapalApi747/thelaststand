@@ -1,16 +1,17 @@
 <div class="space-y-6">
     @auth('customer')
 
-        @if ($hasReviewed)
-            <p class="text-sm text-yellow-400">You have already reviewed this product.</p>
+        @if (in_array($product->id, $customerReviewedProductIds))
+            <p class="text-sm text-yellow-400 mb-6">You have already reviewed this
+                product.</p>
         @else
 
             {{-- Review submission form --}}
             <div class="bg-black p-6 rounded-xl shadow">
                 <h3 class="text-lg font-semibold mb-4">Leave a Review</h3>
 
-                @if (session()->has('message'))
-                    <div class="mb-4 text-green-600">{{ session('message') }}</div>
+                @if (session()->has('review_message'))
+                    <div class="mb-4 text-green-600">{{ session('review_message') }}</div>
                 @endif
 
                 <form wire:submit.prevent="submitReview" class="space-y-4">
@@ -41,7 +42,7 @@
                     </div>
 
                     {{-- Submit button --}}
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors duration-300 cursor-pointer">
                         Submit Review
                     </button>
                 </form>
@@ -86,7 +87,7 @@
                 </div>
                 {{-- Toggle replies button --}}
                 <button wire:click="toggleReplies({{ $review->id }})"
-                        class="text-blue-500 underline mt-2">
+                        class="text-blue-500 underline my-3 cursor-pointer">
                     {{ in_array($review->id, $showReplies) ? 'Hide Replies' : 'Show Replies' }}
                 </button>
 

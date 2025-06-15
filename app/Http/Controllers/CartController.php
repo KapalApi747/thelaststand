@@ -18,6 +18,9 @@ class CartController extends Controller
 
         CartService::addProductToCart($product, $variant);
 
-        return redirect()->back()->with('message', 'Product added to cart!');
+        $productName = $product->name;
+        $variantName = $variant ? ' (' . $variant->name . ')' : '';
+
+        return redirect()->back()->with('message', "✔️ {$productName}{$variantName} added to cart!");
     }
 }
