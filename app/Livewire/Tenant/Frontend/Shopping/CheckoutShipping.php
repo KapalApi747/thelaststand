@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Tenant\Frontend\Shopping;
 
+use App\Services\CartService;
+use App\Services\OrderService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -81,6 +83,27 @@ class CheckoutShipping extends Component
     public function confirmShipping()
     {
         $this->sendShippingInfo();
+
+        // Gather necessary data
+        $customerInfo = session('checkout_customer_info', []);
+        $cartItems = CartService::retrieveCart();
+        $shippingInfo = [
+            'method' => $this->shippingMethod,
+            'carrier' => $this->carrier,
+            'cost' => $this->shippingOptions[$this->shippingMethod]['cost'] ?? 0,
+        ];
+        $authCustomerId = auth('customer')->id();
+
+        if ($authCustomerId) {
+            $customerId = $authCustomerId;
+        } else {
+            $customerId = null;
+        }
+
+        $order = OrderService::createOrder($customerInfo, $cartItems, $shippingInfo, $customerId);
+
+        // Store the created order ID in session for payment step
+        session()->put('current_order_id', $order->id);
 
         return redirect()->route('shop.checkout-payment');
     }

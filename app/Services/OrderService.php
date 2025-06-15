@@ -26,7 +26,7 @@ class OrderService
      * @param int $customerId
      * @return \App\Models\Order
      */
-    public static function createOrder(array $customerInfo, array $cartItems, array $shippingInfo, int $customerId): Order
+    public static function createOrder(array $customerInfo, array $cartItems, array $shippingInfo, ?int $customerId = null): Order
     {
         $order = DB::transaction(function () use ($customerInfo, $cartItems, $shippingInfo, $customerId) {
 
@@ -111,6 +111,7 @@ class OrderService
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
+                    'product_variant_id' => $item['variant_id'] ?? null,
                     'product_name' => $item['name'],
                     'price' => $item['price'],
                     'quantity' => $item['quantity'],

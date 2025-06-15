@@ -5,7 +5,6 @@ namespace App\Livewire\Tenant\Frontend\Shopping;
 use App\Models\Order;
 use App\Services\CartService;
 use App\Services\OrderService;
-use App\Services\PaymentService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -15,6 +14,7 @@ use Stripe\StripeClient;
 class CheckoutSuccess extends Component
 {
     public Order $order;
+
     public function mount()
     {
         $sessionId = request()->query('session_id');
@@ -31,7 +31,8 @@ class CheckoutSuccess extends Component
             $session = $stripe->checkout->sessions->retrieve($sessionId);
 
             if ($session->payment_status !== 'paid') {
-                abort(400, "Payment not completed.");
+                Log::warning("Customer arrived at success page with unpaid session ID: {$sessionId}");
+                // We still let them land, but the order won't be marked paid
             }
 
             // Gather data
@@ -46,19 +47,10 @@ class CheckoutSuccess extends Component
             ];
 
             // Save the order
-            $this->order = OrderService::createOrder($customerInfo, $cartItems, $shippingInfo, $authCustomerId);
+            //$this->order = OrderService::createOrder($customerInfo, $cartItems, $shippingInfo, $authCustomerId);
 
-            $customerId = $this->order->customer_id;
-
-            // Save payment info with PaymentService
-            PaymentService::savePayment($this->order->id, $customerId, [
-                'payment_method' => $session->payment_method_types[0] ?? 'stripe',
-                'transaction_id' => $session->payment_intent,
-                'amount' => $session->amount_total / 100,
-                'status' => 'paid',
-                'provider' => 'stripe',
-                'provider_customer_id' => $session->customer,
-            ]);
+            // Include order ID in session metadata for webhook reference (optional double-save fallback)
+            // You can use this order ID when creating the Stripe Checkout session originally
 
             // Clear cart + shipping info
             CartService::clearCart();
@@ -75,10 +67,9 @@ class CheckoutSuccess extends Component
             abort(500, "An error occurred while finalizing your order.");
         }
     }
+
     public function render()
     {
-        return view('livewire.tenant.frontend.shopping.checkout-success', [
-            'order' => $this->order
-        ]);
+        return view('livewire.tenant.frontend.shopping.checkout-success');
     }
 }

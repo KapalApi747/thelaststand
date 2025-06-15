@@ -4,12 +4,12 @@
     <div>
         <div class="flex justify-between mb-6">
             <a
-                class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors duration-300"
                 href=" {{ route('shop.customer-orders') }}">
                 Back
             </a>
             <button wire:click="exportPDF"
-                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors duration-300 cursor-pointer"
             >
                 Download PDF
             </button>

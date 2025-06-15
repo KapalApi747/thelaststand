@@ -10,6 +10,12 @@ class ReviewReplies extends Component
 {
     public ProductReview $review;
     public string $body = '';
+    public $replyCount;
+
+    public function mount()
+    {
+        $this->replyCount = $this->review->replies()->count();
+    }
 
     protected $rules = [
         'body' => 'required|string|max:1000',
@@ -26,6 +32,7 @@ class ReviewReplies extends Component
         ]);
 
         $this->reset('body');
+        $this->replyCount = $this->review->replies()->count();
 
         $this->review->refresh();
         session()->flash('message', 'Your reply has been submitted!');

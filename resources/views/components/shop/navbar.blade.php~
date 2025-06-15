@@ -31,15 +31,16 @@
                 <div
                     x-show="open"
                     x-transition
-                    class="absolute right-0 mt-2 bg-white text-gray-800 rounded shadow-lg w-48 z-20"
+                    class="absolute right-0 mt-2 bg-white text-gray-800 rounded shadow-lg w-48 z-20 cursor-pointer"
                     @click.outside="open = false"
                 >
                     <a href="{{ route('shop.customer-orders') }}" class="block px-4 py-2 hover:bg-gray-100">My Orders</a>
+                    <a href="{{ route('shop.customer-addresses') }}" class="block px-4 py-2 hover:bg-gray-100">My Addresses</a>
                     <a href="{{ route('shop.customer-profile') }}" class="block px-4 py-2 hover:bg-gray-100">My Profile</a>
                     <a href="{{ route('shop.customer-settings') }}" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
                     <form method="POST" action="{{ route('shop.customer-logout') }}">
                         @csrf
-                        <button type="submit" class="w-full text-left px-4 py-2 hover:bg-red-100 text-red-600">
+                        <button type="submit" class="w-full text-left px-4 py-2 hover:bg-red-100 text-red-600 cursor-pointer">
                             Logout
                         </button>
                     </form>

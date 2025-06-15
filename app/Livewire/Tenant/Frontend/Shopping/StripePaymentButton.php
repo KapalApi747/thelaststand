@@ -49,6 +49,7 @@ class StripePaymentButton extends Component
 
         $lineItems = [];
 
+        // 🛒 Add cart items
         foreach ($cart as $item) {
             $lineItems[] = [
                 'price_data' => [
@@ -56,9 +57,27 @@ class StripePaymentButton extends Component
                     'product_data' => [
                         'name' => $item['name'],
                     ],
-                    'unit_amount' => (int) round($item['price'] * 100), // still recommend rounding
+                    'unit_amount' => (int) round($item['price'] * 100),
                 ],
                 'quantity' => $item['quantity'],
+            ];
+        }
+
+        // ✅ Add shipping cost from session
+        $shippingCost = session('shipping_cost');
+        $shippingMethod = session('shipping_method') ?? 'Shipping';
+        $shippingCarrier = session('shipping_carrier') ?? 'A Random Shipping Carrier';
+
+        if ($shippingCost && $shippingCost > 0) {
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => 'Shipping: ' . ucfirst($shippingMethod) . ' ' . 'by' . ' ' . ucfirst($shippingCarrier),
+                    ],
+                    'unit_amount' => (int) round($shippingCost * 100),
+                ],
+                'quantity' => 1,
             ];
         }
 
@@ -129,6 +148,7 @@ class StripePaymentButton extends Component
             ],
             'metadata' => [
                 'tenant_id' => (string) tenant()->id,
+                'order_id' => (string) session('current_order_id'),
                 'customer_type' => $authCustomer ? 'logged-in' : 'guest',
                 'customer_email' => (string) ($authCustomer->email ?? $guest['email'] ?? 'unknown'),
             ],

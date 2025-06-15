@@ -16,12 +16,21 @@ class ProductReviews extends Component
     public $product;
     public $rating;
     public $comment;
+    public array $customerReviewedProductIds = [];
 
     public $showReplies = [];
 
     public function mount(Product $product)
     {
         $this->product = $product;
+
+        if (auth('customer')->check()) {
+            $this->customerReviewedProductIds = ProductReview::where('customer_id', auth('customer')->id())
+                ->pluck('product_id')
+                ->toArray();
+        } else {
+            $this->customerReviewedProductIds = [];
+        }
     }
 
     public function submitReview()
@@ -38,7 +47,7 @@ class ProductReviews extends Component
             ->exists();
 
         if ($alreadyReviewed) {
-            session()->flash('message', 'You have already reviewed this product!');
+            session()->flash('review_message', 'You have already reviewed this product!');
             return;
         }
 
@@ -50,7 +59,7 @@ class ProductReviews extends Component
             'is_approved' => true,
         ]);
 
-        session()->flash('message', 'Thank you for your review!');
+        session()->flash('review_message', 'Thank you for your review!');
 
         $this->reset(['rating', 'comment']);
     }

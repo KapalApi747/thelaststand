@@ -2,11 +2,51 @@
 
 namespace App\Services;
 
+use App\Models\Product;
+use App\Models\ProductVariant;
+
 class CartService
 {
-    /**
-     * Create a new class instance.
-     */
+    public static function addProductToCart(Product $product, ?ProductVariant $variant = null): void
+    {
+        $cartKey = 'cart_' . tenant()->id;
+        $cart = session()->get($cartKey, []);
+
+        if ($variant) {
+            $key = 'variant_' . $variant->id;
+
+            if (isset($cart[$key])) {
+                $cart[$key]['quantity']++;
+            } else {
+                $cart[$key] = [
+                    'name' => $product->name . ' - ' . $variant->name,
+                    'price' => $variant->price ?? $product->price,
+                    'quantity' => 1,
+                    'image' => $variant->images()->first()?->path
+                        ?? $product->images()->where('is_main_image', true)->first()?->path,
+                    'variant_id' => $variant->id,
+                    'product_id' => $product->id,
+                ];
+            }
+        } else {
+            $key = 'product_' . $product->id;
+
+            if (isset($cart[$key])) {
+                $cart[$key]['quantity']++;
+            } else {
+                $cart[$key] = [
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'quantity' => 1,
+                    'image' => $product->images()->where('is_main_image', true)->first()?->path,
+                    'product_id' => $product->id,
+                ];
+            }
+        }
+
+        session()->put($cartKey, $cart);
+    }
+
     public static function retrieveCart(): array
     {
         $key = 'cart_' . tenant()->id;
