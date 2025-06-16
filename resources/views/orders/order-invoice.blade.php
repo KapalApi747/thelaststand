@@ -14,7 +14,26 @@
 <body>
 
 <h1>Invoice #{{ $order->order_number }}</h1>
-<p><strong>Date:</strong> {{ $order->created_at->format('Y-m-d') }}</p>
+
+<div class="heading">Store Info</div>
+
+<div>
+    <div>
+        <strong>Store:</strong> {{ tenant()->store_name }}<br>
+        <strong>Email:</strong> {{ tenant()->profile->email }}<br>
+        <strong>Phone:</strong> {{ tenant()->profile->phone }}<br>
+        <strong>Date:</strong> {{ $order->created_at->format('Y-m-d') }}
+    </div>
+    <br>
+    <div>
+        <strong>Address:</strong> {{ tenant()->profile->address }} <br>
+        <strong>City:</strong> {{ tenant()->profile->city }}<br>
+        <strong>State:</strong> {{ tenant()->profile->state }}<br>
+        <strong>Zip:</strong> {{ tenant()->profile->zip }}<br>
+        <strong>Country:</strong> {{ tenant()->profile->country }}
+    </div>
+    <br>
+</div>
 
 <div class="heading">Customer Info</div>
 @php

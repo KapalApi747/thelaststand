@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Tenant;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
@@ -91,7 +93,24 @@ class StripeWebhookController extends Controller
 
             $order->update(['status' => 'paid']);
 
-            Log::info("✅ Order #{$orderId} marked as paid and payment saved");
+            // Update stock for products or variants
+            foreach ($order->items as $item) {
+                if (!empty($item['variant_id'])) {
+                    $variant = ProductVariant::find($item['variant_id']);
+                    if ($variant) {
+                        $variant->stock = max(0, $variant->stock - $item['quantity']);
+                        $variant->save();
+                    }
+                } else {
+                    $product = Product::find($item['product_id']);
+                    if ($product) {
+                        $product->stock = max(0, $product->stock - $item['quantity']);
+                        $product->save();
+                    }
+                }
+            }
+
+            Log::info("✅ Order #{$orderId} marked as paid, payment saved and stock updated.");
         } catch (\Throwable $e) {
             Log::error("❌ Failed to save payment or update order: " . $e->getMessage());
         }

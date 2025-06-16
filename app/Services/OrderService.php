@@ -118,23 +118,6 @@ class OrderService
                 ]);
             }
 
-            // 4.5 Update stock for products or variants
-            foreach ($cartItems as $item) {
-                if (!empty($item['variant_id'])) {
-                    $variant = ProductVariant::find($item['variant_id']);
-                    if ($variant) {
-                        $variant->stock = max(0, $variant->stock - $item['quantity']);
-                        $variant->save();
-                    }
-                } else {
-                    $product = Product::find($item['product_id']);
-                    if ($product) {
-                        $product->stock = max(0, $product->stock - $item['quantity']);
-                        $product->save();
-                    }
-                }
-            }
-
             // 5. Save shipment info if available
             Shipment::create([
                 'order_id' => $order->id,

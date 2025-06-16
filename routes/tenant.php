@@ -78,7 +78,6 @@ Route::middleware([
             Route::middleware(['customer.auth'])->group(function () {
                 Route::post('/logout', function () {
                     Auth::guard('customer')->logout();
-                    request()->session()->invalidate();
                     request()->session()->regenerateToken();
                     return redirect()->route('shop.shop-products');
                 })->name('customer-logout');

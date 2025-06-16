@@ -13,7 +13,7 @@ class ProductShow extends Component
     public Product $product;
     public array $customerReviewedProductIds = [];
 
-    public $variantId;
+    public $variantId = null;
 
     public function mount($slug)
     {
@@ -24,6 +24,7 @@ class ProductShow extends Component
             'reviews.replies',
             'reviews.customer',
             'variants',
+            'variants.images',
         ])
             ->where('slug', $slug)
             ->where('is_active', true)
@@ -43,9 +44,17 @@ class ProductShow extends Component
         return $this->product->variants->firstWhere('id', $this->variantId);
     }
 
-    public function updatedVariantId()
+    public function updatedVariantId($value)
     {
-        //
+        $variant = $this->selectedVariant();
+        $variantImagePath = $variant?->images->first()?->path;
+        $mainImagePath = $this->product->mainImage?->path;
+
+        $imageUrl = $variantImagePath
+            ? asset('tenant' . tenant()->id . '/' . $variantImagePath)
+            : asset('tenant' . tenant()->id . '/' . $mainImagePath);
+
+        $this->dispatch('variant-image-updated', ['url' => $imageUrl]);
     }
 
     public function render()
