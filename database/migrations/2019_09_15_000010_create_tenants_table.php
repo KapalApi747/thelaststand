@@ -18,10 +18,11 @@ class CreateTenantsTable extends Migration
         Schema::create('tenants', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('logo_path')->nullable();
-            $table->string('store_name')->nullable();
-            $table->string('plan')->nullable();
+            $table->string('store_name');
+            $table->string('plan')->nullable()->default('free');
             $table->json('data')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

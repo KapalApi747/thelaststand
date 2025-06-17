@@ -121,6 +121,13 @@ class TenancyServiceProvider extends ServiceProvider
                     File::makeDirectory($path, 0755, true);
                 }
             }
+
+            // Block inactive tenants
+            $tenant = $event->tenancy->tenant;
+
+            if ($tenant->profile->store_status === 'inactive') {
+                abort(403, 'Store is currently inactive.');
+            }
         });
     }
 

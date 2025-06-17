@@ -1,33 +1,32 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Admin\Frontend;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('t-shop-layout')]
-class TenantLogin extends Component
+#[Layout('central-layout')]
+class CentralLogin extends Component
 {
     public $email;
     public $password;
     public $errorMessage;
     public bool $remember = false;
 
-    public function loginTenant()
+    public function loginCentral()
     {
         $credentials = $this->only(['email', 'password']);
 
-        if (Auth::attempt($credentials, $this->remember)) {
+        if (Auth::guard('central')->attempt($credentials, $this->remember)) {
             session()->regenerate();
-            return redirect()->intended(route('tenant-dashboard.index')); // or wherever
+            return redirect()->intended(route('home'));
         }
 
         $this->addError('email', __('Invalid credentials.'));
     }
-
     public function render()
     {
-        return view('livewire.tenant-login');
+        return view('livewire.admin.frontend.central-login');
     }
 }
