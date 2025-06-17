@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\StripeWebhookController;
 use App\Livewire\Admin\EditTenantProfile;
 use App\Livewire\Admin\TenantProfilePage;
 use Illuminate\Support\Facades\Route;
