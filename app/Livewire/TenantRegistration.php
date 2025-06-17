@@ -11,9 +11,12 @@ use Database\Seeders\TenantPermissionSeeder;
 use Database\Seeders\TenantProductSeeder;
 use Database\Seeders\TenantRoleSeeder;
 use Illuminate\Support\Facades\Hash;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Spatie\Permission\Models\Role;
 
+#[Layout('central-layout')]
 class TenantRegistration extends Component
 {
     use WithFileUploads;
@@ -24,7 +27,17 @@ class TenantRegistration extends Component
     public $email;
     public $password;
     public $logo;
-    public $successMessage;
+
+    public $phone;
+    public $address;
+    public $city;
+    public $state;
+    public $zip;
+    public $country;
+    public $business_description;
+
+    public $success = false;
+    public $storeUrl;
 
     public function tenantRegistrationFunction() {
 
@@ -34,6 +47,14 @@ class TenantRegistration extends Component
             'email' => 'required|email|max:255',
             'password' => 'required|string|min:8',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|dimensions:width<=200,height<=200|max:2048',
+
+            'phone' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'zip' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
+            'business_description' => 'nullable|string|max:255',
         ]);
 
         // Step 1: Create the tenant and attach the domain
@@ -65,15 +86,15 @@ class TenantRegistration extends Component
 
             TenantProfile::create([
                 'tenant_id' => tenant()->id,
-                'email' => $this->domain . '@email.com',
-                'phone' => '0612345678',
-                'address' => 'Test Address',
-                'city' => 'Test City',
-                'state' => 'Test State',
-                'zip' => '0000AB',
-                'country' => 'Test Country',
-                'vat_id' => '1234567890',
-                'business_description' => 'This is a business description!',
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'address' => $this->address,
+                'city' => $this->city,
+                'state' => $this->state,
+                'zip' => $this->zip,
+                'country' => $this->country,
+                'vat_id' => null,
+                'business_description' => $this->business_description,
                 'store_status' => 'active',
             ]);
 
@@ -85,11 +106,14 @@ class TenantRegistration extends Component
 
         // Step 3: Create a default user for the tenant
         $tenant->run(function () {
-            User::create([
+            $user = User::create([
                 'name' => $this->store_name . ' Admin',
                 'email' => $this->email,
                 'password' => Hash::make($this->password),
             ]);
+
+            $adminRole = Role::where('name', 'admin')->first();
+            $user->assignRole($adminRole);
         });
 
         // Step 4: Upload logo if present
@@ -97,15 +121,18 @@ class TenantRegistration extends Component
         $path = "tenant{$tenantId}/assets/img";
         $file = $this->logo;
 
-        try {
-            $filename = 'store_logo.png';
-            $file->storeAs($path, $filename, 'tenancy');
-            $tenant->update(['logo_path' => "{$path}/{$filename}"]);
-        } catch (\Exception $e) {
-            dd("Upload failed:", $e->getMessage());
+        if ($file) {
+            try {
+                $filename = 'store_logo.png';
+                $this->logo->storeAs($path, $filename, 'tenancy');
+                $tenant->update(['logo_path' => "{$path}/{$filename}"]);
+            } catch (\Exception $e) {
+                dd("Upload failed:", $e->getMessage());
+            }
         }
 
-        $this->successMessage = "Tenant $this->store_name created! You may proceed to log in using the link: http://" . $this->domain . ".myapp.local:8000/";
+        $this->success = true;
+        $this->storeUrl = "http://" . $this->domain . ".myapp.local:8000/shop/products";
     }
 
     public function render()

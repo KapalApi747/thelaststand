@@ -63,7 +63,7 @@
 
                     <input
                         type="file"
-                        wire:model="profile_picture"
+                        wire:model.live="profile_picture"
                         accept="image/*"
                         class="mt-1 block w-full"
                     >

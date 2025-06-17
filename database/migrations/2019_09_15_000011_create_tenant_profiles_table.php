@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('tenant_profiles', function (Blueprint $table) {
             $table->id();
             $table->string('tenant_id');
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
+            $table->foreign('tenant_id')->references('id')->on('tenants')->cascadeOnDelete();
 
-            $table->string('email')->nullable();
+            $table->string('email');
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->string('city')->nullable();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
@@ -9,7 +10,7 @@ use Stancl\Tenancy\Database\Concerns\HasDomains;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains;
+    use HasDatabase, HasDomains, SoftDeletes;
 
     public static function getCustomColumns(): array
     {
@@ -23,10 +24,5 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
     public function profile() {
         return $this->hasOne(TenantProfile::class, 'tenant_id', 'id');
-    }
-
-    public function products()
-    {
-        return $this->belongsToMany(Product::class, 'product_tenant', 'tenant_id', 'product_id');
     }
 }
