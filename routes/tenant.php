@@ -107,24 +107,35 @@ Route::middleware([
         ->as('tenant-dashboard.')
         ->group(function () {
             Route::get('/', TenantDashboard::class)->name('index');
-            Route::get('/profile-settings', StoreSettings::class)->name('store-settings');
 
-            Route::get('/products', ProductManagement::class)->name('product-management');
-            Route::get('/products/{product:slug}', ProductView::class)->name('product-view');
-            Route::get('/products/{product:slug}/edit', ProductEdit::class)->name('product-edit');
+            Route::middleware(['role:admin'])->group(function () {
+                Route::get('/profile-settings', StoreSettings::class)->name('store-settings');
+            });
 
-            Route::get('/categories', CategoryManagement::class)->name('category-management');
+            Route::middleware(['permission:manage products|manage categories'])->group(function () {
+                Route::get('/products', ProductManagement::class)->name('product-management');
+                Route::get('/products/{product:slug}', ProductView::class)->name('product-view');
+                Route::get('/products/{product:slug}/edit', ProductEdit::class)->name('product-edit');
 
-            Route::get('/users', UserIndex::class)->name('user-index');
-            Route::get('/user-register', UserRegistration::class)->name('user-register');
-            Route::get('/users/{user:slug}', UserView::class)->name('user-view');
-            Route::get('/users/{user:slug}/edit', UserEdit::class)->name('user-edit');
+                Route::get('/categories', CategoryManagement::class)->name('category-management');
+            });
 
-            Route::get('/orders', OrderIndex::class)->name('order-index');
-            Route::get('/orders/{order}', OrderView::class)->name('order-view');
-            Route::get('orders/{order}/edit', OrderEdit::class)->name('order-edit');
+            Route::middleware(['role:admin'])->group(function () {
+                Route::get('/users', UserIndex::class)->name('user-index');
+                Route::get('/user-register', UserRegistration::class)->name('user-register');
+                Route::get('/users/{user:slug}', UserView::class)->name('user-view');
+                Route::get('/users/{user:slug}/edit', UserEdit::class)->name('user-edit');
+            });
 
-            Route::get('/statistics', ShopStatistics::class)->name('shop-statistics');
+            Route::middleware(['permission:manage orders'])->group(function () {
+                Route::get('/orders', OrderIndex::class)->name('order-index');
+                Route::get('/orders/{order}', OrderView::class)->name('order-view');
+                Route::get('orders/{order}/edit', OrderEdit::class)->name('order-edit');
+            });
+
+            Route::middleware(['role:admin|analyst'])->group(function () {
+                Route::get('/statistics', ShopStatistics::class)->name('shop-statistics');
+            });
         });
 });
 

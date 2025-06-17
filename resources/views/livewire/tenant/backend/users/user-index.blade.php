@@ -6,7 +6,7 @@
         </div>
     @endif
 
-    <h2 class="text-xl font-semibold mb-4">My Users</h2>
+    <h2 class="h2 font-semibold mb-4">All Users</h2>
 
     <div class="bg-white p-4 rounded shadow mt-6">
 
@@ -60,6 +60,7 @@
                     <th class="border p-2">Email</th>
                     <th class="border p-2">Roles</th>
                     <th class="border p-2">Status</th>
+                    <th class="border p-2">Joined At</th>
                     <th class="border p-2">Actions</th>
                 </tr>
                 </thead>
@@ -72,7 +73,8 @@
                         <td class="border p-2">{{ $user->name }}</td>
                         <td class="border p-2">{{ $user->email }}</td>
                         <td class="border p-2">{{ $user->roles->pluck('name')->implode(', ') }}</td>
-                        <td class="border p-2">{{ $user->is_active ? 'Active' : 'Inactive' }}</td>
+                        <td class="border p-2 text-center">{{ $user->is_active ? 'Active' : 'Inactive' }}</td>
+                        <td class="border p-2 text-center">{{ $user->created_at->format('Y-m-d') }}</td>
                         <td class="border p-2">
                             <div class="flex justify-evenly items-center">
                                 <div>
