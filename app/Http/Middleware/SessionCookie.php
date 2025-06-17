@@ -14,11 +14,11 @@ class SessionCookie
     {
         $host = strtolower(trim($request->getHost()));
 
-        if ($host === 'myapp.local') {
+        if ($host === 'thelaststand.local') {
             Config::set('session.cookie', 'central_session');
-            Config::set('session.domain', 'myapp.local');  // root domain, ok
+            Config::set('session.domain', 'thelaststand.local');  // root domain, ok
             //Log::info("SessionCookie middleware: Set cookie to central_session for host {$host}");
-        } elseif (str_ends_with($host, '.myapp.local')) {
+        } elseif (str_ends_with($host, '.thelaststand.local')) {
             Config::set('session.cookie', 'tenant_session');
             Config::set('session.domain', null); // **host-only cookie for tenant subdomain**
             //Log::info("SessionCookie middleware: Set cookie to tenant_session (host-only) for host {$host}");
