@@ -25,6 +25,7 @@
         <!-- end link -->
 
         <!-- link -->
+        @role('admin')
         <div x-data="{ open: false }">
             <button @click="open = !open" type="button"
                     class="w-full mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
@@ -63,9 +64,11 @@
                 </div>
             </div>
         </div>
+        @endrole
         <!-- end link -->
 
         <!-- link -->
+        @can('manage products')
         <a
             href="{{ route('tenant-dashboard.product-management') }}"
             class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
@@ -81,9 +84,11 @@
             <i class="fa-solid fa-book-open text-xs"></i>
             <div>Categories</div>
         </a>
+        @endcan
         <!-- end link -->
 
         <!-- link -->
+        @can('manage orders')
         <div x-data="{ open: false }">
             <button @click="open = !open" type="button"
                     class="w-full mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
@@ -114,15 +119,18 @@
                 </div>
             </div>
         </div>
+        @endcan
         <!-- end link -->
 
         <!-- link -->
+        @role('admin')
         <a
             href="{{ route('tenant-dashboard.store-settings') }}"
             class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
             <i class="fad fa-shopping-cart text-xs"></i>
             <div>Profile & Store Settings</div>
         </a>
+        @endrole
         <!-- end link -->
 
         <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">apps</p>

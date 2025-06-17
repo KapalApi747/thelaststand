@@ -6,7 +6,8 @@
         </div>
     @endif
 
-        <h2 class="text-lg font-bold mt-6">Store Profile Info</h2>
+        <h3 class="h3 font-bold mt-6">Store Profile Info</h3>
+
         <form wire:submit.prevent="submitProfileChanges" enctype="multipart/form-data" class="space-y-4">
             <div>
                 <label for="email">Email</label>

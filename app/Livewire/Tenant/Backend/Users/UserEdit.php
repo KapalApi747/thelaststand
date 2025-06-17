@@ -26,7 +26,7 @@ class UserEdit extends Component
     public $profile_picture;
     public $existingProfilePicture;
 
-    public function rules()
+    protected function rules()
     {
         return [
             'name' => 'required|string|max:255',
@@ -41,7 +41,6 @@ class UserEdit extends Component
             'profile_picture' => 'nullable|image|max:2048',
         ];
     }
-
 
     public function mount(User $user)
     {
@@ -81,6 +80,11 @@ class UserEdit extends Component
         $this->user->syncRoles($this->userRoles);
 
         session()->flash('message', 'User updated successfully!');
+    }
+
+    public function updated($validation)
+    {
+        $this->validateOnly($validation);
     }
 
     public function render()

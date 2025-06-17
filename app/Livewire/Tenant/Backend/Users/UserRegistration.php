@@ -51,6 +51,13 @@ class UserRegistration extends Component
         $user->assignRole($this->roles);
 
         session()->flash('message', 'User registered successfully!');
+
+        $this->reset();
+    }
+
+    public function updated($validation)
+    {
+        $this->validateOnly($validation);
     }
 
     public function render()

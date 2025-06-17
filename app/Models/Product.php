@@ -45,7 +45,9 @@ class Product extends Model
 
     public function mainImage()
     {
-        return $this->hasOne(ProductImage::class)->where('is_main_image', true);
+        return $this->hasOne(ProductImage::class)
+            ->where('is_main_image', true)
+            ->where('product_variant_id', null);
     }
 
     public function categories()
