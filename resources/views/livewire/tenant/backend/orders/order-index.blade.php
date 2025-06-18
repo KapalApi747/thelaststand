@@ -1,6 +1,6 @@
-<div class="p-6">
+<div class="space-y-6">
 
-    <h2 class="text-2xl font-bold mb-4">All Orders</h2>
+    <h2 class="h2 font-bold mb-4">All Orders</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white p-4 shadow rounded">
@@ -57,6 +57,8 @@
                 <option value="created_at">Date Added</option>
             </select>
 
+            <input type="number" wire:model.live="minAmount" step="0.01" placeholder="Minimum Amount (€)" class="border px-2 py-1 rounded" />
+
             <select wire:model.live="sortDirection" class="border border-gray-300 rounded px-3 py-2">
                 <option value="asc">Ascending</option>
                 <option value="desc">Descending</option>
@@ -71,13 +73,25 @@
         @endif
 
         <div class="my-5 flex items-center">
-            <div>
-                <input type="checkbox" wire:model.live="selectAllOrders">
-                <label for="selectAll" class="ml-1">Select All Orders</label>
+            <div class="flex flex-col">
+                <div>
+                    <input type="checkbox" wire:model.live="selectAllOrders">
+                    <label for="selectAll" class="ml-1">Select All Orders</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="selectAllOnPage" wire:model.live="selectAllOnPage" />
+                    <label for="selectAllOnPage" class="ml-1">All Orders On This Page</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="selectAllFiltered" wire:model.live="selectAllFiltered" />
+                    <label for="selectAllFiltered" class="ml-1">All Filtered Orders</label>
+                </div>
             </div>
             <div class="flex items-center gap-2 ml-3">
                 <select wire:model.live="bulkAction" class="form-select">
-                    <option value="">Bulk Actions</option>
+                    <option value="">-- Bulk Actions --</option>
                     <option value="update_status">Update Status</option>
                     <option value="export">Export Selected</option>
                     <option value="print_invoices">Print Invoices</option>
@@ -86,7 +100,7 @@
                 @if ($bulkAction === 'update_status')
                     <div class="flex items-center gap-2">
                         <select wire:model.live="newStatus" class="form-select">
-                            <option value="">Choose new status</option>
+                            <option value="">-- Choose new status --</option>
                             <option value="pending">Pending</option>
                             <option value="processing">Processing</option>
                             <option value="shipped">Shipped</option>
@@ -101,10 +115,15 @@
                             Update
                         </button>
                     </div>
+                @elseif ($bulkAction === 'export')
+                    <button wire:click="applyBulkAction" class="btn btn-success">
+                        Export
+                    </button>
+                @elseif ($bulkAction === 'print_invoices')
+                    <button wire:click="applyBulkAction" class="btn btn-success">
+                        Print Invoices
+                    </button>
                 @endif
-
-
-                <button wire:click="applyBulkAction" class="btn btn-primary">Apply</button>
             </div>
 
         </div>

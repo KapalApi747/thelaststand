@@ -57,6 +57,11 @@ class ProductShow extends Component
         $this->dispatch('variant-image-updated', ['url' => $imageUrl]);
     }
 
+    public function getStockProperty()
+    {
+        return $this->selectedVariant()?->stock ?? $this->product->stock;
+    }
+
     public function render()
     {
         return view('livewire.tenant.frontend.shopping.products.product-show');

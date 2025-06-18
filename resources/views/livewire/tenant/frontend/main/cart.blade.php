@@ -40,7 +40,7 @@
                     class="w-12 border rounded text-center"
                 >
 
-                <button wire:click="removeFromCart('{{ $itemKey }}')" class="text-red-500 hover:underline">Remove</button>
+                <button wire:click="removeFromCart('{{ $itemKey }}')" class="text-red-500 hover:underline cursor-pointer">Remove</button>
             </div>
         </div>
     @empty
@@ -66,7 +66,7 @@
         <button
             wire:click.prevent="{{ $this->checkForStockIssues() ? '' : 'goToCheckout' }}"
             {{ $this->checkForStockIssues() ? 'disabled' : '' }}
-            class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
             Checkout
         </button>

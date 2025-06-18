@@ -48,6 +48,14 @@
                         <div>
                             <a href="{{ route('dashboard.tenant-profiles.edit', $tenant) }}" class="text-yellow-600 hover:underline">Edit</a>
                         </div>
+                        <div>
+                            <button
+                                wire:click="deleteTenant('{{ $tenant->id }}')"
+                                onclick="return confirm('Are you sure you want to delete this tenant? This will drop their database and remove all data.')"
+                                class="text-red-600 hover:underline">
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 </td>
             </tr>

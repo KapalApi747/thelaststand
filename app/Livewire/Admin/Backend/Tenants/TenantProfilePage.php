@@ -3,6 +3,8 @@
 namespace App\Livewire\Admin\Backend\Tenants;
 
 use App\Models\Tenant;
+use App\Services\TenantDeletionService;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -11,6 +13,19 @@ use Livewire\WithPagination;
 class TenantProfilePage extends Component
 {
     use WithPagination;
+
+    public function deleteTenant($tenantId)
+    {
+        $tenant = Tenant::findOrFail($tenantId);
+
+        try {
+            app(TenantDeletionService::class)->deleteTenant($tenant);
+            session()->flash('message', 'Tenant deleted successfully.');
+        } catch (\Throwable $e) {
+            Log::error('Tenant deletion failed', ['error' => $e->getMessage()]);
+            session()->flash('message', 'Failed to delete tenant. Check logs.');
+        }
+    }
 
     public function toggleStatus($tenantId)
     {

@@ -22,7 +22,7 @@
                     <h1 class="h5">
                         {{ $itemsSold }}
                     </h1>
-                    <p>Total item sales this past month</p>
+                    <p>Total items sold in the past 30 days</p>
                 </div>
                 <!-- end bottom -->
 
@@ -52,7 +52,7 @@
                     <h1 class="h5">
                         {{ $newOrders }}
                     </h1>
-                    <p>New orders this past month</p>
+                    <p>New orders in the past 30 days</p>
                 </div>
                 <!-- end bottom -->
 

@@ -125,7 +125,10 @@ class TenancyServiceProvider extends ServiceProvider
             // Block inactive tenants
             $tenant = $event->tenancy->tenant;
 
-            if ($tenant->profile->store_status === 'inactive') {
+            if (
+                method_exists($tenant, 'profile') &&
+                optional($tenant->profile)->store_status === 'inactive'
+            ) {
                 abort(403, 'Store is currently inactive.');
             }
         });

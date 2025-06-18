@@ -195,7 +195,11 @@
                                                                             Stock: {{ $variant->stock }}</p>
                                                                     </div>
                                                                 @else
-                                                                    <p class="text-red-600">Out of Stock</p>
+                                                                    <div>
+                                                                        <p>{{ $variant->name }} -
+                                                                            €{{ number_format($variant->price, 2) }}</p>
+                                                                        <p class="text-red-600">Out of Stock</p>
+                                                                    </div>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -215,7 +219,7 @@
                                                                 <button
                                                                     type="submit"
                                                                     @if ($isOutOfStock) disabled @endif
-                                                                    class="btn px-4 py-2 rounded-md
+                                                                    class="btn px-4 py-2 rounded-md text-gray-100
                                                                     {{ $isOutOfStock ? 'bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-green-500 hover:bg-green-700' }}
                                                                     transition-colors duration-300 cursor-pointer"
                                                                 >
@@ -428,8 +432,8 @@
                                     type="submit"
                                     @if ($mainProductOutOfStock) disabled @endif
                                     class="btn px-4 py-2 rounded-md
-                                                                    {{ $mainProductOutOfStock ? 'bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-green-500 hover:bg-green-700' }}
-                                                                    transition-colors duration-300 cursor-pointer"
+                                          {{ $mainProductOutOfStock ? 'bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-green-500 hover:bg-green-700' }}
+                                          transition-colors duration-300 cursor-pointer"
                                 >
                                     Add to Cart
                                 </button>
