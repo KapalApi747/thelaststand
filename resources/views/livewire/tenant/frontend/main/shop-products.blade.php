@@ -1,124 +1,99 @@
-<div class="bg-black px-12 py-12">
-
-    <div class="text-center">
-        <h1 class="text-2xl font-bold mb-6">Available Products</h1>
+<div class="bg-gray-50 min-h-screen px-8 py-12 text-gray-800">
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-bold text-gray-900">Available Products</h1>
     </div>
 
     @if (session('message'))
-        <div class="mb-4 rounded-lg bg-green-100 px-4 py-3 text-sm text-green-800 shadow-md" role="alert">
+        <div class="mb-6 rounded-lg bg-green-100 px-4 py-3 text-sm text-green-800 shadow" role="alert">
             {{ session('message') }}
         </div>
     @endif
 
-    {{--<div
-        x-data="{
-            show: false,
-            message: '',
-            type: '',
-        }"
-        x-on:notify.window="
-            message = $event.detail[0].message ?? '';
-            type = $event.detail[0].type ?? 'info';
-            show = true;
-            setTimeout(() => show = false, 2000);
-            "
-        x-show="show"
-        x-transition
-        class=" my-5 px-4 py-3 rounded shadow-lg text-white"
-        :class="{
-            'bg-green-600': type === 'success',
-            'bg-red-600': type === 'error',
-            'bg-blue-600': type === 'info',
-        }"
-        style="display: none;"
-    >
-        <p x-text="message" class="text-sm font-semibold"></p>
-    </div>--}}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- Filters -->
+        <aside class="md:col-span-1 bg-white border border-gray-200 p-6 rounded-xl shadow">
+            <h3 class="text-lg font-semibold mb-4 text-gray-900">Filter Products</h3>
 
-    <div class="mb-6 bg-black rounded shadow">
-        <h3 class="font-bold mb-3">Filter Products</h3>
-
-        <div class="max-w-md mb-4">
-            <label class="block font-semibold mb-1">Categories</label>
-            <select
-                wire:model.live.debounce.500ms="selectedCategories"
-                multiple
-                class="w-full border rounded p-2"
-                size="4"
-            >
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
-            <small class="text-gray-500">Hold Ctrl to select or deselect multiple categories</small>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 max-w-xs">
-            <div>
-                <label class="block font-semibold mb-1" for="minPrice">Min Price (€)</label>
-                <input
-                    type="number"
-                    wire:model.live.500ms="minPrice"
-                    id="minPrice"
-                    min="0"
-                    step="0.01"
-                    class="w-full border rounded p-2"
-                    placeholder="0.00"
-                />
+            <div class="mb-6">
+                <label class="block text-sm font-medium mb-2 text-gray-700">Categories</label>
+                <select
+                    wire:model.live.debounce.500ms="selectedCategories"
+                    multiple
+                    class="w-full rounded-md border border-gray-300 text-gray-800 p-2 bg-white"
+                    size="5"
+                >
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+                <small class="text-gray-500">Hold Ctrl (Cmd) to select multiple</small>
             </div>
-            <div>
-                <label class="block font-semibold mb-1" for="maxPrice">Max Price (€)</label>
-                <input
-                    type="number"
-                    wire:model.live.500ms="maxPrice"
-                    id="maxPrice"
-                    min="0"
-                    step="0.01"
-                    class="w-full border rounded p-2"
-                    placeholder="0.00"
-                />
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1 text-gray-700" for="minPrice">Min Price (€)</label>
+                    <input
+                        type="number"
+                        wire:model.live.500ms="minPrice"
+                        id="minPrice"
+                        min="0"
+                        step="0.01"
+                        class="w-full rounded-md border border-gray-300 text-gray-800 p-2 bg-white"
+                        placeholder="0.00"
+                    />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1 text-gray-700" for="maxPrice">Max Price (€)</label>
+                    <input
+                        type="number"
+                        wire:model.live.500ms="maxPrice"
+                        id="maxPrice"
+                        min="0"
+                        step="0.01"
+                        class="w-full rounded-md border border-gray-300 text-gray-800 p-2 bg-white"
+                        placeholder="0.00"
+                    />
+                </div>
             </div>
-        </div>
-    </div>
+        </aside>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-10">
-        @forelse ($products as $product)
-            @php
-                // Check stock level for main product
-                $mainProductOutOfStock = $product->stock <= 0;
-            @endphp
-
-            <div    wire:key="product-{{ $product->id }}"
-                    class="bg-black rounded-xl border border-gray-200 shadow p-4">
+        <!-- Product Cards -->
+        <main class="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @forelse ($products as $product)
                 @php
+                    $mainProductOutOfStock = $product->stock <= 0;
                     $image = $product->images->first();
                     $imageUrl = $image ? asset('tenant' . tenant()->id . '/' . $image->path) : 'https://placehold.co/200x200?text=No+Image';
                     $modalName = 'product-details-' . $product->id;
                 @endphp
-                <img src="{{ $imageUrl }}"
-                     alt="{{ $product->name }}"
-                     class="w-full h-48 object-cover rounded">
 
-                <h2 class="text-white text-lg font-semibold mt-4">{{ $product->name }}</h2>
-                <p class="font-bold {{ $mainProductOutOfStock ? 'line-through text-gray-400' : 'text-teal-600' }}">€{{ number_format($product->price, 2) }}</p>
+                <div wire:key="product-{{ $product->id }}"
+                     class="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col justify-between">
+                    <img src="{{ $imageUrl }}" alt="{{ $product->name }}"
+                         class="w-full h-48 object-cover rounded mb-4">
 
-                @if ($product->average_rating > 0)
-                    <div class="flex items-center text-yellow-400 text-sm mt-1">
-                        ★ {{ number_format($product->average_rating, 1) }}
-                        <span class="text-gray-400 text-xs ms-2">({{ $product->approved_reviews_count }} reviews)</span>
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900">{{ $product->name }}</h2>
+                        <p class="font-bold {{ $mainProductOutOfStock ? 'line-through text-gray-400' : 'text-teal-600' }}">
+                            €{{ number_format($product->price, 2) }}
+                        </p>
+
+                        <div class="flex items-center text-yellow-500 text-sm mt-1">
+                            @if ($product->average_rating > 0)
+                                ★ {{ number_format($product->average_rating, 1) }}
+                            @else
+                                ☆ 0
+                            @endif
+                            <span class="text-gray-500 text-xs ml-2">({{ $product->approved_reviews_count }} reviews)</span>
+                        </div>
                     </div>
-                @else
-                    <div class="flex items-center text-yellow-400 text-sm mt-1">
-                        ☆ 0
-                        <span class="text-gray-400 text-xs ms-2">({{ $product->approved_reviews_count }} reviews)</span>
-                    </div>
-                @endif
 
-                <div class="mt-5 flex flex-col">
-                    <div class="flex justify-between">
-                        <div class="flex me-1">
-                            <flux:modal.trigger name="product-details-{{ $product->id }}">
-                                <flux:button class="cursor-pointer transition-colors duration-300 ease-in-out">
+                    <div class="mt-4 flex flex-col space-y-3">
+                        <div class="flex justify-between items-center">
+                            <flux:modal.trigger name="{{ $modalName }}">
+                                <flux:button
+                                    class="cursor-pointer transition-colors duration-300"
+                                >
                                     Quick View
                                 </flux:button>
                             </flux:modal.trigger>
@@ -403,47 +378,41 @@
                                     </div>
                                 </div>
                             </flux:modal>
-                        </div>
-                        <div class="mt-2">
-                            <a
-                                class="px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-700 transition-colors duration-300 cursor-pointer"
-                                href="{{ route('shop.shop-product-show', $product->slug) }}"
-                            >
+
+                            <a href="{{ route('shop.shop-product-show', $product->slug) }}"
+                               class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-300">
                                 View Details
                             </a>
                         </div>
-                    </div>
 
-                    {{--<livewire:tenant.frontend.shopping.add-to-cart-button :product="$product" />--}}
-                    <div class="flex justify-center">
-                        <div class="flex flex-col">
-                            <div class="my-3 text-center">
-                                @if ($mainProductOutOfStock)
-                                    <span class="text-red-500 font-semibold">Out of Stock</span>
-                                @else
-                                    <span class="text-green-500 font-semibold">In Stock</span>
-                                @endif
-                            </div>
-                            <form method="POST" action="{{ route('shop.add-to-cart') }}">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                                <button
-                                    type="submit"
-                                    @if ($mainProductOutOfStock) disabled @endif
-                                    class="btn px-4 py-2 rounded-md
-                                          {{ $mainProductOutOfStock ? 'bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-green-500 hover:bg-green-700' }}
-                                          transition-colors duration-300 cursor-pointer"
-                                >
-                                    Add to Cart
-                                </button>
-                            </form>
+                        <div class="text-center text-sm">
+                            @if ($mainProductOutOfStock)
+                                <span class="text-red-500 font-semibold">Out of Stock</span>
+                            @else
+                                <span class="text-green-600 font-semibold">In Stock</span>
+                            @endif
                         </div>
+
+                        <form method="POST" action="{{ route('shop.add-to-cart') }}" class="text-center">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <button
+                                type="submit"
+                                @if ($mainProductOutOfStock) disabled @endif
+                                class="w-full text-sm px-4 py-2 rounded-md
+                                    {{ $mainProductOutOfStock
+                                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        : 'bg-green-500 hover:bg-green-600 text-white cursor-pointer' }}
+                                    transition-colors duration-300"
+                            >
+                                Add to Cart
+                            </button>
+                        </form>
                     </div>
                 </div>
-            </div>
-        @empty
-            <p>No products matching your search criteria.</p>
-        @endforelse
+            @empty
+                <p class="col-span-full text-center text-gray-500">No products matching your search criteria.</p>
+            @endforelse
+        </main>
     </div>
 </div>
