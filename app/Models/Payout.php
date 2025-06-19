@@ -17,6 +17,10 @@ class Payout extends Model
         'paid_at',
     ];
 
+    protected $casts = [
+        'paid_at' => 'datetime',
+    ];
+
     public function tenant()
     {
         return $this->belongsTo(Tenant::class, 'tenant_id', 'id');

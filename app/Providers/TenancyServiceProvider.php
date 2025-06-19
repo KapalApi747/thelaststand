@@ -106,11 +106,10 @@ class TenancyServiceProvider extends ServiceProvider
         $this->mapRoutes();
         $this->makeTenancyMiddlewareHighestPriority();
 
-        /*DomainTenantResolver::$shouldCache = true;
-
+        // Caching on tenant resolvers
+        DomainTenantResolver::$shouldCache = true;
         DomainTenantResolver::$cacheTTL = 3600;
-
-        DomainTenantResolver::$cacheStore = null;*/
+        DomainTenantResolver::$cacheStore = null;
 
         Event::listen(TenancyBootstrapped::class, function (TenancyBootstrapped $event) {
             $basePath = storage_path('framework');

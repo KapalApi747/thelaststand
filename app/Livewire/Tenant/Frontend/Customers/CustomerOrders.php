@@ -26,7 +26,7 @@ class CustomerOrders extends Component
             ->where('customer_id', auth('customer')->id())
             ->findOrFail($orderId);
 
-        $pdf = Pdf::loadView('orders.order-invoice', compact('order'));
+        $pdf = Pdf::loadView('exports.orders.order-invoice', compact('order'));
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->stream();

@@ -78,7 +78,7 @@ class OrderIndex extends Component
             case 'print_invoices':
                 $orders = Order::whereIn('id', $this->selectedOrders)->get();
 
-                $pdf = Pdf::loadView('orders.bulk-invoices', compact('orders'))
+                $pdf = Pdf::loadView('exports.orders.bulk-invoices', compact('orders'))
                     ->setPaper('a4', 'portrait');
 
                 return response()->streamDownload(

@@ -4,22 +4,22 @@ namespace App\Livewire\Tenant\Backend\Payouts;
 
 use App\Models\Order;
 use App\Models\Payout;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('t-dashboard-layout')]
 class TenantPayoutIndex extends Component
 {
     public $payouts = [];
 
     public function mount()
     {
-        $tenantId = tenant('id'); // however you get tenant id
+        $tenantId = tenant('id');
 
-        // 1. Get payouts from central DB for this tenant
         $this->payouts = Payout::where('tenant_id', $tenantId)
-            ->orderByDesc('payout_date')
+            ->orderBy('paid_at')
             ->get()
             ->map(function ($payout) {
-                // 2. For each payout, get tenant orders with this payout_id
                 $orders = Order::where('payout_id', $payout->id)->get();
                 $payout->orders = $orders;
                 return $payout;

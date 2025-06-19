@@ -1,6 +1,6 @@
-<div class="space-y-6">
+<div class="p-6 bg-white rounded shadow">
     <div>
-        <h2 class="h2 font-semibold mb-6">Customer Details: {{ $customer->name }}</h2>
+        <h3 class="h3 font-semibold mb-6">Customer Details: {{ $customer->name }}</h3>
 
         <section class="mb-6">
             <h3 class="font-semibold text-lg mb-2">Basic Information</h3>
