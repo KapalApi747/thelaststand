@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Tenant\Frontend\Shopping;
 
+use App\Models\ShippingMethod;
 use App\Services\CartService;
 use App\Services\OrderService;
 use Livewire\Attributes\Layout;
@@ -13,7 +14,9 @@ class CheckoutShipping extends Component
     public $shippingMethod = null;
     public $carrier = null;
 
-    public $shippingOptions = [
+    public $shippingOptions = [];
+
+    /*public $shippingOptions = [
         'parcel' => [
             'label' => 'Parcel (Standard Shipping)',
             'cost' => 5.00,
@@ -39,12 +42,25 @@ class CheckoutShipping extends Component
             'cost' => 25.00,
             'carriers' => ["Yuri's Special Delivery Service"],
         ],
-    ];
+    ];*/
 
     protected $rules = [
         'shippingMethod' => 'required|in:parcel,mail,pickup,express,courier',
         'carrier' => 'nullable|string',
     ];
+
+    public function mount()
+    {
+        $this->shippingOptions = ShippingMethod::where('enabled', true)
+            ->get()
+            ->keyBy('code')
+            ->map(fn ($method) => [
+                'label' => $method->label,
+                'cost' => $method->cost,
+                'carriers' => $method->carriers,
+            ])
+            ->toArray();
+    }
 
     public function updatedShippingMethod($value)
     {

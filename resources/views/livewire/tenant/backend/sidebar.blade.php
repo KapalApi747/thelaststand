@@ -46,7 +46,7 @@
                 <div class="py-1">
 
                     <a href="{{ route('tenant-dashboard.user-index') }}"
-                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition flex justify-between items-center">
+                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
                         <i class="fas fa-person-walking"></i>
                         <div>
                             All Users
@@ -54,7 +54,7 @@
                     </a>
 
                     <a href="{{ route('tenant-dashboard.user-register') }}"
-                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition flex justify-between items-center">
+                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
                         <i class="fas fa-user-plus"></i>
                         <div>
                             Register New User
@@ -89,7 +89,7 @@
                 <div class="py-1">
 
                     <a href="{{ route('tenant-dashboard.customer-index') }}"
-                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition flex justify-between items-center">
+                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
                         <i class="fas fa-person-walking"></i>
                         <div>
                             All Customers
@@ -97,7 +97,7 @@
                     </a>
 
                     <a href="{{ route('tenant-dashboard.customer-creation') }}"
-                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition flex justify-between items-center">
+                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
                         <i class="fas fa-user-plus"></i>
                         <div>
                             Create New Customer
@@ -152,7 +152,7 @@
                 <div class="py-1">
 
                     <a href="{{ route('tenant-dashboard.order-index') }}"
-                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition flex justify-between items-center">
+                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
                         <i class="fas fa-clipboard-list text-xs"></i>
                         <div>
                             All Orders
@@ -173,6 +173,50 @@
             <i class="fas fa-hand-holding-usd text-xs"></i>
             <div>Payouts</div>
         </a>
+        @endrole
+        <!-- end link -->
+
+        <!-- link -->
+        @role('admin')
+        <div x-data="{ open: false }">
+            <button @click="open = !open" type="button"
+                    class="w-full mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+                <i class="fas fa-shipping-fast text-xs"></i>
+                <div class="flex items-center">
+                    Shipping Methods
+                    <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+            </button>
+
+            <!-- Dropdown panel -->
+            <div x-show="open" @click.outside="open = false"
+                 class="absolute z-10 w-full origin-bottom-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+                <div class="py-1">
+
+                    <a href="{{ route('tenant-dashboard.shipping-method-index') }}"
+                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+                        <i class="fas fa-shipping-fast text-xs"></i>
+                        <div>
+                            All Methods
+                        </div>
+                    </a>
+
+                    <a
+                        href="{{ route('tenant-dashboard.shipping-method-form') }}"
+                        class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+                        <i class="fas fa-shipping-fast text-xs"></i>
+                        <div>
+                            Create New
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
         @endrole
         <!-- end link -->
 
