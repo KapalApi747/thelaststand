@@ -1,8 +1,8 @@
-<div class="space-y-6">
+<div class="p-6 bg-white rounded shadow">
 
-    <h2 class="h2 font-bold mb-4">All Orders</h2>
+    <h3 class="h3 font-bold mb-4">All Orders</h3>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="grid grid-cols-3 md:grid-cols-1 gap-6 mb-6">
         <div class="bg-white p-4 shadow rounded">
             <p class="text-gray-500">Total Orders</p>
             <p class="text-2xl font-semibold">{{ $orderCount }}</p>

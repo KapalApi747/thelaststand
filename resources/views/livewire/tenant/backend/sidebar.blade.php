@@ -168,6 +168,17 @@
         <!-- link -->
         @role('admin')
         <a
+            href="{{ route('tenant-dashboard.tenant-payouts') }}"
+            class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+            <i class="fas fa-hand-holding-usd text-xs"></i>
+            <div>Payouts</div>
+        </a>
+        @endrole
+        <!-- end link -->
+
+        <!-- link -->
+        @role('admin')
+        <a
             href="{{ route('tenant-dashboard.store-settings') }}"
             class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
             <i class="fad fa-shopping-cart text-xs"></i>

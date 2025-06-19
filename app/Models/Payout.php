@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payout extends Model
 {
+    protected $connection = 'mysql';
+
     protected $table = 'payouts';
 
     protected $fillable = [
@@ -13,6 +15,10 @@ class Payout extends Model
         'amount',
         'status',
         'paid_at',
+    ];
+
+    protected $casts = [
+        'paid_at' => 'datetime',
     ];
 
     public function tenant()

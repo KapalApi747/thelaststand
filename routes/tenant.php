@@ -12,6 +12,8 @@ use App\Livewire\Tenant\Backend\Customers\CustomerView;
 use App\Livewire\Tenant\Backend\Orders\OrderEdit;
 use App\Livewire\Tenant\Backend\Orders\OrderIndex;
 use App\Livewire\Tenant\Backend\Orders\OrderView;
+use App\Livewire\Tenant\Backend\Payouts\TenantPayoutIndex;
+use App\Livewire\Tenant\Backend\Payouts\TenantPayoutView;
 use App\Livewire\Tenant\Backend\Products\ProductEdit;
 use App\Livewire\Tenant\Backend\Products\ProductManagement;
 use App\Livewire\Tenant\Backend\Products\ProductView;
@@ -146,6 +148,11 @@ Route::middleware([
 
             Route::middleware(['role:admin|analyst'])->group(function () {
                 Route::get('/statistics', ShopStatistics::class)->name('shop-statistics');
+            });
+
+            Route::middleware(['role:admin'])->group(function () {
+                Route::get('/payouts', TenantPayoutIndex::class)->name('tenant-payouts');
+                Route::get('/payouts/{payoutId}', TenantPayoutView::class)->name('tenant-payout-view');
             });
         });
 });
