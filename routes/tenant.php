@@ -18,6 +18,9 @@ use App\Livewire\Tenant\Backend\Products\ProductEdit;
 use App\Livewire\Tenant\Backend\Products\ProductManagement;
 use App\Livewire\Tenant\Backend\Products\ProductView;
 use App\Livewire\Tenant\Backend\Profile\StoreSettings;
+use App\Livewire\Tenant\Backend\Shipping\ShippingMethodEdit;
+use App\Livewire\Tenant\Backend\Shipping\ShippingMethodForm;
+use App\Livewire\Tenant\Backend\Shipping\ShippingMethodIndex;
 use App\Livewire\Tenant\Backend\Statistics\ShopStatistics;
 use App\Livewire\Tenant\Backend\TenantDashboard;
 use App\Livewire\Tenant\Backend\Users\UserEdit;
@@ -153,6 +156,12 @@ Route::middleware([
             Route::middleware(['role:admin'])->group(function () {
                 Route::get('/payouts', TenantPayoutIndex::class)->name('tenant-payouts');
                 Route::get('/payouts/{payoutId}', TenantPayoutView::class)->name('tenant-payout-view');
+            });
+
+            Route::middleware(['role:admin'])->group(function () {
+                Route::get('/shipping-methods', ShippingMethodIndex::class)->name('shipping-method-index');
+                Route::get('/shipping-methods-add', ShippingMethodForm::class)->name('shipping-method-form');
+                Route::get('/shipping-methods/{shippingMethod}/edit', ShippingMethodEdit::class)->name('shipping-method-edit');
             });
         });
 });

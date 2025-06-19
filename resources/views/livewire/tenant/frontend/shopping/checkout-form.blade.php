@@ -176,13 +176,13 @@
         @if (!$loggedInCustomer)
             <div class="mb-5">
                 <label for="name" class="block font-medium text-gray-700 mb-1">Full Name</label>
-                <input wire:model.lazy="name" type="text" id="name" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                <input wire:model.lazy="name" type="text" id="name" class="w-full border border-gray-300 text-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                 @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="mb-5">
                 <label for="email" class="block font-medium text-gray-700 mb-1">Email Address</label>
-                <input wire:model.lazy="email" type="email" id="email" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                <input wire:model.lazy="email" type="email" id="email" class="w-full border border-gray-300 text-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                 @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 

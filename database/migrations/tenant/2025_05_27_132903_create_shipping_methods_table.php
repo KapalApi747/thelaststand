@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('shipping_methods', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->unique(); // e.g., 'parcel', 'express'
+            $table->string('label');
+            $table->decimal('cost', 8, 2);
+            $table->json('carriers')->nullable(); // store as JSON array
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
         });
     }
