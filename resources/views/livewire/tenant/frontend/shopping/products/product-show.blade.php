@@ -66,9 +66,8 @@
             </p>
 
             {{-- Stock --}}
-            @php $stock = $selected?->stock ?? $product->stock; @endphp
-            <p class="{{ $stock > 0 ? 'text-green-500' : 'text-red-500' }} mt-1">
-                {{ $stock > 0 ? 'In Stock' : 'Out of Stock' }} ({{ $stock }})
+            <p class="{{ $this->stock > 0 ? 'text-green-500' : 'text-red-500' }} mt-1">
+                {{ $this->stock > 0 ? 'In Stock' : 'Out of Stock' }} ({{ $this->stock }})
             </p>
 
             {{-- Description --}}
@@ -84,7 +83,7 @@
                 <div class="mt-6">
                     <h3 class="font-semibold mb-2 text-white text-sm sm:text-base">Choose a Variant (optional):</h3>
                     <select wire:model.live="variantId" class="w-full rounded border-gray-300 bg-black text-white text-sm">
-                        <option value="{{ null }}">-- Standard --</option>
+                        <option value="{{ null }}">-- Standard -- ({{ $product->stock }} in stock)</option>
                         @foreach ($product->variants as $variant)
                             <option value="{{ $variant->id }}">
                                 {{ $variant->name }} - €{{ number_format($variant->price, 2) }}
@@ -108,13 +107,13 @@
                 <button
                     type="submit"
                     class="btn w-full sm:w-auto px-4 py-2 rounded-md bg-green-500 hover:bg-green-700 transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                    {{ $stock <= 0 ? 'disabled' : '' }}
+                    {{ $this->stock <= 0 ? 'disabled' : '' }}
                 >
                     Add to Cart
                 </button>
             </form>
 
-            @if ($stock <= 0)
+            @if ($this->stock <= 0)
                 <p class="text-red-500 font-semibold">Out of Stock</p>
             @endif
         </div>

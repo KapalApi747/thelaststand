@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Tenant\Frontend\Shopping;
 
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Stripe\StripeClient;
 
@@ -130,7 +132,7 @@ class StripePaymentButton extends Component
             'line_items' => $lineItems,
             'mode' => 'payment',
             'success_url' => route('shop.checkout-success') . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('shop.checkout-cancel'),
+            'cancel_url' => route('shop.checkout-cancel') . '?session_id={CHECKOUT_SESSION_ID}',
             'billing_address_collection' => 'required',
             'phone_number_collection' => ['enabled' => true],
             'payment_intent_data' => [
@@ -155,6 +157,14 @@ class StripePaymentButton extends Component
         ];
 
         $session = $stripe->checkout->sessions->create($checkoutData);
+
+        $orderId = session('current_order_id');
+        if ($orderId) {
+            $order = Order::find($orderId);
+            if ($order) {
+                $order->update(['session_id' => $session->id]);
+            }
+        }
 
         return redirect()->away($session->url);
     }

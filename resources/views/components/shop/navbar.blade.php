@@ -1,15 +1,21 @@
-<nav class="bg-black px-12 py-4 rounded flex justify-between items-center">
-
-    <div>
-        <a
-            class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
-            href="{{ route('shop.shop-cart') }}"
-        >
-            Shopping Cart
-        </a>
+<nav class="bg-gray-100 px-8 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-4">
+        <div>
+            <img src="{{ asset("tenant" . tenant()->id . "/assets/img/store_logo.png") }}" alt="store_logo" class="w-full h-12">
+        </div>
+        <div>
+            <h1 class="text-black font-bold text-3xl">{{tenant()->store_name}}</h1>
+        </div>
     </div>
-
     <div class="flex items-center">
+        <div class="me-4">
+            <a
+                class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition-colors duration-300"
+                href="{{ route('shop.shop-cart') }}"
+            >
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+        </div>
         @auth('customer')
         <div x-data="{ open: false }" class="relative">
 
@@ -18,7 +24,7 @@
                     @keydown.escape.window="open = false"
                     @click.outside="open = false"
                     type="button"
-                    class="flex items-center py-2 px-4 text-green-300 font-medium focus:outline-none cursor-pointer"
+                    class="flex items-center py-2 px-4 text-green-500 font-medium focus:outline-none cursor-pointer"
                     aria-haspopup="true"
                     :aria-expanded="open"
                 >

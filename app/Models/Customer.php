@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class Customer extends Authenticatable
 {
@@ -28,6 +29,17 @@ class Customer extends Authenticatable
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($customer) {
+            $customer->slug = Str::slug($customer->name);
+        });
+
+        static::updating(function ($customer) {
+            $customer->slug = Str::slug($customer->name);
+        });
+    }
 
     public function orders()
     {

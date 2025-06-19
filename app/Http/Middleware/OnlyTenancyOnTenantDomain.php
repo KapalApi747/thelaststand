@@ -10,16 +10,16 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 class OnlyTenancyOnTenantDomain extends InitializeTenancyByDomain
 {
     protected array $centralDomains = [
-        'myapp.local',
+        'thelaststand.local',
     ];
 
     public function handle($request, Closure $next)
     {
         if (in_array($request->getHost(), $this->centralDomains)) {
-            return $next($request); // ❌ Skip tenancy initialization
+            return $next($request); // Skip tenancy initialization
         }
 
-        // ✅ Initialize tenancy as usual
+        // Initialize tenancy as usual
         return parent::handle($request, $next);
     }
 }

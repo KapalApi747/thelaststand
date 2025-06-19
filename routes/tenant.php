@@ -5,6 +5,10 @@ declare(strict_types=1);
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
+use App\Livewire\Tenant\Backend\Customers\CustomerCreation;
+use App\Livewire\Tenant\Backend\Customers\CustomerEdit;
+use App\Livewire\Tenant\Backend\Customers\CustomerIndex;
+use App\Livewire\Tenant\Backend\Customers\CustomerView;
 use App\Livewire\Tenant\Backend\Orders\OrderEdit;
 use App\Livewire\Tenant\Backend\Orders\OrderIndex;
 use App\Livewire\Tenant\Backend\Orders\OrderView;
@@ -125,6 +129,13 @@ Route::middleware([
                 Route::get('/user-register', UserRegistration::class)->name('user-register');
                 Route::get('/users/{user:slug}', UserView::class)->name('user-view');
                 Route::get('/users/{user:slug}/edit', UserEdit::class)->name('user-edit');
+            });
+
+            Route::middleware(['role:admin'])->group(function () {
+                Route::get('/customers', CustomerIndex::class)->name('customer-index');
+                Route::get('/customers/{customerId}', CustomerView::class)->name('customer-view');
+                Route::get('/customers/{customer}/edit', CustomerEdit::class)->name('customer-edit');
+                Route::get('/customers/customer-register', CustomerCreation::class)->name('customer-creation');
             });
 
             Route::middleware(['permission:manage orders'])->group(function () {

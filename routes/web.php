@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Admin\Backend\Payouts\PayoutIndex;
 use App\Livewire\Admin\Backend\Tenants\EditTenantProfile;
 use App\Livewire\Admin\Backend\Tenants\TenantProfilePage;
 use App\Livewire\Admin\Backend\Tenants\ViewTenantProfile;
@@ -13,24 +14,6 @@ foreach (config('tenancy.central_domains') as $domain) {
     Route::middleware('web')->domain($domain)->group(function () {
 
         require __DIR__.'/auth.php';
-
-        /*Route::get('/', function () {
-            return view('welcome');
-        })->name('home');*/
-
-        /*Route::view('dashboard', 'dashboard')
-            ->middleware(['auth', 'verified'])
-            ->name('dashboard');*/
-
-        /*Route::middleware(['auth'])->group(function () {
-            Route::redirect('settings', 'settings/profile');
-
-            Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
-            Volt::route('settings/password', 'settings.password')->name('settings.password');
-            Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
-
-            Route::view('dashboard', 'dashboard')->name('dashboard');
-        });*/
 
         Route::get('/', function () {
             return view('central-landing');
@@ -53,6 +36,26 @@ foreach (config('tenancy.central_domains') as $domain) {
                 Route::get('/tenant-profiles', TenantProfilePage::class)->name('tenant-profiles');
                 Route::get('/tenant-profiles/{tenant}', ViewTenantProfile::class)->name('tenant-profiles.view');
                 Route::get('/tenant-profiles/{tenant}/edit', EditTenantProfile::class)->name('tenant-profiles.edit');
+
+                Route::get('/payouts', PayoutIndex::class)->name('payouts');
             });
     });
 }
+
+/*Route::get('/', function () {
+            return view('welcome');
+        })->name('home');*/
+
+/*Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');*/
+
+/*Route::middleware(['auth'])->group(function () {
+    Route::redirect('settings', 'settings/profile');
+
+    Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
+    Volt::route('settings/password', 'settings.password')->name('settings.password');
+    Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+
+    Route::view('dashboard', 'dashboard')->name('dashboard');
+});*/

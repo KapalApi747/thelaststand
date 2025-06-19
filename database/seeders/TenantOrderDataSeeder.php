@@ -12,6 +12,7 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Shipment;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class TenantOrderDataSeeder extends Seeder
@@ -27,11 +28,13 @@ class TenantOrderDataSeeder extends Seeder
 
         // Create 100 customers over the past 6 months
         Customer::factory(100)->create()->each(function ($customer) use ($products) {
-            // Biased signup dates (recent-heavy)
-            $signupDate = now()->subDays(
-                fake()->biasedNumberBetween(0, 180, fn($x) => (1 - $x) ** 1.1)
-            );
-            $customer->update(['created_at' => $signupDate]);
+
+            $signupDate = Carbon::instance(fake()->dateTimeBetween('-6 months', 'now'));
+            $customer->forceFill([
+                'created_at' => $signupDate,
+                'updated_at' => $signupDate,
+            ])
+                ->saveQuietly();
 
             // Every customer gets a shipping address
             CustomerAddress::factory()->create([
@@ -52,9 +55,29 @@ class TenantOrderDataSeeder extends Seeder
             }
 
             $ordersCount = rand(1, 3);
+
+            $daysSinceSignup = $signupDate->diffInDays(now());
+            $segmentSize = max((int) floor($daysSinceSignup / $ordersCount), 1);
+
             for ($i = 0; $i < $ordersCount; $i++) {
-                // Ensure order is after signup but before now
-                $orderCreatedAt = fake()->dateTimeBetween($signupDate, now());
+                $segmentStart = $signupDate->copy()->addDays($segmentSize * $i);
+                $segmentEnd = $segmentStart->copy()->addDays($segmentSize - 1);
+
+                // Clamp to now
+                $now = now();
+                if ($segmentEnd->greaterThan($now)) {
+                    $segmentEnd = $now;
+                }
+
+                // Ensure start <= end
+                if ($segmentStart->greaterThan($segmentEnd)) {
+                    $segmentStart = $segmentEnd->copy()->subDay(); // go back 1 day
+                }
+
+                // Now safely generate order creation date
+                $orderCreatedAt = fake()->dateTimeBetween($segmentStart, $segmentEnd);
+
+                $orderCreatedAt = Carbon::instance($orderCreatedAt);
 
                 $order = Order::factory()->create([
                     'customer_id' => $customer->id,
@@ -75,14 +98,30 @@ class TenantOrderDataSeeder extends Seeder
         for ($j = 0; $j < $orderItemsCount; $j++) {
             $product = $products->random();
 
-            OrderItem::factory()->create([
-                'order_id' => $order->id,
-                'product_id' => $product->id,
-                'product_variant_id' => $product->variants->id ?? null,
-                'product_name' => $product->name,
-                'price' => $product->price,
-                'quantity' => rand(1, 3),
-            ]);
+            $pickVariant = rand(1, 100) <= 70; // 70% chance to pick variant
+
+            if ($pickVariant && $product->variants->isNotEmpty()) {
+                $productVariant = $product->variants->random();
+
+                OrderItem::factory()->create([
+                    'order_id' => $order->id,
+                    'product_id' => $productVariant->product_id,
+                    'product_variant_id' => $productVariant->id,
+                    'product_name' => $product->name . ' - ' . $productVariant->name,
+                    'price' => $productVariant->price,
+                    'quantity' => rand(1, 3),
+                ]);
+            } else {
+                // Pick base product, no variant
+                OrderItem::factory()->create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'product_variant_id' => null,
+                    'product_name' => $product->name,
+                    'price' => $product->price,
+                    'quantity' => rand(1, 3),
+                ]);
+            }
         }
 
         $itemTotal = OrderItem::where('order_id', $order->id)

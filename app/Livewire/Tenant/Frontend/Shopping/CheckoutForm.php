@@ -127,7 +127,6 @@ class CheckoutForm extends Component
                 'password' => Hash::make($this->password),
             ]);
 
-            // Log in the new customer
             auth('customer')->login($customer);
 
             $this->loggedInCustomer = true;

@@ -22,8 +22,12 @@ class OrderIndex extends Component
 
     public $orderCount;
     public $totalRevenue;
+    public $minAmount = null;
 
     public bool $selectAllOrders = false;
+    public bool $selectAllOnPage = false;
+    public bool $selectAllFiltered = false;
+
     public array $selectedOrders = [];
     public string $bulkAction = '';
     public string $newStatus = '';
@@ -61,40 +65,7 @@ class OrderIndex extends Component
 
         session()->flash('message', 'Order statuses updated successfully.');
 
-        $this->reset(['selectedOrders', 'selectAllOrders', 'bulkAction', 'newStatus']);
-    }
-
-
-    public function updatedSelectAllOrders($value)
-    {
-        $ordersQuery = Order::query()
-            ->join('customers', 'orders.customer_id', '=', 'customers.id')
-            ->select('orders.id') // Only fetch IDs for performance
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('customers.name', 'like', '%' . $this->search . '%')
-                        ->orWhere('orders.order_number', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->when($this->status, function ($query) {
-                $query->where('orders.status', $this->status);
-            })
-            ->orderBy(
-                $this->sortField === 'customer.name' ? 'customers.name' : $this->sortField,
-                $this->sortDirection
-            );
-
-        $paginated = $ordersQuery->paginate($this->pagination);
-
-        $this->selectedOrders = $value
-            ? $paginated->pluck('id')->toArray()
-            : [];
-    }
-
-
-    public function updatedSelectedOrders()
-    {
-        $this->selectAllOrders = false;
+        $this->reset(['selectedOrders', 'selectAllOnPage', 'selectAllFiltered', 'selectAllOrders', 'bulkAction', 'newStatus']);
     }
 
     public function applyBulkAction()
@@ -102,9 +73,6 @@ class OrderIndex extends Component
         if (empty($this->selectedOrders)) return;
 
         switch ($this->bulkAction) {
-            case 'update_status':
-                $this->emit('openBulkStatusModal', $this->selectedOrders);
-                break;
             case 'export':
                 return $this->exportCsv(app(CsvExportService::class));
             case 'print_invoices':
@@ -117,6 +85,92 @@ class OrderIndex extends Component
                     fn () => print($pdf->output()),
                     'bulk-invoices.pdf'
                 );
+        }
+    }
+
+    public function updatedSelectedOrders()
+    {
+        $this->selectAllOrders = false;
+    }
+
+    public function updatedSelectAllOrders($value)
+    {
+        if ($value) {
+            $query = Order::query()
+                ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('email', 'like', "%{$this->search}%"));
+
+            $this->selectedOrders = $query->pluck('id')->toArray();
+
+            $this->selectAllOnPage = false;
+            $this->selectAllFiltered = false;
+        } else {
+            $this->selectedOrders = [];
+        }
+    }
+
+    public function updatedSelectAllOnPage($value)
+    {
+        if ($value) {
+            $page = $this->getPage();
+
+            $query = Order::query()
+                ->select('orders.*')
+                ->when($this->search, function ($q) {
+                    $q->where(function ($sub) {
+                        $sub->where('orders.order_number', 'like', '%' . $this->search . '%')
+                            ->orWhereHas('customer', function ($q) {
+                                $q->where('name', 'like', '%' . $this->search . '%')
+                                    ->orWhere('email', 'like', '%' . $this->search . '%');
+                            });
+                    });
+                })
+                ->when($this->status !== '', function ($q) {
+                    $q->where('status', $this->status);
+                })
+                ->when($this->minAmount!== null, function ($q) {
+                    $q->where('total_amount', '>=', $this->minAmount);
+                })
+                ->orderBy($this->sortField, $this->sortDirection);
+
+            $paginated = $query->paginate($this->pagination, ['*'], 'page', $page);
+
+            $this->selectedOrders = $paginated->pluck('id')->toArray();
+
+            $this->selectAllFiltered = false;
+            $this->selectAllOrders = false;
+        } else {
+            $this->selectedOrders = [];
+        }
+    }
+
+    public function updatedSelectAllFiltered($value)
+    {
+        if ($value) {
+            $query = Order::query()
+                ->select('orders.*')
+                ->when($this->search, function ($q) {
+                    $q->where(function ($sub) {
+                        $sub->where('orders.order_number', 'like', '%' . $this->search . '%')
+                            ->orWhereHas('customer', function ($q) {
+                                $q->where('name', 'like', '%' . $this->search . '%')
+                                    ->orWhere('email', 'like', '%' . $this->search . '%');
+                            });
+                    });
+                })
+                ->when($this->status !== '', function ($q) {
+                    $q->where('status', $this->status);
+                })
+                ->when($this->minAmount !== null, function ($q) {
+                    $q->where('total_amount', '>=', $this->minAmount);
+                });
+
+            $this->selectedOrders = $query->pluck('id')->toArray();
+
+            $this->selectAllOnPage = false;
+            $this->selectAllOrders = false;
+        } else {
+            $this->selectedOrders = [];
         }
     }
 
@@ -140,6 +194,45 @@ class OrderIndex extends Component
         );
     }
 
+    public function updatingPagination()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSearch()
+    {
+        $this->resetSelection();
+        $this->resetPage();
+    }
+
+    public function updatedStatus()
+    {
+        $this->resetSelection();
+        $this->resetPage();
+    }
+
+    public function updatedMinAmount()
+    {
+        $this->resetSelection();
+        $this->resetPage();
+    }
+
+    public function updatedPagination()
+    {
+        $this->resetSelection();
+        $this->resetPage();
+    }
+
+    public function resetSelection()
+    {
+        $this->selectAllFiltered = false;
+        $this->selectAllOnPage = false;
+        $this->selectedOrders = [];
+        $this->selectAllOrders = false;
+        $this->bulkAction = '';
+        $this->newStatus = '';
+    }
+
     public function render()
     {
         $orders = Order::query()
@@ -154,6 +247,9 @@ class OrderIndex extends Component
             })
             ->when($this->status, function ($query) {
                 $query->where('orders.status', $this->status);
+            })
+            ->when($this->minAmount !== null, function ($q) {
+                $q->where('total_amount', '>=', $this->minAmount);
             })
             ->orderBy(
                 $this->sortField === 'customer.name' ? 'customers.name' : $this->sortField,

@@ -62,18 +62,6 @@ class ProductFactory extends Factory
                         'product_variant_id' => $variant->id,
                     ]);
             }
-
-            /*foreach ($variants as $variant) {
-                for ($i = 0; $i < rand(1, 3); $i++) {
-                    $variant->images()->create(
-                        ProductImage::factory()->make([
-                            'product_id' => $product->id,
-                            'product_variant_id' => $variant->id,
-                            'is_main_image' => $i === 0,
-                        ])->toArray()
-                    );
-                }
-            }*/
         });
     }
 }

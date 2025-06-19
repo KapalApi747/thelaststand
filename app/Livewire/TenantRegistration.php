@@ -8,6 +8,7 @@ use App\Models\TenantProfile;
 use App\Models\User;
 use Database\Seeders\TenantOrderDataSeeder;
 use Database\Seeders\TenantPermissionSeeder;
+use Database\Seeders\TenantProductReviewSeeder;
 use Database\Seeders\TenantProductSeeder;
 use Database\Seeders\TenantRoleSeeder;
 use Illuminate\Support\Facades\Hash;
@@ -65,7 +66,7 @@ class TenantRegistration extends Component
         ]);
 
         $tenant->domains()->create([
-            'domain' => $this->domain . '.myapp.local'
+            'domain' => $this->domain . '.thelaststand.local'
         ]);
 
         // Step 2: Migrate the tenant database
@@ -81,8 +82,9 @@ class TenantRegistration extends Component
             Category::create(['name' => 'Category 3']);
             Category::create(['name' => 'Category 4']);
 
-            //$productSeeder = new TenantProductSeeder();
-            //$orderSeeder = new TenantOrderDataSeeder();
+            $productSeeder = new TenantProductSeeder();
+            $orderSeeder = new TenantOrderDataSeeder();
+            $reviewSeeder = new TenantProductReviewSeeder();
 
             TenantProfile::create([
                 'tenant_id' => tenant()->id,
@@ -100,8 +102,9 @@ class TenantRegistration extends Component
 
             $permissionSeeder->run();
             $roleSeeder->run();
-            //$productSeeder->run();
-            //$orderSeeder->run();
+            $productSeeder->run();
+            $orderSeeder->run();
+            $reviewSeeder->run();
         });
 
         // Step 3: Create a default user for the tenant
@@ -132,7 +135,7 @@ class TenantRegistration extends Component
         }
 
         $this->success = true;
-        $this->storeUrl = "http://" . $this->domain . ".myapp.local:8000/shop/products";
+        $this->storeUrl = "http://" . $this->domain . ".thelaststand.local:8000/";
     }
 
     public function render()
