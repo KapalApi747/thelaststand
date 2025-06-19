@@ -1,5 +1,5 @@
-<div class="p-6 space-y-4">
-    <h1 class="text-2xl font-bold">All Tenants</h1>
+<div class="p-6">
+    <h3 class="h3 font-bold mb-4">All Tenants</h3>
 
     @if (session()->has('message'))
         <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
@@ -9,7 +9,7 @@
 
     <table class="min-w-full border rounded shadow bg-white">
         <thead>
-        <tr class="bg-gray-100 text-left text-black">
+        <tr class="bg-gray-100 text-center text-black">
             <th class="p-2">Store Name</th>
             <th class="p-2">Email</th>
             <th class="p-2">Phone</th>
@@ -20,7 +20,7 @@
         </thead>
         <tbody>
         @foreach ($tenants as $tenant)
-            <tr @if($tenant->profile->store_status === 'inactive') class="bg-red-100" @endif>
+            <tr class="text-center {{ $tenant->profile->store_status === 'active' ? 'bg-green-100' : 'bg-red-100' }}">
                 <td class="p-2">{{ $tenant->store_name ?? '-' }}</td>
                 <td class="p-2">{{ $tenant->profile->email ?? '-' }}</td>
                 <td class="p-2">{{ $tenant->profile->phone ?? '-' }}</td>

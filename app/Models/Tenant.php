@@ -25,4 +25,8 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     public function profile() {
         return $this->hasOne(TenantProfile::class, 'tenant_id', 'id');
     }
+
+    public function payouts() {
+        return $this->hasMany(Payout::class, 'tenant_id', 'id');
+    }
 }

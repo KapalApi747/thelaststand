@@ -24,6 +24,15 @@
         </a>
         <!-- end link -->
 
+        <!-- link -->
+        <a
+            href="{{ route('dashboard.payouts') }}"
+            class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+            <i class="fad fa-chart-pie text-xs"></i>
+            <div>Payouts</div>
+        </a>
+        <!-- end link -->
+
     </div>
     <!-- end sidebar content -->
 

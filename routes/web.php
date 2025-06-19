@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Admin\Backend\Payouts\PayoutIndex;
 use App\Livewire\Admin\Backend\Tenants\EditTenantProfile;
 use App\Livewire\Admin\Backend\Tenants\TenantProfilePage;
 use App\Livewire\Admin\Backend\Tenants\ViewTenantProfile;
@@ -35,6 +36,8 @@ foreach (config('tenancy.central_domains') as $domain) {
                 Route::get('/tenant-profiles', TenantProfilePage::class)->name('tenant-profiles');
                 Route::get('/tenant-profiles/{tenant}', ViewTenantProfile::class)->name('tenant-profiles.view');
                 Route::get('/tenant-profiles/{tenant}/edit', EditTenantProfile::class)->name('tenant-profiles.edit');
+
+                Route::get('/payouts', PayoutIndex::class)->name('payouts');
             });
     });
 }
