@@ -29,6 +29,7 @@ class OrderFactory extends Factory
         return [
             'order_number' => strtoupper('ORD-' . $this->faker->unique()->bothify('#######')), // e.g. ORD-1234567
             'session_id' => $this->faker->unique()->uuid(),
+            'payout_id' => null,
             'total_amount' => round($subtotal + $tax + $shipping, 2),
             'tax_amount' => round($tax, 2),
             'shipping_cost' => round($shipping, 2),

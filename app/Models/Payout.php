@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payout extends Model
 {
+    protected $connection = 'mysql';
+
     protected $table = 'payouts';
 
     protected $fillable = [

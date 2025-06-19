@@ -1,11 +1,12 @@
-<div class="bg-black text-white p-12 space-y-8">
+<div class="max-w-6xl mx-auto mt-6 bg-white text-gray-900 p-6 space-y-8 shadow-md rounded">
 
     {{-- Order Summary --}}
     <div>
+        <h2 class="text-3xl font-bold mb-6 text-gray-900">Order Summary</h2>
         <div class="flex justify-between mb-6">
             <a
-                class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors duration-300"
-                href=" {{ route('shop.customer-orders') }}">
+                class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition-colors duration-300"
+                href="{{ route('shop.customer-orders') }}">
                 Back
             </a>
             <button wire:click="exportPDF"
@@ -15,27 +16,43 @@
             </button>
         </div>
 
-        <h2 class="text-2xl font-bold mb-6">Order Summary</h2>
-
-        <table class="w-full table-auto text-left border-collapse">
+        <table class="w-full table-auto text-left border-collapse border border-gray-300 rounded">
             <tbody>
-            <tr><th class="py-2 w-1/4">Order Number:</th><td>{{ $order->order_number }}</td></tr>
-            <tr><th class="py-2">Total Amount:</th><td>€{{ number_format($order->total_amount, 2) }}</td></tr>
-            <tr><th class="py-2">Tax:</th><td>€{{ number_format($order->tax_amount, 2) }}</td></tr>
-            <tr><th class="py-2">Shipping Cost:</th><td>€{{ number_format($order->shipping_cost, 2) }}</td></tr>
-            <tr><th class="py-2">Status:</th><td>{{ ucfirst($order->status) }}</td></tr>
-            <tr><th class="py-2">Placed On:</th><td>{{ $order->created_at->format('Y-m-d H:i') }}</td></tr>
+            <tr>
+                <th class="py-2 w-1/4 border-b border-gray-300 font-semibold">Order Number:</th>
+                <td class="border-b border-gray-300">{{ $order->order_number }}</td>
+            </tr>
+            <tr>
+                <th class="py-2 border-b border-gray-300 font-semibold">Total Amount:</th>
+                <td class="border-b border-gray-300">€{{ number_format($order->total_amount, 2) }}</td>
+            </tr>
+            <tr>
+                <th class="py-2 border-b border-gray-300 font-semibold">Tax:</th>
+                <td class="border-b border-gray-300">€{{ number_format($order->tax_amount, 2) }}</td>
+            </tr>
+            <tr>
+                <th class="py-2 border-b border-gray-300 font-semibold">Shipping Cost:</th>
+                <td class="border-b border-gray-300">€{{ number_format($order->shipping_cost, 2) }}</td>
+            </tr>
+            <tr>
+                <th class="py-2 border-b border-gray-300 font-semibold">Status:</th>
+                <td class="border-b border-gray-300">{{ ucfirst($order->status) }}</td>
+            </tr>
+            <tr>
+                <th class="py-2 font-semibold">Placed On:</th>
+                <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
+            </tr>
             </tbody>
         </table>
     </div>
 
     {{-- Addresses --}}
     <div>
-        <h2 class="text-xl font-semibold mb-4">Shipping & Billing Addresses</h2>
+        <h2 class="text-xl font-semibold mb-4 text-gray-900">Shipping & Billing Addresses</h2>
         <div class="grid md:grid-cols-2 gap-6">
             @foreach ($order->addresses as $address)
-                <div class="border border-gray-600 rounded p-4">
-                    <h3 class="text-lg font-bold mb-2">{{ ucfirst($address->type) }} Address</h3>
+                <div class="border border-gray-300 rounded p-4 bg-gray-50">
+                    <h3 class="text-lg font-bold mb-2 text-gray-800">{{ ucfirst($address->type) }} Address</h3>
                     <p>{{ $address->full_name }}</p>
                     <p>{{ $address->address_line1 }}</p>
                     @if ($address->address_line2)
@@ -51,18 +68,18 @@
 
     {{-- Order Items --}}
     <div>
-        <h2 class="text-xl font-semibold mb-4">Items</h2>
-        <table class="w-full border border-gray-600">
+        <h2 class="text-xl font-semibold mb-4 text-gray-900">Items</h2>
+        <table class="w-full border border-gray-300 rounded">
             <thead>
-            <tr class="bg-gray-800 text-left">
-                <th class="p-3">Product</th>
-                <th class="p-3">Price</th>
-                <th class="p-3">Quantity</th>
+            <tr class="bg-gray-100 text-gray-700">
+                <th class="p-3 border-b border-gray-300">Product</th>
+                <th class="p-3 border-b border-gray-300">Price</th>
+                <th class="p-3 border-b border-gray-300">Quantity</th>
             </tr>
             </thead>
             <tbody>
             @foreach ($order->items as $item)
-                <tr class="border-t border-gray-700">
+                <tr class="border-t border-gray-300 text-center">
                     <td class="p-3">{{ $item->product_name }}</td>
                     <td class="p-3">€{{ number_format($item->price, 2) }}</td>
                     <td class="p-3">{{ $item->quantity }}</td>
@@ -74,19 +91,19 @@
 
     {{-- Payment Info --}}
     <div>
-        <h2 class="text-xl font-semibold mb-4">Payment Information</h2>
-        <table class="w-full table-auto text-left border-collapse">
+        <h2 class="text-xl font-semibold mb-4 text-gray-900">Payment Information</h2>
+        <table class="w-full table-auto text-left border-collapse border border-gray-300 rounded">
             <thead>
-            <tr class="bg-gray-800">
-                <th class="p-3">Method</th>
-                <th class="p-3">Amount</th>
-                <th class="p-3">Status</th>
-                <th class="p-3">Date</th>
+            <tr class="bg-gray-100 text-gray-700 text-center">
+                <th class="p-3 border-b border-gray-300">Method</th>
+                <th class="p-3 border-b border-gray-300">Amount</th>
+                <th class="p-3 border-b border-gray-300">Status</th>
+                <th class="p-3 border-b border-gray-300">Date</th>
             </tr>
             </thead>
             <tbody>
             @foreach ($order->payments as $payment)
-                <tr class="border-t border-gray-700">
+                <tr class="border-t border-gray-300 text-center">
                     <td class="p-3">{{ ucfirst($payment->payment_method) }}</td>
                     <td class="p-3">€{{ number_format($payment->amount, 2) }}</td>
                     <td class="p-3">{{ ucfirst($payment->status) }}</td>
@@ -100,39 +117,39 @@
     {{-- Shipment Info --}}
     @if ($order->shipments->count())
         <div>
-            <h2 class="text-xl font-semibold mb-4">Shipments ({{ $order->shipments->count() }})</h2>
+            <h2 class="text-xl font-semibold mb-4 text-gray-900">Shipments ({{ $order->shipments->count() }})</h2>
 
             @foreach ($order->shipments as $index => $shipment)
-                <div class="mb-6 border border-gray-600 rounded p-4 bg-gray-900">
-                    <h3 class="font-bold text-lg mb-2">Shipment #{{ $index + 1 }}</h3>
+                <div class="mb-6 border border-gray-300 rounded p-4 bg-gray-50">
+                    <h3 class="font-bold text-lg mb-2 text-gray-800">Shipment #{{ $index + 1 }}</h3>
                     <table class="w-full table-auto text-left border-collapse">
                         <tbody>
                         <tr>
-                            <th class="py-2 w-1/4">Tracking Number:</th>
-                            <td>{{ $shipment->tracking_number ?? 'N/A' }}</td>
+                            <th class="py-2 w-1/4 font-semibold border-b border-gray-300">Tracking Number:</th>
+                            <td class="border-b border-gray-300">{{ $shipment->tracking_number ?? 'N/A' }}</td>
                         </tr>
                         <tr>
-                            <th class="py-2">Carrier:</th>
-                            <td>{{ $shipment->carrier ?? 'N/A' }}</td>
+                            <th class="py-2 font-semibold border-b border-gray-300">Carrier:</th>
+                            <td class="border-b border-gray-300">{{ $shipment->carrier ?? 'N/A' }}</td>
                         </tr>
                         <tr>
-                            <th class="py-2">Status:</th>
-                            <td>{{ ucfirst($shipment->status) ?? 'Pending' }}</td>
+                            <th class="py-2 font-semibold border-b border-gray-300">Status:</th>
+                            <td class="border-b border-gray-300">{{ ucfirst($shipment->status) ?? 'Pending' }}</td>
                         </tr>
                         <tr>
-                            <th class="py-2">Shipping Method:</th>
-                            <td class="uppercase">{{ $shipment->shipping_method ?? 'N/A' }}</td>
+                            <th class="py-2 font-semibold border-b border-gray-300">Shipping Method:</th>
+                            <td class="border-b border-gray-300 uppercase">{{ $shipment->shipping_method ?? 'N/A' }}</td>
                         </tr>
                         <tr>
-                            <th class="py-2">Shipping Cost:</th>
-                            <td>€{{ number_format($shipment->shipping_cost, 2) }}</td>
+                            <th class="py-2 font-semibold border-b border-gray-300">Shipping Cost:</th>
+                            <td class="border-b border-gray-300">€{{ number_format($shipment->shipping_cost, 2) }}</td>
                         </tr>
                         <tr>
-                            <th class="py-2">Shipped At:</th>
-                            <td>{{ optional($shipment->shipped_at)->format('Y-m-d H:i') ?? 'Not yet shipped' }}</td>
+                            <th class="py-2 font-semibold border-b border-gray-300">Shipped At:</th>
+                            <td class="border-b border-gray-300">{{ optional($shipment->shipped_at)->format('Y-m-d H:i') ?? 'Not yet shipped' }}</td>
                         </tr>
                         <tr>
-                            <th class="py-2">Delivered At:</th>
+                            <th class="py-2 font-semibold">Delivered At:</th>
                             <td>{{ optional($shipment->delivered_at)->format('Y-m-d H:i') ?? 'Not yet delivered' }}</td>
                         </tr>
                         </tbody>

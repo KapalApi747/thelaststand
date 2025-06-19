@@ -7,10 +7,13 @@ use App\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('c-dashboard-layout')]
 class PayoutIndex extends Component
 {
+    use WithPagination;
+
     public $tenantPayouts = [];
     public $existingPayouts = [];
 
@@ -164,8 +167,18 @@ class PayoutIndex extends Component
 
     public function render()
     {
+        $tenants = Tenant::query()->paginate(10);
+
+        $payouts = $tenants->map(function ($tenant) {
+            return [
+                'tenant_id' => $tenant->id,
+                'tenant_name' => $tenant->name,
+            ];
+        });
+
         return view('livewire.admin.backend.payouts.payout-index', [
-            'tenantPayouts' => $this->tenantPayouts,
+            'payouts' => $payouts,
+            'tenants' => $tenants,
         ]);
     }
 }
