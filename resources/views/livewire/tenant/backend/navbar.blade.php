@@ -5,7 +5,10 @@
     <div class="flex-none w-56 flex flex-row items-center">
         <img src="{{ asset("tenant" . tenant()->id . "/assets/img/store_logo.png") }}" class="w-10 flex-none" alt="logo">
         @if (tenant())
-        <strong class="capitalize ml-1 flex-1">{{ tenant()->store_name }}</strong>
+            <div class="flex flex-col flex-1 ml-3">
+                <strong class="capitalize">{{ tenant()->store_name }}</strong>
+                <a href="{{ route('shop.shop-products') }}" class="text-xs text-gray-600 hover:text-gray-900 transition-colors ease-in-out duration-500">Return Home</a>
+            </div>
         @endif
 
         <button id="sliderBtn" class="flex-none text-right text-gray-900 hidden md:block">
