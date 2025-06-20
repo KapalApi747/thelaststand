@@ -1,6 +1,6 @@
-<div class="space-y-6">
+<div class="space-y-6 p-6">
     <div class="max-w-3xl mx-auto p-8 bg-gray-300 rounded-md">
-        <h1 class="text-2xl font-semibold mb-6">Create New Customer</h1>
+        <h3 class="h3 font-bold mb-6">Create New Customer</h3>
 
         @if (session()->has('message'))
             <div class="mb-4 text-green-600 font-medium">{{ session('message') }}</div>
@@ -82,5 +82,4 @@
             </button>
         </form>
     </div>
-
 </div>

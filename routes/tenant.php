@@ -115,6 +115,7 @@ Route::middleware([
         ->prefix('tenant-dashboard')
         ->as('tenant-dashboard.')
         ->group(function () {
+
             Route::get('/', TenantDashboard::class)->name('index');
 
             Route::middleware(['role:admin'])->group(function () {
@@ -138,9 +139,9 @@ Route::middleware([
 
             Route::middleware(['role:admin'])->group(function () {
                 Route::get('/customers', CustomerIndex::class)->name('customer-index');
+                Route::get('/customers/customer-creation', CustomerCreation::class)->name('customer-creation');
                 Route::get('/customers/{customerId}', CustomerView::class)->name('customer-view');
                 Route::get('/customers/{customer}/edit', CustomerEdit::class)->name('customer-edit');
-                Route::get('/customers/customer-register', CustomerCreation::class)->name('customer-creation');
             });
 
             Route::middleware(['permission:manage orders'])->group(function () {

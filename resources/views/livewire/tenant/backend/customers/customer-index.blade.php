@@ -1,6 +1,17 @@
-<div class="space-y-6">
+<div class="space-y-6 p-6">
 
-    <h2 class="h2 font-bold mb-4">All Customers</h2>
+    <div class="flex justify-between items-center">
+        <h2 class="h2 font-bold mb-4">All Customers</h2>
+        <div>
+            <a
+                href="{{ route('tenant-dashboard.customer-creation') }}"
+                class="btn btn-primary"
+            >
+                Create New
+            </a>
+        </div>
+    </div>
+
 
     <div class="grid grid-cols-1 max-w-sm mb-6">
         <div class="bg-white p-4 shadow rounded">

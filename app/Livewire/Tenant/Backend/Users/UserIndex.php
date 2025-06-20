@@ -33,6 +33,26 @@ class UserIndex extends Component
         session()->flash('message', 'User status updated successfully!');
     }
 
+    public function updatingPagination()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedIsActive()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedRole()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $users = User::query()

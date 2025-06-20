@@ -14,7 +14,7 @@ class CustomerCreation extends Component
 {
     public string $name = '';
     public string $email = '';
-    public ?string $phone = null;
+    public string $phone = '';
     public bool $is_active = true;
 
     public string $password = '';
