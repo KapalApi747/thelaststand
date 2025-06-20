@@ -1,4 +1,10 @@
-!css/
-!img/
-!js/
-!livewire-tmp/
+# Ignore everything in this folder
+*
+
+# But allow Git to *see* these subfolders first
+!*/
+# Then allow specific folders (and their contents)
+!css/**
+!img/**
+!js/**
+!livewire-tmp/**
