@@ -8,7 +8,7 @@
         </div>
     @endif
 
-    <div class="bg-white p-4 rounded shadow mt-6">
+    <div class="bg-white p-6 rounded shadow mt-6">
 
         <div class="flex flex-wrap gap-4 mb-6">
             <input

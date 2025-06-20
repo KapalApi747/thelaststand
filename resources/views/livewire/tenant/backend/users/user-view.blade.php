@@ -1,31 +1,37 @@
-<div class="p-6">
-    <div class="flex justify-between">
-        <div>
-            <h1 class="text-2xl font-bold mb-4">{{ $user->name }}</h1>
-            <p class="text-black"><strong>Slug:</strong> {{ $user->slug }}</p>
-            <p class="text-black"><strong>Email:</strong> {{ $user->email }}</p>
-            <p class="text-black"><strong>Active:</strong> {{ $user->is_active ? 'Yes' : 'No' }}</p>
-        </div>
+<div class="p-6 space-y-6">
+
+    <div class="flex justify-between items-center">
+        <h3 class="h3 font-bold mb-4">{{ $user->name }}</h3>
         <div>
             <a
-                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                class="btn btn-primary"
                 href="{{ route('tenant-dashboard.user-edit', $user) }}">Edit</a>
         </div>
     </div>
 
-    <div class="mt-4">
-        <strong>Roles:</strong>
-        <ul class="list-disc ml-5">
-            @foreach ($user->roles as $role)
-                <li>{{ $role->name }}</li>
-            @endforeach
-        </ul>
-    </div>
+    <div class="p-6 bg-white rounded shadow">
 
-    <div class="mt-4">
-        <strong>Profile picture:</strong>
         <div>
-            <img src="{{ asset('tenant' . tenant()->id . '/' . $user->profile_picture_path) }}" class="h-48 w-48 rounded">
+            <p class="text-black"><strong>Slug:</strong> {{ $user->slug }}</p>
+            <p class="text-black"><strong>Email:</strong> {{ $user->email }}</p>
+            <p class="text-black"><strong>Active:</strong> {{ $user->is_active ? 'Yes' : 'No' }}</p>
         </div>
+
+        <div class="mt-4">
+            <strong>Roles:</strong>
+            <ul class="list-disc ml-5">
+                @foreach ($user->roles as $role)
+                    <li>{{ $role->name }}</li>
+                @endforeach
+            </ul>
+        </div>
+
+        <div class="mt-4">
+            <strong>Profile picture:</strong>
+            <div>
+                <img src="{{ asset('tenant' . tenant()->id . '/' . $user->profile_picture_path) }}" class="h-full w-40 rounded-md">
+            </div>
+        </div>
+
     </div>
 </div>

@@ -1,7 +1,7 @@
 <div class="space-y-6 p-6">
 
     <div class="flex justify-between items-center">
-        <h2 class="h2 font-bold mb-4">All Customers</h2>
+        <h3 class="h3 font-bold mb-4">All Customers</h3>
         <div>
             <a
                 href="{{ route('tenant-dashboard.customer-creation') }}"

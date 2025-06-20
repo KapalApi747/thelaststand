@@ -71,7 +71,7 @@
         <div x-data="{ open: false }">
             <button @click="open = !open" type="button"
                     class="w-full mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
-                <i class="fas fa-users text-xs"></i>
+                <i class="fas fa-user-tie text-xs"></i>
                 <div class="flex items-center">
                     Customers
                     <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -230,7 +230,7 @@
         @endrole
         <!-- end link -->
 
-        <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">apps</p>
+        {{--<p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">apps</p>
 
         <!-- link -->
         <a href="./email.html" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
@@ -272,7 +272,7 @@
             <i class="fad fa-folder-open text-xs mr-2"></i>
             file manager
         </a>
-        <!-- end link -->
+        <!-- end link -->--}}
 
 
         <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">UI Elements</p>

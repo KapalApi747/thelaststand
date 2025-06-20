@@ -42,11 +42,14 @@
                            class="text-blue-600 hover:text-blue-800 transition-colors duration-300">
                             <i class="fa fa-edit"></i>
                         </a>
-                        <button wire:click="delete({{ $method->id }})"
-                                class="text-red-600 hover:text-red-800 transition-colors duration-300"
-                                onclick="return confirm('Delete this shipping method?')">
+                        <button
+                            x-data
+                            @click.prevent="if (confirm('Delete this shipping method?')) $wire.delete({{ $method->id }})"
+                            class="text-red-600 hover:text-red-800 transition-colors duration-300"
+                        >
                             <i class="fa fa-trash"></i>
                         </button>
+
                     </td>
                 </tr>
             @empty

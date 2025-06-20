@@ -1,4 +1,6 @@
-<div class="space-y-6">
+<div class="space-y-6 p-6">
+
+    <h3 class="h3 font-bold mb-4">Register New Users</h3>
 
     @if (session()->has('message'))
         <div class="p-2 bg-green-200 text-green-800 rounded">
@@ -6,38 +8,36 @@
         </div>
     @endif
 
-    <h3 class="h3 font-semibold mb-4">Register New Users</h3>
-
-        <div class="p-4 bg-white rounded shadow">
+        <div class="p-6 bg-white rounded shadow">
             <form wire:submit.prevent="registerUser" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
                     <label for="name" class="block font-semibold mb-1">Name</label>
-                    <input type="text" id="name" wire:model.live="name" class="w-full border px-3 py-2 rounded" />
+                    <input type="text" id="name" wire:model.live="name" class="w-full border-2 px-3 py-2 rounded" />
                     @error('name') <span class="text-red-600">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="mb-4">
                     <label for="email" class="block font-semibold mb-1">Email</label>
-                    <input type="email" id="email" wire:model.live="email" class="w-full border px-3 py-2 rounded" />
+                    <input type="email" id="email" wire:model.live="email" class="w-full border-2 px-3 py-2 rounded" />
                     @error('email') <span class="text-red-600">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="mb-4">
                     <label for="password" class="block font-semibold mb-1">Password</label>
-                    <input type="password" id="password" wire:model.defer="password" class="w-full border px-3 py-2 rounded" />
+                    <input type="password" id="password" wire:model.defer="password" class="w-full border-2 px-3 py-2 rounded" />
                     @error('password') <span class="text-red-600">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="mb-4">
                     <label for="password_confirmation" class="block font-semibold mb-1">Confirm Password</label>
-                    <input type="password" id="password_confirmation" wire:model.defer="password_confirmation" class="w-full border px-3 py-2 rounded" />
+                    <input type="password" id="password_confirmation" wire:model.defer="password_confirmation" class="w-full border-2 px-3 py-2 rounded" />
                     @error('password_confirmation') <span class="text-red-600">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="mb-4 flex flex-col max-w-sm">
                     <label for="roles" class="mb-2 font-semibold">Roles</label>
-                    <select wire:model.live="roles" multiple class="form-select">
+                    <select wire:model.live="roles" multiple class="form-select border-2">
                         @foreach($existingRoles as $role)
                             <option value="{{ $role->name }}">{{ $role->name }}</option>
                         @endforeach
@@ -47,7 +47,7 @@
 
                 <div class="mb-4 max-w-sm">
                     <label for="is_active" class="font-semibold">Status</label>
-                    <select wire:model.live="is_active" class="w-full border p-2 rounded">
+                    <select wire:model.live="is_active" class="w-full border-2 p-2 rounded">
                         <option value="0">Inactive</option>
                         <option value="1">Active</option>
                     </select>

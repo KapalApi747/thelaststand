@@ -11,6 +11,7 @@ use Database\Seeders\TenantPermissionSeeder;
 use Database\Seeders\TenantProductReviewSeeder;
 use Database\Seeders\TenantProductSeeder;
 use Database\Seeders\TenantRoleSeeder;
+use Database\Seeders\TenantShippingMethodSeeder;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -72,19 +73,6 @@ class TenantRegistration extends Component
         // Step 2: Migrate the tenant database
         $tenant->run(function () {
 
-            $permissionSeeder = new TenantPermissionSeeder();
-            $roleSeeder = new TenantRoleSeeder();
-
-            Category::create(['name' => 'Category 1']);
-            Category::create(['name' => 'Category 2']);
-            Category::create(['name' => 'Category 3']);
-            Category::create(['name' => 'Category 4']);
-
-            $productSeeder = new TenantProductSeeder();
-            $productReviewSeeder = new TenantProductReviewSeeder();
-            $orderSeeder = new TenantOrderDataSeeder();
-            $reviewSeeder = new TenantProductReviewSeeder();
-
             TenantProfile::create([
                 'tenant_id' => tenant()->id,
                 'email' => $this->email,
@@ -99,10 +87,25 @@ class TenantRegistration extends Component
                 'store_status' => 'active',
             ]);
 
+            $permissionSeeder = new TenantPermissionSeeder();
+            $roleSeeder = new TenantRoleSeeder();
+
+            Category::create(['name' => 'Category 1']);
+            Category::create(['name' => 'Category 2']);
+            Category::create(['name' => 'Category 3']);
+            Category::create(['name' => 'Category 4']);
+
+            $productSeeder = new TenantProductSeeder();
+            $productReviewSeeder = new TenantProductReviewSeeder();
+            $shippingMethodSeeder = new TenantShippingMethodSeeder();
+            $orderSeeder = new TenantOrderDataSeeder();
+            $reviewSeeder = new TenantProductReviewSeeder();
+
             $permissionSeeder->run();
             $roleSeeder->run();
             $productSeeder->run();
             $productReviewSeeder->run();
+            $shippingMethodSeeder->run();
             $orderSeeder->run();
             $reviewSeeder->run();
         });
