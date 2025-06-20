@@ -95,22 +95,45 @@
                                     </a>
                                 </div>
                                 <div>
-                                    @if ($user->is_active)
+                                    @if(auth()->user()->id === $user->id && $user->is_active)
+                                        {{-- Self-deactivation with confirmation --}}
+                                        <button
+                                            x-data
+                                            @click.prevent="if (confirm('Deactivate your own account?')) { $wire.call('activeToggle', {{ $user->id }}) }"
+                                            class="text-red-600 hover:text-red-800 transition-colors duration-300"
+                                            title="Deactivate your own account">
+                                            <i class="far fa-ban"></i>
+                                        </button>
+                                    @elseif(auth()->user()->id === $user->id && !$user->is_active)
+                                        {{-- Self-activation NOT allowed, show nothing or disabled icon --}}
                                         <button
                                             type="button"
                                             wire:click="activeToggle({{ $user->id }})"
-                                            class="text-red-600 hover:text-red-800 transition-colors duration-300">
+                                            class="text-green-600 hover:text-green-800 transition-colors duration-300"
+                                            title="Activate user">
+                                            <i class="far fa-check"></i>
+                                        </button>
+                                    @elseif ($user->is_active)
+                                        {{-- Admin deactivating another user --}}
+                                        <button
+                                            type="button"
+                                            wire:click="activeToggle({{ $user->id }})"
+                                            class="text-red-600 hover:text-red-800 transition-colors duration-300"
+                                            title="Deactivate user">
                                             <i class="far fa-ban"></i>
                                         </button>
                                     @else
+                                        {{-- Admin activating another user --}}
                                         <button
                                             type="button"
                                             wire:click="activeToggle({{ $user->id }})"
-                                            class="text-green-600 hover:text-green-800 transition-colors duration-300">
+                                            class="text-green-600 hover:text-green-800 transition-colors duration-300"
+                                            title="Activate user">
                                             <i class="far fa-check"></i>
                                         </button>
                                     @endif
                                 </div>
+
                             </div>
                         </td>
                     </tr>

@@ -23,14 +23,14 @@
 
             <div class="mb-4">
                 <label for="password" class="block font-semibold mb-1">New Password (optional)</label>
-                <input type="password" id="password" wire:model.live="password"
+                <input type="password" id="password" wire:model.defer="password"
                        class="w-full border px-3 py-2 rounded"/>
                 @error('password') <span class="text-red-600">{{ $message }}</span> @enderror
             </div>
 
             <div class="mb-4">
                 <label for="password_confirmation" class="block font-semibold mb-1">Confirm Password (optional)</label>
-                <input type="password" id="password_confirmation" wire:model.live="password_confirmation"
+                <input type="password" id="password_confirmation" wire:model.defer="password_confirmation"
                        class="w-full border px-3 py-2 rounded"/>
                 @error('password_confirmation') <span class="text-red-600">{{ $message }}</span> @enderror
             </div>
@@ -57,8 +57,11 @@
             @if ($existingProfilePicture)
                 <div class="mb-4">
                     <label class="block font-semibold mb-1">Current Profile Picture</label>
-                    <img src="{{ asset('tenant' . tenant()->id . '/' . $user->profile_picture_path) }}"
-                         class="h-20 w-20 rounded-full mt-2">
+                    <div class="w-20 h-20 overflow-hidden rounded-full mt-4">
+                        <img src="{{ asset('tenant' . tenant()->id . '/' . $user->profile_picture_path) }}"
+                             class="w-full h-full object-cover">
+                    </div>
+
                 </div>
             @endif
 
@@ -71,14 +74,12 @@
 
             <div class="mb-8">
                 <label for="profile_picture" class="block font-semibold mb-1">Profile Picture</label>
-
                 <input
                     type="file"
                     wire:model="profile_picture"
                     accept="image/*"
                     class="mt-1 block w-full"
                 >
-
                 @error('profile_picture')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror

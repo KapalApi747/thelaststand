@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -16,14 +18,22 @@ class TenantLogin extends Component
 
     public function loginTenant()
     {
-        $credentials = $this->only(['email', 'password']);
+        $user = User::where('email', $this->email)->first();
 
-        if (Auth::attempt($credentials, $this->remember)) {
-            session()->regenerate();
-            return redirect()->intended(route('tenant-dashboard.index')); // or wherever
+        if (! $user || ! Hash::check($this->password, $user->password)) {
+            $this->addError('email', __('Invalid credentials.'));
+            return;
         }
 
-        $this->addError('email', __('Invalid credentials.'));
+        if (! $user->is_active) {
+            $this->addError('email', __('Your account is inactive. Please contact an admin for further assistance.'));
+            return;
+        }
+
+        Auth::login($user, $this->remember);
+        session()->regenerate();
+
+        return redirect()->intended(route('tenant-dashboard.index'));
     }
 
     public function render()

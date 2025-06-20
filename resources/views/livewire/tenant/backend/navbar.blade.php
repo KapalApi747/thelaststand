@@ -12,7 +12,7 @@
             class="w-10 h-10 rounded-full overflow-hidden mr-3 bg-gray-100 border border-gray-300"
             alt="Store Logo">
 
-    @if (tenant())
+        @if (tenant())
             <div class="flex flex-col flex-1 ml-3">
                 <strong class="capitalize">{{ tenant()->store_name }}</strong>
                 <a href="{{ route('shop.shop-products') }}" class="text-xs text-gray-600 hover:text-gray-900 transition-colors ease-in-out duration-500">Return Home</a>

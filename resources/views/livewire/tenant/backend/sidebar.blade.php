@@ -220,6 +220,17 @@
         <!-- end link -->
 
         <!-- link -->
+        @role(['admin', 'analyst'])
+        <a
+            href="{{ route('tenant-dashboard.shop-statistics') }}"
+            class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+            <i class="fad fa-chart-line text-xs"></i>
+            <div>Shop Statistics</div>
+        </a>
+        @endrole
+        <!-- end link -->
+
+        <!-- link -->
         @role('admin')
         <a
             href="{{ route('tenant-dashboard.store-settings') }}"

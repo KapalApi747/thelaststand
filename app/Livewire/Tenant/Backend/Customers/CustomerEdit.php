@@ -30,11 +30,6 @@ class CustomerEdit extends Component
         $this->phone = $customer->phone;
         $this->is_active = $customer->is_active ? '1' : '0';
 
-        logger()->info('Mounted customer with is_active:', [
-            'value' => $customer->is_active,
-            'casted' => (string) $customer->is_active,
-        ]);
-
         $this->shippingAddress = $customer->addresses->firstWhere('type', 'shipping') ?? new CustomerAddress(['type' => 'shipping']);
         $this->billingAddress = $customer->addresses->firstWhere('type', 'billing') ?? new CustomerAddress(['type' => 'billing']);
 

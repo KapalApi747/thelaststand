@@ -6,14 +6,14 @@
         <div class="card-body flex flex-row">
 
             <!-- image -->
-            <div class="img-wrapper w-40 h-40 flex justify-center items-center">
+            <div class="w-40 h-40 overflow-hidden rounded-full">
                 @php
                     $picturePath = 'tenant' . tenant()->id . '/' . auth()->user()->profile_picture_path;
                 @endphp
 
                 <img
-                    src="{{ auth()->user()->profile_picture_path && file_exists(public_path('tenancy/assets/' . $picturePath)) ? asset($picturePath) : 'https://placehold.co/120x120' }}"
-                    class="w-80 h-80 rounded-full overflow-hidden"
+                    src="{{ auth()->user()->profile_picture_path && file_exists(public_path('tenancy/assets/' . $picturePath)) ? asset($picturePath) : 'https://placehold.co/160x160' }}"
+                    class="w-full h-full object-cover"
                     alt="User Picture">
             </div>
             <!-- end image -->
