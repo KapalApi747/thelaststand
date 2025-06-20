@@ -9,10 +9,10 @@ class Navbar extends Component
 {
     public function logout()
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
         session()->regenerateToken();
 
-        return redirect()->route('tenant.login');
+        return redirect()->route('shop.login');
     }
 
     public function render()
