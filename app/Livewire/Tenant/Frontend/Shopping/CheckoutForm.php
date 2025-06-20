@@ -69,19 +69,34 @@ class CheckoutForm extends Component
     {
         session()->forget('checkout_customer_info');
 
-        if (auth('customer')->check()) {
-            $customer = auth('customer')->user();
+        $customer = $this->currentCustomer();
+
+        if ($customer) {
+            $customer = $this->currentCustomer();
             $this->name = $customer->name;
             $this->email = $customer->email;
             $this->phone = $customer->phone ?? '';
-            $this->address_line1 = $customer->address_line1 ?? '';
-            $this->address_line2 = $customer->address_line2 ?? '';
-            $this->city = $customer->city ?? '';
-            $this->state = $customer->state ?? '';
-            $this->zip = $customer->zip ?? '';
-            $this->country = $customer->country ?? '';
+            $this->address_line1 = $customer->addresses->firstWhere('type', 'shipping')->address_line1 ?? '';
+            $this->address_line2 = $customer->addresses->firstWhere('type', 'shipping')->address_line2 ?? '';
+            $this->city = $customer->addresses->firstWhere('type', 'shipping')->city ?? '';
+            $this->state = $customer->addresses->firstWhere('type', 'shipping')->state ?? '';
+            $this->zip = $customer->addresses->firstWhere('type', 'shipping')->zip ?? '';
+            $this->country = $customer->addresses->firstWhere('type', 'shipping')->country ?? '';
             $this->loggedInCustomer = true;
         }
+    }
+
+    protected function currentCustomer()
+    {
+        if ($customer = auth('customer')->user()) {
+            return $customer;
+        }
+
+        if ($tenantUser = auth('web')->user()) {
+            return $tenantUser->customers()->first();
+        }
+
+        return null;
     }
 
     public function updated($propertyName)

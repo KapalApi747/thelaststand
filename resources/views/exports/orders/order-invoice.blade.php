@@ -11,6 +11,12 @@
         .text-right { text-align: right; }
     </style>
 </head>
+
+@php
+    $billing = $order->addresses->where('type', 'billing')->first();
+    $shipping = $order->addresses->where('type', 'shipping')->first();
+@endphp
+
 <body>
 
 <h1>Invoice #{{ $order->order_number }}</h1>
@@ -21,10 +27,11 @@
     <div>
         <strong>Store:</strong> {{ tenant()->store_name }}<br>
         <strong>Email:</strong> {{ tenant()->profile->email }}<br>
-        <strong>Phone:</strong> {{ tenant()->profile->phone }}<br>
+        <strong>Phone:</strong> {{ tenant()->profile->phone ?? 'N/A' }}<br>
         <strong>Date:</strong> {{ $order->created_at->format('Y-m-d') }}
     </div>
     <br>
+    @if (tenant()->profile->address)
     <div>
         <strong>Address:</strong> {{ tenant()->profile->address }} <br>
         <strong>City:</strong> {{ tenant()->profile->city }}<br>
@@ -33,13 +40,10 @@
         <strong>Country:</strong> {{ tenant()->profile->country }}
     </div>
     <br>
+    @endif
 </div>
 
 <div class="heading">Customer Info</div>
-@php
-    $billing = $order->addresses->where('type', 'billing')->first();
-    $shipping = $order->addresses->where('type', 'shipping')->first();
-@endphp
 
 <table>
     <tr>
@@ -116,7 +120,7 @@
     </tr>
     @foreach($order->payments as $payment)
         <tr>
-            <td>{{ $payment->payment_method }}</td>
+            <td style="text-transform: uppercase">{{ $payment->payment_method }}</td>
             <td style="text-transform: uppercase">{{ $payment->status }}</td>
             <td>€{{ number_format($payment->amount, 2) }}</td>
             <td>{{ $payment->created_at->format('Y-m-d') }}</td>
@@ -138,10 +142,10 @@
         <tr>
             <td>{{ $shipment->carrier }}</td>
             <td style="text-transform: uppercase">{{ $shipment->shipping_method }}</td>
-            <td>{{ $shipment->tracking_number }}</td>
+            <td>{{ $shipment->tracking_number ?? 'N/A' }}</td>
             <td style="text-transform: uppercase">{{ $shipment->status }}</td>
-            <td>{{ optional($shipment->shipped_at)->format('Y-m-d') }}</td>
-            <td>{{ optional($shipment->delivered_at)->format('Y-m-d') }}</td>
+            <td>{{ optional($shipment->shipped_at)->format('Y-m-d') ?? 'N/A' }}</td>
+            <td>{{ optional($shipment->delivered_at)->format('Y-m-d') ?? 'N/A' }}</td>
         </tr>
     @endforeach
 </table>

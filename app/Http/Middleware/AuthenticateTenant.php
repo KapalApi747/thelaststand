@@ -8,18 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticateTenant
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
     public function handle(Request $request, Closure $next)
     {
         // Optional: specify a custom guard if you're using one
-        if (!Auth::check()) {
-            return redirect()->route('tenant.login');
+        if (!Auth::guard('web')->check()) {
+            return redirect()->route('shop.login');
         }
 
         return $next($request);

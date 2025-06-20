@@ -1,8 +1,8 @@
-<div class="bg-blue-100 py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
+<div class="py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
     <div class="max-w-2xl mx-auto bg-blue-50 p-10 rounded-xl shadow-lg border border-blue-200">
         <form wire:submit.prevent="loginTenant" class="p-6 rounded shadow">
             @csrf
-            <h1 class="text-xl mb-6 text-blue-900 font-semibold">Tenant Login</h1>
+            <h1 class="text-xl mb-6 text-blue-900 font-semibold text-center">Login</h1>
 
             <div class="mb-4">
                 <label class="block text-sm font-medium text-blue-800">Email</label>
@@ -23,9 +23,12 @@
                 </label>
             </div>
 
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out cursor-pointer">
-                Login
-            </button>
+            <div class="flex justify-center">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out cursor-pointer">
+                    Login
+                </button>
+            </div>
+
         </form>
     </div>
 </div>

@@ -188,7 +188,7 @@
 
             @if($showLoginButton)
                 <div class="my-6 text-center">
-                    <a href="{{ route('shop.customer-login') }}" class="text-indigo-600 hover:underline text-sm font-medium">
+                    <a href="{{ route('shop.login') }}" class="text-indigo-600 hover:underline text-sm font-medium">
                         Already have an account? Log in
                     </a>
                 </div>

@@ -40,9 +40,28 @@ class CustomerAddresses extends Component
         $this->loadAddresses();
     }
 
+    protected function currentCustomer()
+    {
+        if ($customer = auth('customer')->user()) {
+            return $customer;
+        }
+
+        if ($tenantUser = auth('web')->user()) {
+            return $tenantUser->customers()->first();
+        }
+
+        return null;
+    }
+
     public function loadAddresses()
     {
-        $this->addresses = Auth::guard('customer')->user()->addresses()->get()->toArray();
+        $customer = $this->currentCustomer();
+
+        if (!$customer) {
+            abort(403, 'Unauthorized');
+        }
+
+        $this->addresses = $customer->addresses()->get()->toArray();
     }
 
     public function addAddress()
@@ -53,7 +72,13 @@ class CustomerAddresses extends Component
 
     public function editAddress($id)
     {
-        $address = Auth::guard('customer')->user()->addresses()->findOrFail($id);
+        $customer = $this->currentCustomer();
+
+        if (!$customer) {
+            abort(403, 'Unauthorized');
+        }
+
+        $address = $customer->addresses()->findOrFail($id);
         $this->editingAddress = $address->toArray();
         $this->isEditing = true;
     }
@@ -62,14 +87,16 @@ class CustomerAddresses extends Component
     {
         $this->validate();
 
-        $customer = Auth::guard('customer')->user();
+        $customer = $this->currentCustomer();
+
+        if (!$customer) {
+            abort(403, 'Unauthorized');
+        }
 
         if ($this->editingAddress['id']) {
-            // Update
             $address = $customer->addresses()->findOrFail($this->editingAddress['id']);
             $address->update($this->editingAddress);
         } else {
-            // Create
             $customer->addresses()->create($this->editingAddress);
         }
 
@@ -81,7 +108,12 @@ class CustomerAddresses extends Component
 
     public function deleteAddress($id)
     {
-        $customer = Auth::guard('customer')->user();
+        $customer = $this->currentCustomer();
+
+        if (!$customer) {
+            abort(403, 'Unauthorized');
+        }
+
         $address = $customer->addresses()->findOrFail($id);
         $address->delete();
 

@@ -14,16 +14,41 @@ class CustomerOrders extends Component
 
     public function mount()
     {
+        $customer = $this->currentCustomer();
+
+        if (!$customer) {
+            abort(403, 'Unauthorized');
+        }
+
         $this->orders = Order::with(['items', 'shipments', 'payments'])
-            ->where('customer_id', auth('customer')->user()->id)
+            ->where('customer_id', $customer->id)
             ->latest()
             ->get();
     }
 
+    protected function currentCustomer()
+    {
+        if ($customer = auth('customer')->user()) {
+            return $customer;
+        }
+
+        if ($tenantUser = auth('web')->user()) {
+            return $tenantUser->customers()->first();
+        }
+
+        return null;
+    }
+
     public function exportPDF($orderId)
     {
+        $customer = $this->currentCustomer();
+
+        if (!$customer) {
+            abort(403, 'Unauthorized');
+        }
+
         $order = Order::with(['items', 'addresses', 'payments', 'shipments'])
-            ->where('customer_id', auth('customer')->id())
+            ->where('customer_id', $customer->id)
             ->findOrFail($orderId);
 
         $pdf = Pdf::loadView('exports.orders.order-invoice', compact('order'));

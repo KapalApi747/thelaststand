@@ -75,18 +75,19 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    Route::get('/', TenantLogin::class)->name('tenant.login');
+    //Route::get('/', TenantLogin::class)->name('tenant.login');
 
     Route::prefix('shop')
         ->as('shop.')
         ->group(function () {
 
-            Route::get('login', CustomerLogin::class)->name('customer-login');
+            Route::get('login', TenantLogin::class)->name('login');
             Route::get('register', CustomerRegistration::class)->name('customer-register');
 
             Route::middleware(['customer.auth'])->group(function () {
                 Route::post('/logout', function () {
                     Auth::guard('customer')->logout();
+                    Auth::guard('web')->logout();
                     request()->session()->regenerateToken();
                     return redirect()->route('shop.shop-products');
                 })->name('customer-logout');
