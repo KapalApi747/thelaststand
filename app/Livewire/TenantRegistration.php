@@ -81,6 +81,7 @@ class TenantRegistration extends Component
             Category::create(['name' => 'Category 4']);
 
             $productSeeder = new TenantProductSeeder();
+            $productReviewSeeder = new TenantProductReviewSeeder();
             $orderSeeder = new TenantOrderDataSeeder();
             $reviewSeeder = new TenantProductReviewSeeder();
 
@@ -101,6 +102,7 @@ class TenantRegistration extends Component
             $permissionSeeder->run();
             $roleSeeder->run();
             $productSeeder->run();
+            $productReviewSeeder->run();
             $orderSeeder->run();
             $reviewSeeder->run();
         });
