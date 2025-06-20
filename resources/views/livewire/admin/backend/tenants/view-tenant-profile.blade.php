@@ -15,47 +15,47 @@
             <div class="grid grid-cols-1 gap-4">
                 <div>
                     <label class="block font-semibold">Email:</label>
-                    <p class="text-gray-600">{{ $tenant->profile->email }}</p>
+                    <p class="text-gray-600">{{ $tenant->profile->email ?? 'N/A' }}</p>
                 </div>
 
                 <div>
                     <label class="block font-semibold">Phone</label>
-                    <p class="text-gray-600">{{ $tenant->profile->phone }}</p>
+                    <p class="text-gray-600">{{ $tenant->profile->phone ?? 'N/A' }}</p>
                 </div>
 
                 <div>
                     <label class="block font-semibold">Address</label>
-                    <p class="text-gray-600">{{ $tenant->profile->address }}</p>
+                    <p class="text-gray-600">{{ $tenant->profile->address ?? 'N/A' }}</p>
                 </div>
 
                 <div>
                     <label class="block font-semibold">City</label>
-                    <p class="text-gray-600">{{ $tenant->profile->city }}</p>
+                    <p class="text-gray-600">{{ $tenant->profile->city ?? 'N/A' }}</p>
                 </div>
 
                 <div>
                     <label class="block font-semibold">State</label>
-                    <p class="text-gray-600">{{ $tenant->profile->state }}</p>
+                    <p class="text-gray-600">{{ $tenant->profile->state ?? 'N/A' }}</p>
                 </div>
 
                 <div>
                     <label class="block font-semibold">ZIP</label>
-                    <p class="text-gray-600">{{ $tenant->profile->zip }}</p>
+                    <p class="text-gray-600">{{ $tenant->profile->zip ?? 'N/A' }}</p>
                 </div>
 
                 <div>
                     <label class="block font-semibold">Country</label>
-                    <p class="text-gray-600">{{ $tenant->profile->country }}</p>
+                    <p class="text-gray-600">{{ $tenant->profile->country ?? 'N/A' }}</p>
                 </div>
 
                 <div>
                     <label class="block font-semibold">VAT ID</label>
-                    <p class="text-gray-600">{{ $tenant->profile->vat_id }}</p>
+                    <p class="text-gray-600">{{ $tenant->profile->vat_id ?? 'N/A' }}</p>
                 </div>
 
                 <div>
                     <label class="block font-semibold">Business Description</label>
-                    <p class="text-gray-600">{{ $tenant->profile->business_description }}</p>
+                    <p class="text-gray-600">{{ $tenant->profile->business_description ?? 'N/A' }}</p>
                 </div>
 
                 <div>
