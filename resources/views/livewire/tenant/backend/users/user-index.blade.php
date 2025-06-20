@@ -68,7 +68,11 @@
                 @foreach($users as $user)
                     <tr>
                         <td class="border p-2 flex justify-center items-center">
-                            <img src="{{ asset('tenant' . tenant()->id . '/' . $user->profile_picture_path) }}" alt="Profile Picture" class="w-10 h-10 rounded-full">
+                            @php
+                                $picturePath = 'tenant' . tenant()->id . '/' . $user->profile_picture_path;
+                            @endphp
+
+                            <img src="{{ file_exists(public_path('tenancy/assets/' . $picturePath)) ? asset($picturePath) : 'https://placehold.co/10x10' }}" alt="Profile Picture" class="w-10 h-10 rounded-full">
                         </td>
                         <td class="border p-2">{{ $user->name }}</td>
                         <td class="border p-2">{{ $user->email }}</td>

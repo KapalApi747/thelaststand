@@ -7,7 +7,14 @@
 
             <!-- image -->
             <div class="img-wrapper w-40 h-40 flex justify-center items-center">
-                <img src="{{ asset('tenant' . tenant()->id . '/' . auth()->user()->profile_picture_path) }}" alt="profile picture">
+                @php
+                    $picturePath = 'tenant' . tenant()->id . '/' . auth()->user()->profile_picture_path;
+                @endphp
+
+                <img
+                    src="{{ file_exists(public_path('tenancy/assets/' . $picturePath)) ? asset($picturePath) : 'https://placehold.co/120x120' }}"
+                    class="w-80 h-80 rounded-full overflow-hidden"
+                    alt="User Picture">
             </div>
             <!-- end image -->
 

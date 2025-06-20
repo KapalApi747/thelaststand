@@ -3,8 +3,16 @@
 
     <!-- logo -->
     <div class="flex-none w-56 flex flex-row items-center">
-        <img src="{{ asset("tenant" . tenant()->id . "/assets/img/store_logo.png") }}" class="w-10 flex-none" alt="logo">
-        @if (tenant())
+        @php
+            $logoPath = 'tenant' . tenant()->id . '/assets/img/store_logo.png';
+        @endphp
+
+        <img
+            src="{{ file_exists(public_path('tenancy/assets/' . $logoPath)) ? asset($logoPath) : 'https://placehold.co/40x40' }}"
+            class="w-10 h-10 rounded-full overflow-hidden mr-3 bg-gray-100 border border-gray-300"
+            alt="Store Logo">
+
+    @if (tenant())
             <div class="flex flex-col flex-1 ml-3">
                 <strong class="capitalize">{{ tenant()->store_name }}</strong>
                 <a href="{{ route('shop.shop-products') }}" class="text-xs text-gray-600 hover:text-gray-900 transition-colors ease-in-out duration-500">Return Home</a>
