@@ -12,7 +12,7 @@
                 @endphp
 
                 <img
-                    src="{{ file_exists(public_path('tenancy/assets/' . $picturePath)) ? asset($picturePath) : 'https://placehold.co/120x120' }}"
+                    src="{{ auth()->user()->profile_picture_path && file_exists(public_path('tenancy/assets/' . $picturePath)) ? asset($picturePath) : 'https://placehold.co/120x120' }}"
                     class="w-80 h-80 rounded-full overflow-hidden"
                     alt="User Picture">
             </div>

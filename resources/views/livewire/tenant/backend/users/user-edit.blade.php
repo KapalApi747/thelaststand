@@ -1,10 +1,10 @@
-<div class="space-y-6">
+<div class="space-y-6 p-6">
+
+    <h3 class="h3 font-semibold mb-4">Editing: {{ $user->name }}</h3>
 
     @if (session()->has('message'))
         <div class="text-green-600 font-semibold">{{ session('message') }}</div>
     @endif
-
-    <h3 class="h3 font-semibold mb-4">Editing: {{ $user->name }}</h3>
 
         <div class="p-4 bg-white rounded shadow">
             <form wire:submit.prevent="updateUser" enctype="multipart/form-data">
@@ -52,12 +52,12 @@
                     @error('is_active') <span class="text-red-600">{{ $message }}</span> @enderror
                 </div>
 
+                @if ($existingProfilePicture)
                 <div class="mb-4">
                     <label class="block font-semibold mb-1">Current Profile Picture</label>
-                    @if ($existingProfilePicture)
-                        <img src="{{ asset('tenant' . tenant()->id . '/' . $user->profile_picture_path) }}" class="h-20 w-20 rounded-full mt-2">
-                    @endif
+                    <img src="{{ asset('tenant' . tenant()->id . '/' . $user->profile_picture_path) }}" class="h-20 w-20 rounded-full mt-2">
                 </div>
+                @endif
 
                 @if ($profile_picture)
                     <div>

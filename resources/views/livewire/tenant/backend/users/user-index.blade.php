@@ -1,12 +1,12 @@
-<div class="space-y-6">
+<div class="space-y-6 p-6">
+
+    <h3 class="h3 font-semibold mb-4">All Users</h3>
 
     @if (session()->has('message'))
         <div class="p-2 bg-green-200 text-green-800 rounded">
             {{ session('message') }}
         </div>
     @endif
-
-    <h2 class="h2 font-semibold mb-4">All Users</h2>
 
     <div class="bg-white p-4 rounded shadow mt-6">
 
@@ -72,7 +72,7 @@
                                 $picturePath = 'tenant' . tenant()->id . '/' . $user->profile_picture_path;
                             @endphp
 
-                            <img src="{{ file_exists(public_path('tenancy/assets/' . $picturePath)) ? asset($picturePath) : 'https://placehold.co/10x10' }}" alt="Profile Picture" class="w-10 h-10 rounded-full">
+                            <img src="{{ $user->profile_picture_path && file_exists(public_path('tenancy/assets/' . $picturePath)) ? asset($picturePath) : 'https://placehold.co/10x10' }}" alt="Profile Picture" class="w-10 h-10 rounded-full">
                         </td>
                         <td class="border p-2">{{ $user->name }}</td>
                         <td class="border p-2">{{ $user->email }}</td>
@@ -80,29 +80,34 @@
                         <td class="border p-2 text-center">{{ $user->is_active ? 'Active' : 'Inactive' }}</td>
                         <td class="border p-2 text-center">{{ $user->created_at->format('Y-m-d') }}</td>
                         <td class="border p-2">
-                            <div class="flex justify-evenly items-center">
-                                <div>
+                            <div class="flex justify-center items-center">
+                                <div class="mr-2">
                                     <a href="{{ route('tenant-dashboard.user-view', $user) }}"
-                                       class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2">View</a>
+                                       class="text-blue-500 hover:text-blue-700 transition-colors duration-300">
+
+                                        <i class="far fa-eye"></i>
+                                    </a>
                                 </div>
-                                <div>
+                                <div class="mr-2">
                                     <a href="{{ route('tenant-dashboard.user-edit', $user) }}"
-                                       class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded mt-2">Edit</a>
+                                       class="text-yellow-500 hover:text-yellow-700 transition-colors duration-300">
+                                        <i class="far fa-edit"></i>
+                                    </a>
                                 </div>
                                 <div>
                                     @if ($user->is_active)
                                         <button
                                             type="button"
                                             wire:click="activeToggle({{ $user->id }})"
-                                            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
-                                            Deactivate
+                                            class="text-red-600 hover:text-red-800 transition-colors duration-300">
+                                            <i class="far fa-ban"></i>
                                         </button>
                                     @else
                                         <button
                                             type="button"
                                             wire:click="activeToggle({{ $user->id }})"
-                                            class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-                                            Reactivate
+                                            class="text-green-600 hover:text-green-800 transition-colors duration-300">
+                                            <i class="far fa-check"></i>
                                         </button>
                                     @endif
                                 </div>
