@@ -15,7 +15,7 @@
         @if (tenant())
             <div class="flex flex-col flex-1 ml-3">
                 <strong class="capitalize">{{ tenant()->store_name }}</strong>
-                <a href="{{ route('shop.shop-products') }}" class="text-xs text-gray-600 hover:text-gray-900 transition-colors ease-in-out duration-500">Return Home</a>
+                <a href="{{ route('shop.shop-products') }}" class="text-xs text-gray-600 hover:text-gray-900 transition-colors ease-in-out duration-500">Return To Shop</a>
             </div>
         @endif
 

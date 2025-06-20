@@ -14,6 +14,19 @@ class CustomerSettings extends Component
     public $new_password;
     public $new_password_confirmation;
 
+    protected function currentCustomer()
+    {
+        if ($customer = auth('customer')->user()) {
+            return $customer;
+        }
+
+        if ($tenantUser = auth('web')->user()) {
+            return $tenantUser->customers()->first();
+        }
+
+        return null;
+    }
+
     public function updatePassword()
     {
         $this->validate([
@@ -21,16 +34,38 @@ class CustomerSettings extends Component
             'new_password' => 'required|string|min:8|confirmed',
         ]);
 
-        $customer = auth('customer')->user();
+        $customer = $this->currentCustomer();
 
-        if (!Hash::check($this->current_password, $customer->password)) {
+        if (!$customer) {
             throw ValidationException::withMessages([
-                'current_password' => 'The existing password is incorrect.',
+                'current_password' => 'User not found or unauthorized.',
             ]);
         }
 
+        $tenantUser = null;
+        if ($tenantUser = auth('web')->user()) {
+            if (!Hash::check($this->current_password, $tenantUser->password)) {
+                throw ValidationException::withMessages([
+                    'current_password' => 'The existing password is incorrect.',
+                ]);
+            }
+        } else {
+            if (!Hash::check($this->current_password, $customer->password)) {
+                throw ValidationException::withMessages([
+                    'current_password' => 'The existing password is incorrect.',
+                ]);
+            }
+        }
+
+        // Update customer password
         $customer->password = Hash::make($this->new_password);
         $customer->save();
+
+        // Update tenant user password if exists
+        if ($tenantUser) {
+            $tenantUser->password = Hash::make($this->new_password);
+            $tenantUser->save();
+        }
 
         // Clear form fields after successful update
         $this->reset(['current_password', 'new_password', 'new_password_confirmation']);

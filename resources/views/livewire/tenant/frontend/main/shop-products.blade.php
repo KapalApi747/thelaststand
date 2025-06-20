@@ -211,11 +211,6 @@
 
                                     {{--Product Reviews Section--}}
                                     <div class="mt-8 border-t pt-6">
-                                        {{--<livewire:tenant.frontend.shopping.reviews.product-reviews :product="$product"
-                                                                                                   :reviews="$product->reviews"
-                                                                                                   :hasReviewed="in_array($product->id, $customerReviewedProductIds)"
-                                                                                                   :key="'reviews-' . $product->id"
-                                        />--}}
                                         @auth('customer')
 
                                             @if (in_array($product->id, $customerReviewedProductIds))
@@ -274,7 +269,7 @@
                                             @endif
                                         @else
                                             <p class="text-sm text-gray-400">
-                                                <a href="{{ route('shop.customer-login') }}"
+                                                <a href="{{ route('shop.login') }}"
                                                    class="underline text-blue-500">Log in</a> to leave a
                                                 review or reply.
                                             </p>

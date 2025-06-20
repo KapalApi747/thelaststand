@@ -19,7 +19,11 @@ class CustomerProfile extends Component
 
     public function mount()
     {
-        $customer = Auth::guard('customer')->user();
+        $customer = $this->currentCustomer();
+
+        if (!$customer) {
+            abort(403, 'Unauthorized');
+        }
 
         $this->name = $customer->name;
         $this->email = $customer->email;
@@ -28,11 +32,26 @@ class CustomerProfile extends Component
         $this->paymentAccounts = $customer->paymentAccounts()->get()->toArray();
     }
 
+    protected function currentCustomer()
+    {
+        if ($customer = auth('customer')->user()) {
+            return $customer;
+        }
+
+        if ($tenantUser = auth('web')->user()) {
+            return $tenantUser->customers()->first();
+        }
+
+        return null;
+    }
+
     protected function rules()
     {
+        $customer = $this->currentCustomer();
+
         return [
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email', 'max:255', Rule::unique('customers')->ignore(auth('customer')->id())],
+            'email' => ['required', 'email', 'max:255', Rule::unique('customers')->ignore($customer->id)],
             'phone' => 'nullable|string|max:30',
         ];
     }
@@ -41,9 +60,12 @@ class CustomerProfile extends Component
     {
         $this->validate();
 
-        $customer = Auth::guard('customer')->user();
+        $customer = $this->currentCustomer();
 
-        // Update basic info
+        if (!$customer) {
+            abort(403, 'Unauthorized');
+        }
+
         $customer->update([
             'name' => $this->name,
             'email' => $this->email,

@@ -1,28 +1,30 @@
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-black p-4 sm:p-6 md:p-12">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 sm:p-8 md:p-12 bg-white rounded-lg shadow-lg text-gray-800">
+
     {{-- Image gallery --}}
     <div
         x-data="{ mainImage: '' }"
         x-init="
-        mainImage = '{{ asset('tenant' . tenant()->id . '/' . ($product->mainImage?->path ?? 'https://placehold.co/200x200?text=No+Image')) }}'
-    "
+            mainImage = '{{ asset('tenant' . tenant()->id . '/' . ($product->mainImage?->path ?? 'https://placehold.co/400x400?text=No+Image')) }}'
+        "
         x-on:variant-image-updated.window="mainImage = $event.detail[0].url"
+        class="flex flex-col"
     >
         {{-- Main Image --}}
         <img
             :src="mainImage"
             alt="{{ $product->name }}"
-            class="w-full h-64 sm:h-80 md:h-96 object-cover rounded-xl transition duration-300 ease-in-out"
+            class="w-full h-72 sm:h-96 md:h-[28rem] object-contain rounded-lg border border-gray-300 shadow-sm transition duration-300 ease-in-out"
         >
 
         {{-- Main Product Images Thumbnails --}}
-        <div class="mt-4">
-            <h3 class="text-white font-semibold mb-2">Main Product Images</h3>
-            <div class="flex flex-wrap gap-2">
+        <div class="mt-6">
+            <h3 class="text-gray-900 font-semibold mb-3">Main Product Images</h3>
+            <div class="flex flex-wrap gap-3">
                 @foreach ($product->images->where('product_variant_id', null) as $image)
                     <img
                         src="{{ asset('tenant' . tenant()->id . '/' . $image->path) }}"
                         @click="mainImage = '{{ asset('tenant' . tenant()->id . '/' . $image->path) }}'"
-                        class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded border cursor-pointer transition-all hover:ring-2 hover:ring-white"
+                        class="w-20 h-20 object-cover rounded-lg border border-gray-300 cursor-pointer hover:ring-2 hover:ring-indigo-500 transition-all"
                     >
                 @endforeach
             </div>
@@ -31,14 +33,14 @@
         {{-- Variant Images Thumbnails --}}
         @if ($product->variants->count())
             @foreach ($product->variants as $variant)
-                <div class="mt-6">
-                    <h3 class="text-white font-semibold mb-2">Image(s) for {{ $product->name }} - {{ $variant->name }}</h3>
-                    <div class="flex flex-wrap gap-2">
+                <div class="mt-8">
+                    <h3 class="text-gray-900 font-semibold mb-3">Image(s) for {{ $product->name }} - {{ $variant->name }}</h3>
+                    <div class="flex flex-wrap gap-3">
                         @foreach ($variant->images as $variantImage)
                             <img
                                 src="{{ asset('tenant' . tenant()->id . '/' . $variantImage->path) }}"
                                 @click="mainImage = '{{ asset('tenant' . tenant()->id . '/' . $variantImage->path) }}'"
-                                class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded border cursor-pointer transition-all hover:ring-2 hover:ring-white"
+                                class="w-20 h-20 object-cover rounded-lg border border-gray-300 cursor-pointer hover:ring-2 hover:ring-indigo-500 transition-all"
                             >
                         @endforeach
                     </div>
@@ -48,41 +50,46 @@
     </div>
 
     {{-- Product Info --}}
-    <div class="flex flex-col justify-between">
+    <div class="flex flex-col justify-between bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
         <div>
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                <h1 class="text-2xl sm:text-3xl font-bold text-white">{{ $product->name }}</h1>
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                <h1 class="text-3xl font-extrabold text-gray-900">{{ $product->name }}</h1>
 
                 {{-- Back Button --}}
-                <a class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-300 text-center"
-                   href="{{ route('shop.shop-products') }}">
+                <a
+                    href="{{ route('shop.shop-products') }}"
+                    class="inline-block bg-red-600 text-white px-5 py-2 rounded-md hover:bg-red-700 transition-colors duration-300 text-center font-semibold shadow-sm"
+                >
                     Back
                 </a>
             </div>
 
             {{-- Price --}}
-            <p class="text-lg sm:text-xl text-gray-200 mt-3">
+            <p class="text-2xl text-indigo-600 font-semibold mt-4">
                 €{{ number_format($selected?->price ?? $product->price, 2) }}
             </p>
 
             {{-- Stock --}}
-            <p class="{{ $this->stock > 0 ? 'text-green-500' : 'text-red-500' }} mt-1">
+            <p class="{{ $this->stock > 0 ? 'text-green-600' : 'text-red-600' }} mt-2 font-medium">
                 {{ $this->stock > 0 ? 'In Stock' : 'Out of Stock' }} ({{ $this->stock }})
             </p>
 
             {{-- Description --}}
-            <p class="mt-4 text-gray-200 text-sm sm:text-base">{{ $product->description }}</p>
+            <p class="mt-5 text-gray-700 leading-relaxed text-base sm:text-lg">{{ $product->description }}</p>
 
             {{-- Categories --}}
-            <p class="mt-4 text-gray-200 text-sm sm:text-base">
-                <strong>Categories:</strong> {{ $product->categories->implode('name', ', ') }}
+            <p class="mt-6 text-gray-600 text-sm sm:text-base">
+                <strong class="font-semibold text-gray-800">Categories:</strong> {{ $product->categories->implode('name', ', ') }}
             </p>
 
             {{-- Variant Selector --}}
             @if ($product->variants->isNotEmpty())
-                <div class="mt-6">
-                    <h3 class="font-semibold mb-2 text-white text-sm sm:text-base">Choose a Variant (optional):</h3>
-                    <select wire:model.live="variantId" class="w-full rounded border-gray-300 bg-black text-white text-sm">
+                <div class="mt-8">
+                    <h3 class="font-semibold mb-2 text-gray-900 text-base sm:text-lg">Choose a Variant (optional):</h3>
+                    <select
+                        wire:model.live="variantId"
+                        class="w-full rounded-md border border-gray-300 bg-white text-gray-900 text-base sm:text-lg focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+                    >
                         <option value="{{ null }}">-- Standard -- ({{ $product->stock }} in stock)</option>
                         @foreach ($product->variants as $variant)
                             <option value="{{ $variant->id }}">
@@ -96,8 +103,8 @@
         </div>
 
         {{-- Add to Cart --}}
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-6">
-            <form method="POST" action="{{ route('shop.add-to-cart') }}">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-8">
+            <form method="POST" action="{{ route('shop.add-to-cart') }}" class="flex w-full sm:w-auto">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                 @if ($variantId)
@@ -106,7 +113,7 @@
 
                 <button
                     type="submit"
-                    class="btn w-full sm:w-auto px-4 py-2 rounded-md bg-green-500 hover:bg-green-700 transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="btn w-full sm:w-auto px-6 py-3 rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 font-semibold text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                     {{ $this->stock <= 0 ? 'disabled' : '' }}
                 >
                     Add to Cart
@@ -114,19 +121,19 @@
             </form>
 
             @if ($this->stock <= 0)
-                <p class="text-red-500 font-semibold">Out of Stock</p>
+                <p class="text-red-600 font-semibold">Out of Stock</p>
             @endif
         </div>
 
         @if (session('message'))
-            <div class="my-4 rounded-lg bg-green-100 px-4 py-3 text-sm text-green-800 shadow-md" role="alert">
+            <div class="mt-6 rounded-lg bg-green-50 px-5 py-4 text-green-800 shadow-inner" role="alert">
                 {{ session('message') }}
             </div>
         @endif
     </div>
 
     {{-- Reviews --}}
-    <div class="mt-10 border-t pt-6 col-span-1 md:col-span-2">
+    <div class="mt-10 border-t border-gray-300 pt-8 col-span-1 md:col-span-2">
         <livewire:tenant.frontend.shopping.reviews.product-reviews :product="$product" />
     </div>
 </div>

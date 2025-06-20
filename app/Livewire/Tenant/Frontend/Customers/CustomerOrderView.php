@@ -14,7 +14,7 @@ class CustomerOrderView extends Component
 
     public function mount(Order $order)
     {
-        $customerId = auth('customer')->id();
+        $customerId = $this->currentCustomer()->id;
 
         if ($order->customer_id !== $customerId) {
             abort(403, 'Unauthorized access to this order.');
@@ -23,10 +23,25 @@ class CustomerOrderView extends Component
         $this->order = $order;
     }
 
+    protected function currentCustomer()
+    {
+        if ($customer = auth('customer')->user()) {
+            return $customer;
+        }
+
+        if ($tenantUser = auth('web')->user()) {
+            return $tenantUser->customers()->first();
+        }
+
+        return null;
+    }
+
     public function exportPDF()
     {
+        $customer = $this->currentCustomer();
+
         $order = Order::with(['items', 'addresses', 'payments', 'shipments'])
-            ->where('customer_id', auth('customer')->id())
+            ->where('customer_id', $customer->id)
             ->findOrFail($this->order->id);
 
         $pdf = Pdf::loadView('exports.orders.order-invoice', compact('order'));

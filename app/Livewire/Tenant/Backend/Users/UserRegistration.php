@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Tenant\Backend\Users;
 
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -49,6 +51,15 @@ class UserRegistration extends Component
         ]);
 
         $user->assignRole($this->roles);
+
+        $customer = Customer::create([
+            'name' => $user->name,
+            'slug' => Str::slug($user->name),
+            'email' => $user->email,
+            'password' => $user->password,
+        ]);
+
+        $user->customers()->attach($customer->id);
 
         session()->flash('message', 'User registered successfully!');
 

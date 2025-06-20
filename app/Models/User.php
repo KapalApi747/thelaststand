@@ -73,4 +73,9 @@ class User extends Authenticatable
             $user->slug = Str::slug($user->name);
         });
     }
+
+    public function customers()
+    {
+        return $this->belongsToMany(Customer::class);
+    }
 }

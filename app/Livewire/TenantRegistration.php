@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Tenant;
 use App\Models\TenantProfile;
 use App\Models\User;
@@ -13,6 +14,7 @@ use Database\Seeders\TenantProductSeeder;
 use Database\Seeders\TenantRoleSeeder;
 use Database\Seeders\TenantShippingMethodSeeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -120,6 +122,15 @@ class TenantRegistration extends Component
 
             $adminRole = Role::where('name', 'admin')->first();
             $user->assignRole($adminRole);
+
+            $customer = Customer::create([
+                'name' => $user->name,
+                'slug' => Str::slug($user->name),
+                'email' => $user->email,
+                'password' => $user->password,
+            ]);
+
+            $user->customers()->attach($customer->id);
         });
 
         // Step 4: Upload logo if present

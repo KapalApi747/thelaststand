@@ -22,30 +22,36 @@
         </tr>
         </thead>
         <tbody class="text-gray-800">
-        @foreach($orders as $order)
-            <tr class="hover:bg-gray-50 transition">
-                <td class="py-4 px-3 text-center">{{ $order->order_number }}</td>
-                <td class="py-4 px-3 text-center">{{ $order->created_at->format('Y-m-d') }}</td>
-                <td class="py-4 px-3 text-center">{{ $order->items->count() }}</td>
-                <td class="py-4 px-3 text-center uppercase">
-                    {{ $order->shipments->pluck('shipping_method')->unique()->implode(', ') }}
-                </td>
-                <td class="py-4 px-3 text-center">€{{ $order->total_amount }}</td>
-                <td class="py-4 px-3 text-center uppercase">{{ $order->status }}</td>
-                <td class="py-4 px-3 text-center whitespace-nowrap">
-                    <a href="{{ route('shop.customer-order-view', $order) }}"
-                       class="text-blue-600 hover:text-blue-800 font-medium me-3 transition"
-                    >
-                        View Order
-                    </a>
-                    <button wire:click="exportPDF({{ $order->id }})"
-                            class="text-orange-600 hover:text-orange-800 font-medium transition"
-                    >
-                        Download
-                    </button>
-                </td>
+        @if ($orders->count() > 0)
+            @foreach($orders as $order)
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="py-4 px-3 text-center">{{ $order->order_number }}</td>
+                    <td class="py-4 px-3 text-center">{{ $order->created_at->format('Y-m-d') }}</td>
+                    <td class="py-4 px-3 text-center">{{ $order->items->count() }}</td>
+                    <td class="py-4 px-3 text-center uppercase">
+                        {{ $order->shipments->pluck('shipping_method')->unique()->implode(', ') }}
+                    </td>
+                    <td class="py-4 px-3 text-center">€{{ $order->total_amount }}</td>
+                    <td class="py-4 px-3 text-center uppercase">{{ $order->status }}</td>
+                    <td class="py-4 px-3 text-center whitespace-nowrap">
+                        <a href="{{ route('shop.customer-order-view', $order) }}"
+                           class="text-blue-600 hover:text-blue-800 font-medium me-3 transition"
+                        >
+                            View Order
+                        </a>
+                        <button wire:click="exportPDF({{ $order->id }})"
+                                class="text-orange-600 hover:text-orange-800 font-medium transition"
+                        >
+                            Download
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
+        @else
+            <tr>
+                <td colspan="7" class="p-2 text-gray-500">No orders found.</td>
             </tr>
-        @endforeach
+        @endif
         </tbody>
     </table>
 </div>

@@ -10,8 +10,8 @@ class AuthenticateCustomer
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::guard('customer')->check()) {
-            return redirect()->route('shop.customer-login');
+        if (!Auth::guard('customer')->check() && !Auth::guard('web')->check()) {
+            return redirect()->route('shop.login');
         }
 
         return $next($request);

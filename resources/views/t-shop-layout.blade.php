@@ -17,8 +17,10 @@
 
 </head>
 <body class="bg-white">
-<div class="mx-auto">
-    @include('components.shop.navbar')
+
+@include('components.shop.navbar')
+
+<div class="container mx-auto">
     {{ $slot }}
 </div>
 
