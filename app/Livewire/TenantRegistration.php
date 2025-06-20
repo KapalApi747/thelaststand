@@ -149,7 +149,7 @@ class TenantRegistration extends Component
         }
 
         $this->success = true;
-        $this->storeUrl = "http://" . $this->domain . ".thelaststand.local:8000/";
+        $this->storeUrl = "http://" . $this->domain . ".thelaststand.local:8000/shop/products";
     }
 
     public function render()
