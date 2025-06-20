@@ -60,9 +60,9 @@ class TenantRegistration extends Component
 
         // Step 1: Create the tenant and attach the domain
         $tenant = Tenant::create([
-            'id' => $this->domain, // You can use domain as tenant id
+            'id' => $this->domain,
             'store_name' => $this->store_name,
-            'plan' => 'free', // Optional: You can set a default plan here
+            'plan' => 'free',
         ]);
 
         $tenant->domains()->create([
@@ -71,8 +71,6 @@ class TenantRegistration extends Component
 
         // Step 2: Migrate the tenant database
         $tenant->run(function () {
-            // This runs inside the tenant context
-            // Optional: You can seed here too if needed
 
             $permissionSeeder = new TenantPermissionSeeder();
             $roleSeeder = new TenantRoleSeeder();
