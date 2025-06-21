@@ -18,6 +18,9 @@ use App\Livewire\Tenant\Backend\Products\ProductEdit;
 use App\Livewire\Tenant\Backend\Products\ProductManagement;
 use App\Livewire\Tenant\Backend\Products\ProductView;
 use App\Livewire\Tenant\Backend\Profile\StoreSettings;
+use App\Livewire\Tenant\Backend\Roles\RoleCreation;
+use App\Livewire\Tenant\Backend\Roles\RoleEdit;
+use App\Livewire\Tenant\Backend\Roles\RoleIndex;
 use App\Livewire\Tenant\Backend\Shipping\ShippingMethodEdit;
 use App\Livewire\Tenant\Backend\Shipping\ShippingMethodForm;
 use App\Livewire\Tenant\Backend\Shipping\ShippingMethodIndex;
@@ -143,6 +146,12 @@ Route::middleware([
                 Route::get('/customers/customer-creation', CustomerCreation::class)->name('customer-creation');
                 Route::get('/customers/{customerId}', CustomerView::class)->name('customer-view');
                 Route::get('/customers/{customer}/edit', CustomerEdit::class)->name('customer-edit');
+            });
+
+            Route::middleware(['role:admin'])->group(function () {
+                Route::get('/roles', RoleIndex::class)->name('role-index');
+                Route::get('/roles/role-creation', RoleCreation::class)->name('role-creation');
+                Route::get('/roles/{role}', RoleEdit::class)->name('role-edit');
             });
 
             Route::middleware(['permission:manage orders'])->group(function () {
