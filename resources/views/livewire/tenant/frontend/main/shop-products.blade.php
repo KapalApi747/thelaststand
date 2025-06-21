@@ -9,27 +9,32 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 sm:gap-y-6 lg:gap-6">
         <!-- Filters -->
-        <aside class="md:col-span-1 bg-white border border-gray-200 p-6 rounded-xl shadow">
+        <aside class="bg-white border border-gray-200 p-6 rounded-xl shadow">
             <h3 class="text-lg font-semibold mb-4 text-gray-900">Filter Products</h3>
 
             <div class="mb-6">
                 <label class="block text-sm font-medium mb-2 text-gray-700">Categories</label>
-                <select
-                    wire:model.live.debounce.500ms="selectedCategories"
-                    multiple
-                    class="w-full rounded-md border border-gray-300 text-gray-800 p-2 bg-white"
-                    size="5"
-                >
+
+                <div class="flex flex-col space-y-2">
                     @foreach ($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        <label class="flex items-center space-x-2 text-sm text-gray-800">
+                            <input
+                                type="checkbox"
+                                wire:model.live="selectedCategories"
+                                value="{{ $category->id }}"
+                                class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            >
+                            <span>{{ $category->name }}</span>
+                        </label>
                     @endforeach
-                </select>
-                <small class="text-gray-500">Hold Ctrl (Cmd) to select multiple</small>
+                </div>
+
+                <small class="text-gray-500 mt-1 block">Select one or more categories</small>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium mb-1 text-gray-700" for="minPrice">Min Price (€)</label>
                     <input
@@ -58,13 +63,16 @@
         </aside>
 
         <!-- Product Cards -->
-        <main class="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <main class="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             @forelse ($products as $product)
                 @php
                     $mainProductOutOfStock = $product->stock <= 0;
                     $image = $product->images->first();
                     $imageUrl = $image ? asset('tenant' . tenant()->id . '/' . $image->path) : 'https://placehold.co/200x200?text=No+Image';
                     $modalName = 'product-details-' . $product->id;
+
+                    $avgRating = $product->approved_reviews_avg_rating;
+                    $count = $product->approved_reviews_count;
                 @endphp
 
                 <div wire:key="product-{{ $product->id }}"
@@ -79,10 +87,6 @@
                         </p>
 
                         <div class="flex items-center text-yellow-500 text-sm mt-1">
-                            @php
-                                $avgRating = $product->approved_reviews_avg_rating;
-                                $count = $product->approved_reviews_count;
-                            @endphp
 
                             @if ($avgRating > 0)
                                 ★ {{ number_format($avgRating, 1) }}
@@ -130,17 +134,16 @@
                                                 <strong>Categories:</strong> {{ $product->categories->implode('name', ', ') }}
                                             </p>
                                             <p class="text-green-600 {{ $product->stock > 0 ? '' : 'text-red-600' }}"><strong>Stock:</strong> {{ $product->stock }}</p>
-                                            @if ($product->average_rating > 0)
-                                                <div class="flex items-center text-yellow-400 text-sm mt-1">
-                                                    ★ {{ number_format($product->average_rating, 1) . ' ' . '/' . ' ' . '5' }}
-                                                    <span class="text-gray-400 text-xs ms-2">({{ $product->approved_reviews_count }} reviews)</span>
-                                                </div>
-                                            @else
-                                                <div class="flex items-center text-yellow-400 text-sm mt-1">
+                                            <div class="flex items-center text-yellow-500 text-sm mt-1">
+
+                                                @if ($avgRating > 0)
+                                                    ★ {{ number_format($avgRating, 1) }}
+                                                @else
                                                     ☆ 0
-                                                    <span class="text-gray-400 text-xs ms-2">({{ $product->approved_reviews_count }} reviews)</span>
-                                                </div>
-                                            @endif
+                                                @endif
+
+                                                <span class="text-gray-500 text-xs ml-2">({{ $count }} reviews)</span>
+                                            </div>
                                         </div>
                                         <div class="grid grid-cols-3 gap-4 mt-5">
                                             @foreach ($product->images as $img)
@@ -262,10 +265,9 @@
             @empty
                 <p class="col-span-full text-center text-gray-500">No products matching your search criteria.</p>
             @endforelse
-
-            <div class="mt-6">
-                {{ $products->links() }}
-            </div>
         </main>
+    </div>
+    <div class="mt-6 w-full">
+        {{ $products->links() }}
     </div>
 </div>

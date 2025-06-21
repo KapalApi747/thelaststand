@@ -26,16 +26,18 @@ class ShopProducts extends Component
 
     public function updatedSelectedCategories()
     {
-        $this->resetPage(); // important to avoid stale pagination
-    }
-
-    public function updatedMinPrice()
-    {
         $this->resetPage();
     }
 
-    public function updatedMaxPrice()
+    public function updatedMinPrice($value)
     {
+        $this->minPrice = $value !== '' ? $value : null;
+        $this->resetPage();
+    }
+
+    public function updatedMaxPrice($value)
+    {
+        $this->maxPrice = $value !== '' ? $value : null;
         $this->resetPage();
     }
 
