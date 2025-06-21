@@ -50,7 +50,7 @@
     </div>
 
     {{-- Product Info --}}
-    <div class="flex flex-col justify-between bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+    <div class="flex flex-col bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
         <div>
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                 <h1 class="text-3xl font-extrabold text-gray-900">{{ $product->name }}</h1>
@@ -113,7 +113,7 @@
 
                 <button
                     type="submit"
-                    class="btn w-full sm:w-auto px-6 py-3 rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 font-semibold text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="btn w-full sm:w-auto px-6 py-3 rounded-md bg-indigo-600 hover:bg-indigo-800 transition-colors duration-300 cursor-pointer font-semibold text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                     {{ $this->stock <= 0 ? 'disabled' : '' }}
                 >
                     Add to Cart

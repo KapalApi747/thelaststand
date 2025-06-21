@@ -21,13 +21,28 @@ class ReviewReplies extends Component
         'body' => 'required|string|max:1000',
     ];
 
+    protected function currentCustomer()
+    {
+        if ($customer = auth('customer')->user()) {
+            return $customer;
+        }
+
+        if ($tenantUser = auth('web')->user()) {
+            return $tenantUser->customers()->first();
+        }
+
+        return null;
+    }
+
     public function submit()
     {
         $this->validate();
 
+        $customer = $this->currentCustomer();
+
         ProductReviewReply::create([
             'product_review_id' => $this->review->id,
-            'customer_id' => auth('customer')->id(),
+            'customer_id' => $customer->id,
             'body' => $this->body,
         ]);
 

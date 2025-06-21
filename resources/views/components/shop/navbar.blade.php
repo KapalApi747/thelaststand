@@ -1,10 +1,29 @@
-@php use Illuminate\Support\Facades\Auth; @endphp
+@php
+    use Illuminate\Support\Facades\Auth;
+
+    $store_logo_url = 'tenant' . tenant()->id . '/assets/img/store_logo.png';
+
+    $tenantUser = Auth::guard('web')->user();
+    $customerUser = Auth::guard('customer')->user();
+
+    $linkedCustomer = null;
+    if ($tenantUser && $tenantUser->relationLoaded('customers')) {
+        $linkedCustomer = $tenantUser->customers->first();
+    } elseif ($tenantUser) {
+        $linkedCustomer = $tenantUser->customers()->first();
+    }
+@endphp
 
 <nav class="bg-gray-100 px-8 py-4 flex justify-between items-center">
     <div class="flex items-center gap-4">
-        <div>
-            <img src="{{ asset("tenant" . tenant()->id . "/assets/img/store_logo.png") }}" alt="store_logo" class="w-full h-12">
-        </div>
+        @if (file_exists(public_path('tenancy/assets/' . $store_logo_url)))
+            <div class="w-10 h-10 rounded-full overflow-hidden">
+                <img
+                    src="{{ file_exists(public_path('tenancy/assets/' . $store_logo_url)) ? asset($store_logo_url) : 'https://placehold.co/40x40' }}"
+                    alt="store_logo"
+                    class="w-full h-full object-cover">
+            </div>
+        @endif
         <div>
             <h1 class="text-black font-bold text-3xl">{{tenant()->store_name}}</h1>
         </div>
@@ -18,19 +37,6 @@
                 <i class="fa-solid fa-cart-shopping"></i>
             </a>
         </div>
-        @php
-            $tenantUser = Auth::guard('web')->user();
-            $customerUser = Auth::guard('customer')->user();
-
-            // If tenant user logged in and has linked customers, get first linked customer
-            $linkedCustomer = null;
-            if ($tenantUser && $tenantUser->relationLoaded('customers')) {
-                $linkedCustomer = $tenantUser->customers->first();
-            } elseif ($tenantUser) {
-                // Lazy load if not eager loaded
-                $linkedCustomer = $tenantUser->customers()->first();
-            }
-        @endphp
 
         @if ($customerUser || $linkedCustomer)
             @php
