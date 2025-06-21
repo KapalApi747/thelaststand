@@ -1,5 +1,9 @@
 <div class="p-6 space-y-6">
 
+    @php
+        $profile_picture = 'tenant' . tenant()->id . '/' . $user->profile_picture_path;
+    @endphp
+
     <div class="flex justify-between items-center">
         <h3 class="h3 font-bold mb-4">{{ $user->name }}</h3>
         <div>
@@ -9,7 +13,7 @@
         </div>
     </div>
 
-    <div class="p-6 bg-white rounded shadow">
+    <div class="max-w-md p-6 bg-white rounded shadow">
 
         <div>
             <p class="text-black"><strong>Slug:</strong> {{ $user->slug }}</p>
@@ -28,8 +32,8 @@
 
         <div class="mt-4">
             <strong>Profile picture:</strong>
-            <div>
-                <img src="{{ asset('tenant' . tenant()->id . '/' . $user->profile_picture_path) }}" class="h-full w-40 rounded-md">
+            <div class="w-40 h-40 overflow-hidden rounded-full mt-6">
+                <img src="{{ file_exists(public_path($profile_picture)) ? asset($profile_picture) : 'https://placehold.co/40x40' }}" class="w-full h-full object-cover">
             </div>
         </div>
 

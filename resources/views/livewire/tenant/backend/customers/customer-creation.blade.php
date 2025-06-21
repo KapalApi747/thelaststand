@@ -85,9 +85,19 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-6 px-4 py-2 rounded">
-                Save Customer
-            </button>
+            <div class="flex space-x-4 align-center">
+                <div>
+                    <button type="submit" class="btn btn-primary">
+                        Save Customer
+                    </button>
+                </div>
+                <div>
+                    <a href="{{ route('tenant-dashboard.customer-index') }}" class="btn-gray">
+                        Cancel
+                    </a>
+                </div>
+            </div>
+
         </form>
     </div>
 </div>

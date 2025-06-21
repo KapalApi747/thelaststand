@@ -42,7 +42,7 @@
                         <div class="flex justify-evenly">
                             <div>
                                 <a href="{{ route('tenant-dashboard.role-edit', $role) }}"
-                                   class="text-indigo-600 hover:text-indigo-400 transition-colors duration-300">
+                                   class="text-yellow-500 hover:text-yellow-700 transition-colors duration-300">
                                     <i class="far fa-edit"></i>
                                 </a>
                             </div>

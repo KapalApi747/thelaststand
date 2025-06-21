@@ -80,4 +80,10 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(ProductReview::class);
     }
+
+    public function reviewReplies()
+    {
+        return $this->hasMany(ProductReviewReply::class);
+    }
+
 }

@@ -89,7 +89,7 @@
                     <label for="selectAllFiltered" class="ml-1">All Filtered Orders</label>
                 </div>
             </div>
-            <div class="flex items-center gap-2 ml-3">
+            <div class="flex items-center gap-4 ml-12">
                 <select wire:model.live="bulkAction" class="form-select">
                     <option value="">-- Bulk Actions --</option>
                     <option value="update_status">Update Status</option>
@@ -111,18 +111,25 @@
                             <option value="failed">Failed</option>
                         </select>
 
-                        <button wire:click="updateBulkStatus" class="btn btn-success">
-                            Update
-                        </button>
+                        <div>
+                            <button wire:click="updateBulkStatus" class="btn-info">
+                                Update
+                            </button>
+                        </div>
+
                     </div>
                 @elseif ($bulkAction === 'export')
-                    <button wire:click="applyBulkAction" class="btn btn-success">
-                        Export
-                    </button>
+                    <div>
+                        <button wire:click="applyBulkAction" class="btn-info">
+                            Export
+                        </button>
+                    </div>
                 @elseif ($bulkAction === 'print_invoices')
-                    <button wire:click="applyBulkAction" class="btn btn-success">
-                        Print Invoices
-                    </button>
+                    <div>
+                        <button wire:click="applyBulkAction" class="btn-info">
+                            Print Invoices
+                        </button>
+                    </div>
                 @endif
             </div>
 

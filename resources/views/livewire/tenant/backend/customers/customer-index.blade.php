@@ -74,7 +74,6 @@
         @endif
 
         <div class="my-5 flex items-center gap-12">
-
             <div class="flex flex-col">
 
                 <div>
@@ -93,7 +92,8 @@
                 </div>
 
             </div>
-            <div class="flex items-center gap-2 ml-3">
+            <div class="flex items-center gap-4 ml-3">
+
                 <select wire:model.live="bulkAction" class="form-select">
                     <option value="">-- Bulk Actions --</option>
                     <option value="update_status">Update Status</option>
@@ -102,19 +102,25 @@
 
                 @if ($bulkAction === 'update_status')
                     <div class="flex items-center gap-2">
+
                         <select wire:model.live="newStatus" class="form-select">
                             <option value="">Choose new status</option>
                             <option value="1">Active</option>
                             <option value="0">Inactive</option>
                         </select>
 
-                        <button wire:click="updateBulkStatus" class="btn btn-success">
-                            Update
-                        </button>
+                        <div class="ml-4">
+                            <button wire:click="updateBulkStatus" class="btn-info">
+                                Update
+                            </button>
+                        </div>
+
                     </div>
                 @endif
                 @if($bulkAction === 'export')
-                    <button wire:click="applyBulkAction" class="btn btn-primary">Export</button>
+                    <div class="ml-4">
+                        <button wire:click="applyBulkAction" class="btn-info">Export</button>
+                    </div>
                 @endif
             </div>
 
@@ -160,15 +166,15 @@
                             <div class="flex justify-evenly items-center">
                                 <a
                                     href="{{ route('tenant-dashboard.customer-view', $customer) }}"
-                                    class="text-blue-600"
+                                    class="text-blue-600 hover:text-blue-800 transition-colors duration-300"
                                 >
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
                                 <a
                                     href="{{ route('tenant-dashboard.customer-edit', $customer) }}"
-                                    class="text-orange-600"
+                                    class="text-yellow-500 hover:text-yellow-700 transition-colors duration-300"
                                 >
-                                    <i class="fa-solid fa-pencil"></i>
+                                    <i class="far fa-edit"></i>
                                 </a>
                             </div>
                         </td>

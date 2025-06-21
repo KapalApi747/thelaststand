@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('product_reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete(); // or user_id for staff
-            $table->tinyInteger('rating'); // 1-5
+            $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
+            $table->tinyInteger('rating');
             $table->text('comment')->nullable();
-            $table->boolean('is_approved')->default(false); // optional moderation
+            $table->boolean('is_approved')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
 
     }

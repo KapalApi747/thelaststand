@@ -144,7 +144,7 @@ Route::middleware([
             Route::middleware(['role:admin'])->group(function () {
                 Route::get('/customers', CustomerIndex::class)->name('customer-index');
                 Route::get('/customers/customer-creation', CustomerCreation::class)->name('customer-creation');
-                Route::get('/customers/{customerId}', CustomerView::class)->name('customer-view');
+                Route::get('/customers/{customer}', CustomerView::class)->name('customer-view');
                 Route::get('/customers/{customer}/edit', CustomerEdit::class)->name('customer-edit');
             });
 
