@@ -16,6 +16,9 @@ class CustomerView extends Component
 
     public Customer $customer;
 
+    public $reviewsPage = 1;
+    public $repliesPage = 1;
+
     public function mount(Customer $customer)
     {
         $this->customer = $customer->load([
@@ -38,19 +41,36 @@ class CustomerView extends Component
         $reply->save();
     }
 
+    public function updatingReviewsPage()
+    {
+        // Reset replies page to 1 only if it's not already 1
+        if ($this->repliesPage !== 1) {
+            $this->repliesPage = 1;
+        }
+    }
+
+    public function updatingRepliesPage()
+    {
+        // Reset reviews page to 1 only if it's not already 1
+        if ($this->reviewsPage !== 1) {
+            $this->reviewsPage = 1;
+        }
+    }
+
     public function render()
     {
         $reviews = ProductReview::where('customer_id', $this->customer->id)
             ->latest()
-            ->paginate(5);
+            ->paginate(5, ['*'], 'reviewsPage');
 
         $replies = ProductReviewReply::where('customer_id', $this->customer->id)
             ->latest()
-            ->paginate(5);
+            ->paginate(10, ['*'], 'repliesPage');
 
         return view('livewire.tenant.backend.customers.customer-view', [
             'reviews' => $reviews,
             'replies' => $replies,
         ]);
     }
+
 }

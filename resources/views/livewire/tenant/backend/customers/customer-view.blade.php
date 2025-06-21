@@ -74,7 +74,7 @@
                 </ul>
 
                 <div class="mt-6">
-                    {{ $reviews->links() }}
+                    {{ $reviews->links('pagination::tailwind', ['pageName' => 'reviewsPage']) }}
                 </div>
             @endif
         </section>
@@ -107,7 +107,7 @@
                 </ul>
 
                 <div class="mt-6">
-                    {{ $replies->links() }}
+                    {{ $replies->links('pagination::tailwind', ['pageName' => 'repliesPage']) }}
                 </div>
             @endif
         </section>
