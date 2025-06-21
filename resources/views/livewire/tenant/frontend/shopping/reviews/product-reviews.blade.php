@@ -70,7 +70,29 @@
     @endif
 
     {{-- Approved Reviews List --}}
-    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+    <div
+        id="customer-reviews"
+        x-data="{ page: new URLSearchParams(window.location.search).get('page') }"
+        x-init="
+        $watch('page', value => {
+            const el = document.getElementById('customer-reviews');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+
+        // Listen to URL changes
+        const observer = new MutationObserver(() => {
+            const newPage = new URLSearchParams(window.location.search).get('page');
+            if (newPage !== page) {
+                page = newPage;
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+    "
+        class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
+    >
         <h3 class="text-xl font-semibold mb-4 text-gray-900">Customer Reviews</h3>
 
         @forelse ($reviews as $review)

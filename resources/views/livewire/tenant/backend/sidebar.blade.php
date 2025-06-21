@@ -71,7 +71,7 @@
         <div x-data="{ open: false }">
             <button @click="open = !open" type="button"
                     class="w-full mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
-                <i class="fas fa-user-tie text-xs"></i>
+                <i class="fas fa-user text-xs"></i>
                 <div class="flex items-center">
                     Customers
                     <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -100,6 +100,49 @@
                         <i class="fas fa-user-plus"></i>
                         <div>
                             Create New Customer
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        @endrole
+        <!-- end link -->
+
+        <!-- link -->
+        @role('admin')
+        <div x-data="{ open: false }">
+            <button @click="open = !open" type="button"
+                    class="w-full mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+                <i class="fas fa-user-tie text-xs"></i>
+                <div class="flex items-center">
+                    Roles
+                    <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+            </button>
+
+            <!-- Dropdown panel -->
+            <div x-show="open" @click.outside="open = false"
+                 class="absolute z-10 w-full origin-bottom-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+                <div class="py-1">
+
+                    <a href="{{ route('tenant-dashboard.role-index') }}"
+                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+                        <i class="fas fa-person-walking"></i>
+                        <div>
+                            All Roles
+                        </div>
+                    </a>
+
+                    <a href="{{ route('tenant-dashboard.role-creation') }}"
+                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+                        <i class="fas fa-user-plus"></i>
+                        <div>
+                            Create New Role
                         </div>
                     </a>
 
@@ -236,7 +279,7 @@
             href="{{ route('tenant-dashboard.store-settings') }}"
             class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
             <i class="fad fa-shopping-cart text-xs"></i>
-            <div>Profile & Store Settings</div>
+            <div>Store Settings</div>
         </a>
         @endrole
         <!-- end link -->
