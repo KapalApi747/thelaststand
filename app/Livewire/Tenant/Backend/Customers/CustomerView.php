@@ -72,5 +72,4 @@ class CustomerView extends Component
             'replies' => $replies,
         ]);
     }
-
 }

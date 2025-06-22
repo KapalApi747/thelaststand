@@ -119,39 +119,58 @@ class CheckoutForm extends Component
             $this->billing_country = $this->country;
         }
 
+        $existingCustomer = Customer::where('email', $this->email)->first();
+
         if ($this->askForAccount && !$this->loggedInCustomer) {
-
-            $existingCustomer = Customer::where('email', $this->email)->first();
-
             if ($existingCustomer) {
-                $this->addError('email', 'An account with this email already exists. Please log in!');
-                $this->showLoginButton = true;
-                return;
+                if ($existingCustomer->password === null) {
+                    // Upgrade guest account to full account
+                    $existingCustomer->update([
+                        'name' => $this->name,
+                        'phone' => $this->phone,
+                        'address_line1' => $this->address_line1,
+                        'address_line2' => $this->address_line2,
+                        'city' => $this->city,
+                        'state' => $this->state,
+                        'zip' => $this->zip,
+                        'country' => $this->country,
+                        'password' => Hash::make($this->password),
+                    ]);
+
+                    auth('customer')->login($existingCustomer);
+                    $this->loggedInCustomer = true;
+                } else {
+                    $this->addError('email', 'An account with this email already exists. Please log in!');
+                    $this->showLoginButton = true;
+                    return;
+                }
+            } else {
+                // No existing customer — create a new one
+                $customer = Customer::create([
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'phone' => $this->phone,
+                    'address_line1' => $this->address_line1,
+                    'address_line2' => $this->address_line2,
+                    'city' => $this->city,
+                    'state' => $this->state,
+                    'zip' => $this->zip,
+                    'country' => $this->country,
+                    'password' => Hash::make($this->password),
+                ]);
+
+                auth('customer')->login($customer);
+                $this->loggedInCustomer = true;
             }
-
-            $customer = Customer::create([
-                'name' => $this->name,
-                'email' => $this->email,
-                'phone' => $this->phone,
-                'address_line1' => $this->address_line1,
-                'address_line2' => $this->address_line2,
-                'city' => $this->city,
-                'state' => $this->state,
-                'zip' => $this->zip,
-                'country' => $this->country,
-                'password' => Hash::make($this->password),
-            ]);
-
-            auth('customer')->login($customer);
-
-            $this->loggedInCustomer = true;
         } else {
-            $existingCustomer = Customer::where('email', $this->email)->first();
-
+            // Not asking to create account
             if ($existingCustomer && !$this->loggedInCustomer) {
-                $this->addError('email', 'An account with this email already exists. Please log in or reset your password!');
-                $this->showLoginButton = true;
-                return;
+                if ($existingCustomer->password !== null) {
+                    $this->addError('email', 'An account with this email already exists. Please log in or reset your password!');
+                    $this->showLoginButton = true;
+                    return;
+                }
+                // else: it's a guest, allow flow to continue
             }
         }
 
@@ -178,9 +197,7 @@ class CheckoutForm extends Component
                 'billing_country' => $this->billing_country,
             ]);
         } else {
-            $customerData = array_merge($customerData, [
-                'billing_different' => false,
-            ]);
+            $customerData['billing_different'] = false;
         }
 
         session()->put('checkout_customer_info', $customerData);

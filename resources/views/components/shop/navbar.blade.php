@@ -75,7 +75,7 @@
                     @endif
 
                     @if ($tenantUser)
-                        <a href="{{ route('tenant-dashboard.index') }}" class="block px-4 py-2 hover:bg-gray-100">Tenant Dashboard</a>
+                        <a href="{{ route('tenant-dashboard.index') }}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
                     @endif
 
                     <form method="POST" action="{{ route('shop.customer-logout') }}">

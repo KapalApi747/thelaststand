@@ -204,13 +204,13 @@
             @if ($askForAccount)
                 <div class="mb-5">
                     <label for="password" class="block font-medium text-gray-700 mb-1">Password</label>
-                    <input wire:model.lazy="password" type="password" id="password" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                    <input wire:model.lazy="password" type="password" id="password" class="w-full border border-gray-300 text-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                     @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="mb-5">
                     <label for="password_confirmation" class="block font-medium text-gray-700 mb-1">Confirm Password</label>
-                    <input wire:model.lazy="password_confirmation" type="password" id="password_confirmation" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                    <input wire:model.lazy="password_confirmation" type="password" id="password_confirmation" class="w-full border border-gray-300 text-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                 </div>
             @endif
         @else
