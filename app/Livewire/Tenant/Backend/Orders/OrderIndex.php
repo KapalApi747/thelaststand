@@ -35,7 +35,7 @@ class OrderIndex extends Component
     public function mount()
     {
         $this->orderCount = Order::count();
-        $this->totalRevenue = Order::where('status', 'completed')->sum('total_amount');
+        $this->totalRevenue = Order::whereIn('status', ['completed', 'paid', 'delivered', 'shipped'])->sum('total_amount');
     }
 
     public function allStatuses(string $status): string

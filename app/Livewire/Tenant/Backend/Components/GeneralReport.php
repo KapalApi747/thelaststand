@@ -7,7 +7,6 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use Carbon\Carbon;
 use Livewire\Component;
 
 class GeneralReport extends Component
@@ -21,7 +20,7 @@ class GeneralReport extends Component
     public $newOrders, $newOrdersChange, $newOrdersChevron;
 
     // Total products
-    public $totalProducts, $totalProductsChange, $totalProductsChevron;
+    public $newProducts, $newProductsChange, $newProductsChevron, $currentProducts, $previousProducts;
 
     // New customers
     public $newCustomers, $newCustomersChange, $newCustomersChevron;
@@ -54,12 +53,12 @@ class GeneralReport extends Component
         $endPrevious = now()->copy()->subMonth()->endOfMonth();
 
         $currentCount = OrderItem::whereHas('order', function ($query) use ($startCurrent, $endCurrent) {
-            $query->where('status', 'completed')
+            $query->whereIn('status', ['completed', 'paid', 'shipped', 'delivered'])
                 ->whereBetween('created_at', [$startCurrent, $endCurrent]);
         })->sum('quantity');
 
         $previousCount = OrderItem::whereHas('order', function ($query) use ($startPrevious, $endPrevious) {
-            $query->where('status', 'completed')
+            $query->whereIn('status', ['completed', 'paid', 'shipped', 'delivered'])
                 ->whereBetween('created_at', [$startPrevious, $endPrevious]);
         })->sum('quantity');
 
@@ -98,9 +97,11 @@ class GeneralReport extends Component
         $previousCount = Product::whereBetween('created_at', [$startPrevious, $endPrevious])->count()
             + ProductVariant::whereBetween('created_at', [$startPrevious, $endPrevious])->count();
 
-        $this->totalProducts = Product::count() + ProductVariant::count();
-        $this->totalProductsChange = $this->calculateChange($currentCount, $previousCount);
-        $this->totalProductsChevron = $this->totalProductsChange >= 0 ? 'up' : 'down';
+        $this->currentProducts = $currentCount;
+        $this->previousProducts = $previousCount;
+        $this->newProducts = Product::count() + ProductVariant::count();
+        $this->newProductsChange = $this->calculateChange($currentCount, $previousCount);
+        $this->newProductsChevron = $this->newProductsChange >= 0 ? 'up' : 'down';
     }
 
     public function loadNewCustomersReport()

@@ -22,7 +22,7 @@
                     <h1 class="h5">
                         {{ $itemsSold }}
                     </h1>
-                    <p>Total items sold in the past 30 days</p>
+                    <p>Total items sold this month</p>
                 </div>
                 <!-- end bottom -->
 
@@ -52,7 +52,7 @@
                     <h1 class="h5">
                         {{ $newOrders }}
                     </h1>
-                    <p>New orders in the past 30 days</p>
+                    <p>New orders this month</p>
                 </div>
                 <!-- end bottom -->
 
@@ -71,9 +71,9 @@
                 <!-- top -->
                 <div class="flex flex-row justify-between items-center">
                     <div class="h6 text-yellow-600 fad fa-sitemap"></div>
-                    <span class="rounded-full text-white badge {{ $totalProductsChevron === 'up' ? 'bg-teal-400' : 'bg-red-400' }} text-xs">
-                        {{ abs($totalProductsChange) }}%
-                        <i class="fal fa-chevron-{{ $totalProductsChevron }} ml-1"></i>
+                    <span class="rounded-full text-white badge {{ $newProductsChevron === 'up' ? 'bg-teal-400' : 'bg-red-400' }} text-xs">
+                        {{ abs($newProductsChange) }}%
+                        <i class="fal fa-chevron-{{ $newProductsChevron }} ml-1"></i>
                     </span>
                 </div>
                 <!-- end top -->
@@ -81,9 +81,9 @@
                 <!-- bottom -->
                 <div class="mt-8">
                     <h1 class="h5">
-                        {{ $totalProducts }}
+                        {{ $currentProducts }}
                     </h1>
-                    <p>Total products</p>
+                    <p>New products this month</p>
                 </div>
                 <!-- end bottom -->
 

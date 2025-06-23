@@ -66,7 +66,7 @@
                 </p>
             </div>
 
-            <div class="flex items-center">
+            <div class="flex items-center mb-2">
                 <div
                     class="py-1 px-3 rounded mr-3"
                     @class([
@@ -102,6 +102,45 @@
             >
                 {{ $avgRevenue > 0 ? 'more revenue' : ($avgRevenue < 0 ? 'less revenue' : 'revenue') }}
             </span> per sale in comparison to last month so far.
+                </p>
+            </div>
+
+            <div class="mb-2 flex items-center">
+                <div
+                    class="py-1 px-3 rounded mr-3"
+                    @class([
+                        'bg-green-200 text-green-900' => $revenueGrowth > 0,
+                        'bg-red-200 text-red-900' => $revenueGrowth < 0,
+                        'bg-gray-200 text-gray-600' => $revenueGrowth === 0 || $revenueGrowth === null,
+                    ])
+                >
+                    <i
+                        @class([
+                            'fa fa-caret-up' => $revenueGrowth > 0,
+                            'fa fa-caret-down' => $revenueGrowth < 0,
+                            'fa fa-minus' => $revenueGrowth === 0 || $revenueGrowth === null,
+                        ])
+                    ></i>
+                </div>
+                <p class="text-black">
+            <span
+                @class([
+                    'text-green-400' => $revenueGrowth > 0,
+                    'text-red-400' => $revenueGrowth < 0,
+                    'text-gray-400' => $revenueGrowth === 0 || $revenueGrowth === null,
+                ])
+            >
+                {{ $revenueGrowth !== null ? abs($revenueGrowth) . '%' : 'N/A' }}
+            </span>
+                    <span
+                @class([
+                    'text-green-400' => $revenueGrowth > 0,
+                    'text-red-400' => $revenueGrowth < 0,
+                    'text-gray-400' => $revenueGrowth === 0 || $revenueGrowth === null,
+                ])
+            >
+                {{ $revenueGrowth > 0 ? 'more total revenue' : ($revenueGrowth < 0 ? 'less total revenue' : 'total revenue') }}
+            </span> in comparison to last month so far.
                 </p>
             </div>
 

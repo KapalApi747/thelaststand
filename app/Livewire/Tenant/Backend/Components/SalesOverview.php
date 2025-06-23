@@ -14,6 +14,8 @@ class SalesOverview extends Component
 
     public $salesThisMonth;
     public $salesGrowth;
+    public $revenueThisMonth;
+    public $revenueGrowth;
     public $avgRevenue;
 
     public function mount()
@@ -29,15 +31,15 @@ class SalesOverview extends Component
                 DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"),
                 DB::raw("SUM(total_amount) as revenue")
             )
-            ->where('status', 'completed')
-            ->where('created_at', '>=', now()->subMonths(6)->startOfMonth())
+            ->whereIn('status', ['completed', 'paid', 'shipped', 'delivered'])
+            ->where('created_at', '>=', now()->subMonths(12)->startOfMonth())
             ->groupBy('month')
             ->orderBy('month')
             ->get()
             ->keyBy('month');
 
         $months = collect();
-        for ($i = 5; $i >= 0; $i--) {
+        for ($i = 11; $i >= 0; $i--) {
             $monthKey = now()->subMonths($i)->format('Y-m');
             $months->push($monthKey);
         }
@@ -53,11 +55,11 @@ class SalesOverview extends Component
         $lastMonthStart = now()->subMonth()->startOfMonth();
         $lastMonthEnd = now()->subMonth()->endOfMonth();
 
-        $currentSales = Order::where('status', 'completed')
+        $currentSales = Order::whereIn('status', ['completed', 'paid', 'shipped', 'delivered', 'processing'])
             ->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd])
             ->count();
 
-        $lastSales = Order::where('status', 'completed')
+        $lastSales = Order::whereIn('status', ['completed', 'paid', 'shipped', 'delivered', 'processing'])
             ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
             ->count();
 
@@ -67,13 +69,19 @@ class SalesOverview extends Component
             ? round((($currentSales - $lastSales) / $lastSales) * 100, 1)
             : null;
 
-        $currentRevenue = Order::where('status', 'completed')
+        $currentRevenue = Order::whereIn('status', ['completed', 'paid', 'delivered', 'shipped'])
             ->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd])
             ->sum('total_amount');
 
-        $lastRevenue = Order::where('status', 'completed')
+        $lastRevenue = Order::whereIn('status', ['completed', 'paid', 'delivered', 'shipped'])
             ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
             ->sum('total_amount');
+
+        $this->revenueThisMonth = $currentRevenue;
+
+        $this->revenueGrowth = $lastRevenue > 0
+            ? round((($currentRevenue - $lastRevenue) / $lastRevenue) * 100, 1)
+            : null;
 
         $currentAvg = $currentSales > 0 ? $currentRevenue / $currentSales : 0;
         $lastAvg = $lastSales > 0 ? $lastRevenue / $lastSales : 0;

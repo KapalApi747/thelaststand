@@ -27,9 +27,9 @@ class TenantOrderDataSeeder extends Seeder
         }
 
         // Create 100 customers over the past 6 months
-        Customer::factory(100)->create()->each(function ($customer) use ($products) {
+        Customer::factory(200)->create()->each(function ($customer) use ($products) {
 
-            $signupDate = Carbon::instance(fake()->dateTimeBetween('-6 months', 'now'));
+            $signupDate = Carbon::instance(fake()->dateTimeBetween('-12 months', 'now'));
             $customer->forceFill([
                 'created_at' => $signupDate,
                 'updated_at' => $signupDate,
