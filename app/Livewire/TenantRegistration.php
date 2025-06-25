@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Tenant;
 use App\Models\TenantProfile;
 use App\Models\User;
+use Database\Seeders\PageSeeder;
 use Database\Seeders\TenantOrderDataSeeder;
 use Database\Seeders\TenantPermissionSeeder;
 use Database\Seeders\TenantProductReviewSeeder;
@@ -102,6 +103,7 @@ class TenantRegistration extends Component
             $shippingMethodSeeder = new TenantShippingMethodSeeder();
             $orderSeeder = new TenantOrderDataSeeder();
             $reviewSeeder = new TenantProductReviewSeeder();
+            $pageSeeder = new PageSeeder();
 
             $permissionSeeder->run();
             $roleSeeder->run();
@@ -110,6 +112,7 @@ class TenantRegistration extends Component
             $shippingMethodSeeder->run();
             $orderSeeder->run();
             $reviewSeeder->run();
+            $pageSeeder->run();
         });
 
         // Step 3: Create a default user for the tenant

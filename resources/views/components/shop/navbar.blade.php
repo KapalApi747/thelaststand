@@ -15,19 +15,38 @@
 @endphp
 
 <nav class="bg-gray-100 px-8 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-4">
-        @if (file_exists(public_path('tenancy/assets/' . $store_logo_url)))
-            <div class="w-10 h-10 rounded-full overflow-hidden">
-                <img
-                    src="{{ file_exists(public_path('tenancy/assets/' . $store_logo_url)) ? asset($store_logo_url) : 'https://placehold.co/40x40' }}"
-                    alt="store_logo"
-                    class="w-full h-full object-cover">
+    <div class="flex items-center gap-12">
+        <div class="flex items-center">
+            @if (file_exists(public_path('tenancy/assets/' . $store_logo_url)))
+                <div class="w-10 h-10 rounded-full overflow-hidden">
+                    <img
+                        src="{{ file_exists(public_path('tenancy/assets/' . $store_logo_url)) ? asset($store_logo_url) : 'https://placehold.co/40x40' }}"
+                        alt="store_logo"
+                        class="w-full h-full object-cover">
+                </div>
+            @endif
+            <div>
+                <h1 class="text-black font-bold text-3xl">{{tenant()->store_name}}</h1>
             </div>
-        @endif
+        </div>
         <div>
-            <h1 class="text-black font-bold text-3xl">{{tenant()->store_name}}</h1>
+            <a
+                href="{{ route('shop.shop-products') }}"
+                class="text-gray-700 hover:text-gray-300 transition-colors duration-300 ease-in-out text-2xl"
+            >
+                Shop
+            </a>
+        </div>
+        <div>
+            <a
+                href="{{ route('page-show', ['slug' => 'about-us']) }}"
+                class="text-gray-700 hover:text-gray-300 transition-colors duration-300 ease-in-out text-2xl"
+            >
+                About Us
+            </a>
         </div>
     </div>
+
     <div class="flex items-center">
         <div class="me-4">
             <a

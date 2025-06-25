@@ -16,13 +16,49 @@
     @fluxAppearance
 
 </head>
-<body class="bg-white">
+<body class="bg-white min-h-screen flex flex-col">
 
 @include('components.shop.navbar')
 
 <div class="container mx-auto">
     {{ $slot }}
 </div>
+
+<div class="flex-grow"></div>
+
+
+<footer class="text-center text-gray-500 py-6 text-sm border-t border-gray-800 flex flex-col">
+    <div class="mb-6 flex justify-center">
+        <div class="mr-4">
+            <a
+                href="{{ route('page-show', ['slug' => 'privacy-policy']) }}"
+                class="text-gray-500 hover:text-gray-700 transition-colors duration-300 ease-in-out"
+            >
+                Privacy Policy
+            </a>
+        </div>
+        <div class="mr-4">
+            <a
+                href="{{ route('page-show', ['slug' => 'terms-of-service']) }}"
+                class="text-gray-500 hover:text-gray-700 transition-colors duration-300 ease-in-out"
+            >
+                Terms Of Service
+            </a>
+        </div>
+        <div>
+            <a
+                href="{{ route('page-show', ['slug' => 'cookies-policy']) }}"
+                class="text-gray-500 hover:text-gray-700 transition-colors duration-300 ease-in-out"
+            >
+                Cookies Policy
+            </a>
+        </div>
+
+    </div>
+    <div>
+        &copy; {{ date('Y') }} {{ (tenant()->store_name) }}. All rights reserved.
+    </div>
+</footer>
 
 @fluxScripts
 </body>

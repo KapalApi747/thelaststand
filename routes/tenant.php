@@ -12,6 +12,8 @@ use App\Livewire\Tenant\Backend\Customers\CustomerView;
 use App\Livewire\Tenant\Backend\Orders\OrderEdit;
 use App\Livewire\Tenant\Backend\Orders\OrderIndex;
 use App\Livewire\Tenant\Backend\Orders\OrderView;
+use App\Livewire\Tenant\Backend\Pages\PageEdit;
+use App\Livewire\Tenant\Backend\Pages\PageIndex;
 use App\Livewire\Tenant\Backend\Payouts\TenantPayoutIndex;
 use App\Livewire\Tenant\Backend\Payouts\TenantPayoutView;
 use App\Livewire\Tenant\Backend\Products\ProductCreation;
@@ -39,6 +41,7 @@ use App\Livewire\Tenant\Frontend\Customers\CustomerProfile;
 use App\Livewire\Tenant\Frontend\Customers\CustomerRegistration;
 use App\Livewire\Tenant\Frontend\Customers\CustomerSettings;
 use App\Livewire\Tenant\Frontend\Main\Cart;
+use App\Livewire\Tenant\Frontend\Main\PageShow;
 use App\Livewire\Tenant\Frontend\Main\ShopProducts;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutCancel;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutForm;
@@ -80,6 +83,10 @@ Route::middleware([
 ])->group(function () {
 
     //Route::get('/', TenantLogin::class)->name('tenant.login');
+
+    Route::get('/{slug}', PageShow::class)
+        ->name('page-show')
+        ->where('slug', 'privacy-policy|terms-of-service|about-us|cookies-policy');
 
     Route::prefix('shop')
         ->as('shop.')
@@ -175,6 +182,11 @@ Route::middleware([
                 Route::get('/shipping-methods', ShippingMethodIndex::class)->name('shipping-method-index');
                 Route::get('/shipping-methods-add', ShippingMethodForm::class)->name('shipping-method-form');
                 Route::get('/shipping-methods/{shippingMethod}/edit', ShippingMethodEdit::class)->name('shipping-method-edit');
+            });
+
+            Route::middleware(['role:admin'])->group(function () {
+                Route::get('/pages', PageIndex::class)->name('page-index');
+                Route::get('/pages/{page}/edit', PageEdit::class)->name('page-edit');
             });
         });
 });
