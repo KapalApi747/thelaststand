@@ -278,14 +278,14 @@
                         </div>
                     </a>
 
-                    <a
+                    {{--<a
                         href="{{ route('tenant-dashboard.shipping-method-form') }}"
                         class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
                         <i class="fas fa-file text-xs"></i>
                         <div>
                             Create New Page
                         </div>
-                    </a>
+                    </a>--}}
 
                 </div>
             </div>

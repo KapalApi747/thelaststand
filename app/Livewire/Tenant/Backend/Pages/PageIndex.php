@@ -13,10 +13,21 @@ class PageIndex extends Component
     use WithPagination;
 
     public $search = '';
+    public $pagesCount;
 
     protected $queryString = ['search'];
 
+    public function mount()
+    {
+        $this->pagesCount = Page::count();
+    }
+
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingPagination()
     {
         $this->resetPage();
     }

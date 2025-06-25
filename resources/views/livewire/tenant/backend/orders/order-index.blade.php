@@ -165,11 +165,17 @@
                     </td>
 
                     <td class="border p-2">
-                        <div class="flex justify-evenly items-center">
+                        <div class="flex justify-center items-center">
                             <a href="{{ route('tenant-dashboard.order-view', $order) }}"
-                               class="text-blue-600"><i class="fa-solid fa-eye"></i></a>
+                               class="text-blue-600 hover:text-blue-800 transition-colors duration-300 mr-3"
+                            >
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
                             <a href="{{ route('tenant-dashboard.order-edit', $order) }}"
-                               class="text-orange-600"><i class="fa-solid fa-pencil"></i></a>
+                               class="text-yellow-500 hover:text-yellow-700 transition-colors duration-300"
+                            >
+                                <i class="far fa-edit"></i>
+                            </a>
                         </div>
                     </td>
                 </tr>

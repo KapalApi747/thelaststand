@@ -35,6 +35,7 @@
                 @error('password_confirmation') <span class="text-red-600">{{ $message }}</span> @enderror
             </div>
 
+            @role('admin')
             <div class="mb-4 flex flex-col max-w-sm">
                 <label for="roles" class="block font-semibold mb-2">Roles</label>
                 <select wire:model.live="userRoles" id="roles" multiple class="form-multiselect">
@@ -53,6 +54,7 @@
                 </select>
                 @error('is_active') <span class="text-red-600">{{ $message }}</span> @enderror
             </div>
+            @endrole
 
             @if ($existingProfilePicture)
                 <div class="mb-4">
