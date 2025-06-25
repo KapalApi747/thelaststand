@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.12.1/css/pro.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('tenancy/assets/css/style.css') }}">
+    {{--<link rel="stylesheet" type="text/css" href="{{ asset('tenancy/assets/css/style.css') }}">--}}
+    @vite(['resources/css/style.css', 'resources/js/scripts.js'])
     <title>Welcome To The Last Stand!</title>
 </head>
 <body class="bg-gray-100">
@@ -35,7 +36,7 @@
 
 <!-- script -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script src="{{ asset('tenancy/assets/js/scripts.js') }}"></script>
+{{--<script src="{{ asset('tenancy/assets/js/scripts.js') }}"></script>--}}
 <script>
     window.addEventListener('updated_and_refresh', () => {
         setTimeout(() => {

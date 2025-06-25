@@ -1,15 +1,18 @@
-<div class="space-y-6">
+<div class="space-y-6 p-6">
 
-    @if (session()->has('message'))
-        <div class="p-2 bg-green-200 text-green-800 rounded">
-            {{ session('message') }}
-        </div>
-    @endif
+    <h3 class="h3 font-bold mb-4">All Products</h3>
 
-    {{--<livewire:tenant.backend.products.product-creation/>--}}
+
 
     <div class="bg-white p-4 rounded shadow mt-6">
-        <h2 class="text-xl font-semibold mb-4">My Products</h2>
+
+        <div class="mb-6">
+            @if (session()->has('message'))
+                <div class="p-2 bg-green-200 text-green-800 rounded">
+                    {{ session('message') }}
+                </div>
+            @endif
+        </div>
 
         <div class="flex flex-wrap gap-4 mb-6">
             <input
@@ -33,9 +36,9 @@
             </select>
 
             <select wire:model.live="pagination" class="border border-gray-300 rounded px-3 py-2">
-                <option value="12">12 per page</option>
-                <option value="24">24 per page</option>
-                <option value="48">48 per page</option>
+                <option value="10">10 per page</option>
+                <option value="20">20 per page</option>
+                <option value="50">50 per page</option>
             </select>
 
             <select wire:model.live="sortField" class="border border-gray-300 rounded px-3 py-2">
@@ -54,46 +57,53 @@
         @if ($products->isEmpty())
             <p class="text-gray-600">The product list is currently empty. Please adjust your search criteria.</p>
         @else
-            <div class="grid grid-cols-4 xl:grid-cols-2 gap-4">
-                @foreach ($products as $product)
-                    <div class="border p-3 rounded shadow-sm flex flex-col items-center">
-                        <div class="flex flex-col">
-                            <h3 class="font-bold text-lg text-center my-6">{{ $product->name }}</h3>
-                            <div class="flex justify-center mb-6">
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200 shadow-sm rounded-lg">
+                    <thead class="bg-gray-100 text-left text-sm font-semibold text-gray-700">
+                    <tr>
+                        <th class="p-3">Image</th>
+                        <th class="p-3">Name</th>
+                        <th class="p-3">Slug</th>
+                        <th class="p-3">SKU</th>
+                        <th class="p-3">Categories</th>
+                        <th class="p-3">Price</th>
+                        <th class="p-3">Stock</th>
+                        <th class="p-3">Status</th>
+                        <th class="p-3 text-center">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-sm text-gray-700">
+                    @foreach ($products as $product)
+                        <tr class="border-t border-gray-200 hover:bg-gray-50">
+                            <td class="p-3">
                                 @php
                                     $image = $product->images->first();
-                                    $imageUrl = $image ? asset('tenant' . tenant()->id . '/' . $image->path) : 'https://placehold.co/200x200?text=No+Image';
+                                    $imageUrl = $image ? asset('tenant' . tenant()->id . '/' . $image->path) : 'https://placehold.co/80x80?text=No+Image';
                                 @endphp
-                                <img src="{{ $imageUrl }}" alt="Main Product Image"
-                                     class="w-40 h-40 object-cover rounded">
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-700">Slug: {{ $product->slug }}</p>
-                                <p class="text-sm text-gray-700">SKU: {{ $product->sku }}</p>
-                                <p class="text-sm text-gray-700">
-                                    Categories: {{ implode(', ', $product->categories->pluck('name')->toArray()) }}</p>
-                                <p class="text-sm text-gray-700">Price: €{{ number_format($product->price, 2) }}</p>
-                                <p class="text-sm text-gray-700">Stock: {{ $product->stock }}</p>
-                                <p class="text-sm text-gray-700">
-                                    Status: {{ ucfirst($product->is_active ? 'active' : 'inactive') }}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-end my-6">
-                            <div>
+                                <img src="{{ $imageUrl }}" alt="Product Image" class="w-16 h-16 object-cover rounded">
+                            </td>
+                            <td class="p-3 font-medium">{{ $product->name }}</td>
+                            <td class="p-3">{{ $product->slug }}</td>
+                            <td class="p-3">{{ $product->sku }}</td>
+                            <td class="p-3">{{ implode(', ', $product->categories->pluck('name')->toArray()) }}</td>
+                            <td class="p-3">€{{ number_format($product->price, 2) }}</td>
+                            <td class="p-3">{{ $product->stock }}</td>
+                            <td class="p-3">{{ ucfirst($product->is_active ? 'Active' : 'Inactive') }}</td>
+                            <td class="p-3 text-center whitespace-nowrap">
                                 <a href="{{ route('tenant-dashboard.product-view', $product) }}"
-                                   class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2">View</a>
-                            </div>
-                            <div>
+                                   class="text-blue-600 hover:text-blue-800 font-semibold text-sm mr-3">View</a>
                                 <a href="{{ route('tenant-dashboard.product-edit', $product) }}"
-                                   class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mt-2 ml-2">Edit</a>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+                                   class="text-green-600 hover:text-green-800 font-semibold text-sm">Edit</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-6">
+                {{ $products->links() }}
             </div>
         @endif
-    </div>
-    <div class="mt-6">
-        {{ $products->links() }}
     </div>
 </div>

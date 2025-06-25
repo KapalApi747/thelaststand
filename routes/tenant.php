@@ -41,6 +41,7 @@ use App\Livewire\Tenant\Frontend\Customers\CustomerProfile;
 use App\Livewire\Tenant\Frontend\Customers\CustomerRegistration;
 use App\Livewire\Tenant\Frontend\Customers\CustomerSettings;
 use App\Livewire\Tenant\Frontend\Main\Cart;
+use App\Livewire\Tenant\Frontend\Main\Homepage;
 use App\Livewire\Tenant\Frontend\Main\PageShow;
 use App\Livewire\Tenant\Frontend\Main\ShopProducts;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutCancel;
@@ -82,7 +83,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    //Route::get('/', TenantLogin::class)->name('tenant.login');
+    Route::get('/', Homepage::class)->name('tenant-homepage');
 
     Route::get('/{slug}', PageShow::class)
         ->name('page-show')

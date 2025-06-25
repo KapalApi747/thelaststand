@@ -1,4 +1,4 @@
-<div class="p-6 bg-white rounded shadow">
+<div class="space-y-6 p-6">
 
     <h3 class="h3 font-bold mb-4">All Orders</h3>
 

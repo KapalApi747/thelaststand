@@ -16,31 +16,39 @@
 
 <nav class="bg-gray-100 px-8 py-4 flex justify-between items-center">
     <div class="flex items-center gap-12">
-        <div class="flex items-center">
-            @if (file_exists(public_path('tenancy/assets/' . $store_logo_url)))
-                <div class="w-10 h-10 rounded-full overflow-hidden">
-                    <img
-                        src="{{ file_exists(public_path('tenancy/assets/' . $store_logo_url)) ? asset($store_logo_url) : 'https://placehold.co/40x40' }}"
-                        alt="store_logo"
-                        class="w-full h-full object-cover">
-                </div>
-            @endif
+        <a
+            href="{{ route('tenant-homepage') }}"
+        >
             <div>
-                <h1 class="text-black font-bold text-3xl">{{tenant()->store_name}}</h1>
+                <div class="flex items-center">
+                    @if (file_exists(public_path('tenancy/assets/' . $store_logo_url)))
+                        <div class="w-10 h-10 rounded-md overflow-hidden mr-3">
+                            <img
+                                src="{{ file_exists(public_path('tenancy/assets/' . $store_logo_url)) ? asset($store_logo_url) : 'https://placehold.co/40x40' }}"
+                                alt="store_logo"
+                                class="w-full h-full object-cover">
+                        </div>
+                    @endif
+                    <div>
+                        <h1 class="text-black font-bold text-3xl hover:text-blue-300 transition-colors duration-300 ease-in-out">{{tenant()->store_name}}</h1>
+                    </div>
+                </div>
             </div>
-        </div>
+        </a>
+
         <div>
             <a
                 href="{{ route('shop.shop-products') }}"
-                class="text-gray-700 hover:text-gray-300 transition-colors duration-300 ease-in-out text-2xl"
+                class="text-gray-700 hover:text-blue-300 transition-colors duration-300 ease-in-out text-2xl"
             >
                 Shop
             </a>
         </div>
+
         <div>
             <a
                 href="{{ route('page-show', ['slug' => 'about-us']) }}"
-                class="text-gray-700 hover:text-gray-300 transition-colors duration-300 ease-in-out text-2xl"
+                class="text-gray-700 hover:text-blue-300 transition-colors duration-300 ease-in-out text-2xl"
             >
                 About Us
             </a>
@@ -50,7 +58,7 @@
     <div class="flex items-center">
         <div class="me-4">
             <a
-                class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition-colors duration-300"
+                class="text-2xl text-teal-600 py-2 px-4 rounded hover:text-teal-300 transition-colors duration-300"
                 href="{{ route('shop.shop-cart') }}"
             >
                 <i class="fa-solid fa-cart-shopping"></i>
@@ -108,7 +116,7 @@
 
         @else
             <a
-                class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
+                class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300"
                 href="{{ route('shop.login') }}"
             >
                 Login

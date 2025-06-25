@@ -6,7 +6,9 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-medium text-blue-800">Email</label>
-                <input wire:model="email" type="email" class="w-full text-blue-800 border border-blue-300 px-3 py-2 rounded bg-white focus:ring-2 focus:ring-blue-300 focus:outline-none" />
+                <input wire:model="email"
+                       type="email"
+                       class="w-full text-blue-800 border border-blue-300 px-3 py-2 rounded bg-white focus:ring-2 focus:ring-blue-300 focus:outline-none" />
                 @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
@@ -21,6 +23,18 @@
                     <input wire:model="remember" type="checkbox" class="mr-2 rounded border-blue-300 focus:ring-blue-300">
                     Remember Me
                 </label>
+            </div>
+
+            <div class="mb-4">
+                <p class="text-blue-800">
+                    Not a member yet?
+                    <a
+                        href="{{ route('shop.customer-register') }}"
+                        class="italic underline text-blue-500 hover:text-blue-700 transition-colors duration-300 ease-in-out"
+                    >
+                        Register
+                    </a>
+                </p>
             </div>
 
             <div class="flex justify-center">

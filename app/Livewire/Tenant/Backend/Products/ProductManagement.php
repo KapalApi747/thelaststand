@@ -16,7 +16,7 @@ class ProductManagement extends Component
     public $search = '';
     public $category = '';
     public $status = '';
-    public $pagination = 12;
+    public $pagination = 10;
 
     public $sortField = 'name';
     public $sortDirection = 'asc';

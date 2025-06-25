@@ -22,7 +22,7 @@ class ProductImageFactory extends Factory
 
     public function definition(): array
     {
-        $placeholdersFolder = public_path('tenancy/assets/img/placeholders');
+        $placeholdersFolder = resource_path('images/placeholders');
         $images = File::files($placeholdersFolder);
 
         $randomImage = collect($images)->random();
