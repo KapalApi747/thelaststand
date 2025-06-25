@@ -18,8 +18,8 @@ class ProductManagement extends Component
     public $status = '';
     public $pagination = 12;
 
-    public $sortField = 'name'; // Default sort by name
-    public $sortDirection = 'asc'; // Default ascending
+    public $sortField = 'name';
+    public $sortDirection = 'asc';
 
     public function render()
     {

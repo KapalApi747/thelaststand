@@ -5,9 +5,11 @@ namespace App\Livewire\Tenant\Backend\Products;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+#[Layout('t-dashboard-layout')]
 class ProductCreation extends Component
 {
     use WithFileUploads;

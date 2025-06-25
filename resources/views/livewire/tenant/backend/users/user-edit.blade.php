@@ -68,11 +68,13 @@
             @if ($profile_picture)
                 <div>
                     <label class="block font-semibold mb-1">New Profile Picture</label>
-                    <img src="{{ $profile_picture->temporaryUrl() }}" class="h-20 w-20 rounded-full mt-2">
+                    <div class="w-20 h-20 overflow-hidden rounded-full mt-4">
+                        <img src="{{ $profile_picture->temporaryUrl() }}" class="w-full h-full object-cover">
+                    </div>
                 </div>
             @endif
 
-            <div class="mb-8">
+            <div class="my-6">
                 <label for="profile_picture" class="block font-semibold mb-1">Profile Picture</label>
                 <input
                     type="file"

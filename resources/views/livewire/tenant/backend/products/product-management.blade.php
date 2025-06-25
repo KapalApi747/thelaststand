@@ -6,7 +6,7 @@
         </div>
     @endif
 
-    <livewire:tenant.backend.products.product-creation/>
+    {{--<livewire:tenant.backend.products.product-creation/>--}}
 
     <div class="bg-white p-4 rounded shadow mt-6">
         <h2 class="text-xl font-semibold mb-4">My Products</h2>

@@ -14,6 +14,7 @@ use App\Livewire\Tenant\Backend\Orders\OrderIndex;
 use App\Livewire\Tenant\Backend\Orders\OrderView;
 use App\Livewire\Tenant\Backend\Payouts\TenantPayoutIndex;
 use App\Livewire\Tenant\Backend\Payouts\TenantPayoutView;
+use App\Livewire\Tenant\Backend\Products\ProductCreation;
 use App\Livewire\Tenant\Backend\Products\ProductEdit;
 use App\Livewire\Tenant\Backend\Products\ProductManagement;
 use App\Livewire\Tenant\Backend\Products\ProductView;
@@ -128,6 +129,7 @@ Route::middleware([
 
             Route::middleware(['permission:manage products|manage categories'])->group(function () {
                 Route::get('/products', ProductManagement::class)->name('product-management');
+                Route::get('/product-creation', ProductCreation::class)->name('product-creation');
                 Route::get('/products/{product:slug}', ProductView::class)->name('product-view');
                 Route::get('/products/{product:slug}/edit', ProductEdit::class)->name('product-edit');
 

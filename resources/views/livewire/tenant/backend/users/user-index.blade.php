@@ -71,8 +71,11 @@
                             @php
                                 $picturePath = 'tenant' . tenant()->id . '/' . $user->profile_picture_path;
                             @endphp
-
-                            <img src="{{ $user->profile_picture_path && file_exists(public_path('tenancy/assets/' . $picturePath)) ? asset($picturePath) : 'https://placehold.co/10x10' }}" alt="Profile Picture" class="w-10 h-10 rounded-full">
+                            <div class="w-10 h-10 overflow-hidden rounded-full">
+                                <img src="{{ $user->profile_picture_path && file_exists(public_path('tenancy/assets/' . $picturePath)) ? asset($picturePath) : 'https://placehold.co/10x10' }}"
+                                     alt="Profile Picture"
+                                     class="w-full h-full object-cover">
+                            </div>
                         </td>
                         <td class="border p-2">{{ $user->name }}</td>
                         <td class="border p-2">{{ $user->email }}</td>
