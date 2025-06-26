@@ -36,7 +36,7 @@ class TenantLogin extends Component
             Auth::guard('web')->login($user, $this->remember);
             session()->regenerate();
 
-            return redirect()->intended(route('shop.shop-products'));
+            return redirect()->intended(route('tenant-homepage'));
         }
 
         // Try to find customer by email

@@ -1,4 +1,6 @@
-<div class="space-y-6">
+<div class="space-y-6 p-6">
+
+    <h3 class="h3 font-bold mb-4">All Categories</h3>
 
     @if (session()->has('message'))
         <div class="p-2 bg-green-200 text-green-800 rounded">
