@@ -23,6 +23,10 @@ class CheckoutShipping extends Component
 
     public function mount()
     {
+        session()->forget('shipping_method');
+        session()->forget('shipping_carrier');
+        session()->forget('shipping_cost');
+
         $this->shippingOptions = ShippingMethod::where('enabled', true)
             ->get()
             ->keyBy('code')

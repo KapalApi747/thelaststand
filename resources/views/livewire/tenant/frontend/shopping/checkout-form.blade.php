@@ -54,31 +54,31 @@
 
         <div class="mb-5">
             <label for="phone" class="block font-medium text-gray-700 mb-1">Phone</label>
-            <input wire:model.lazy="phone" type="text" id="phone" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+            <input wire:model.live="phone" type="text" id="phone" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
             @error('phone') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-5">
             <label for="address_line1" class="block font-medium text-gray-700 mb-1">Address Line 1</label>
-            <input wire:model.lazy="address_line1" type="text" id="address_line1" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+            <input wire:model.live="address_line1" type="text" id="address_line1" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
             @error('address_line1') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-5">
             <label for="address_line2" class="block font-medium text-gray-700 mb-1">Address Line 2 (optional)</label>
-            <input wire:model.lazy="address_line2" type="text" id="address_line2" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+            <input wire:model.live="address_line2" type="text" id="address_line2" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
             @error('address_line2') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 
         <div class="grid grid-cols-2 gap-4 mb-5">
             <div>
                 <label for="zip" class="block font-medium text-gray-700 mb-1">ZIP / Postal Code</label>
-                <input wire:model.lazy="zip" type="text" id="zip" class="w-full border border-gray-300 text-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                <input wire:model.live="zip" type="text" id="zip" class="w-full border border-gray-300 text-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                 @error('zip') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
             <div>
                 <label for="city" class="block font-medium text-gray-700 mb-1">City</label>
-                <input wire:model.lazy="city" type="text" id="city" class="w-full border border-gray-300 text-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                <input wire:model.live="city" type="text" id="city" class="w-full border border-gray-300 text-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                 @error('city') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
         </div>
@@ -86,12 +86,12 @@
         <div class="grid grid-cols-2 gap-4 mb-5">
             <div>
                 <label for="state" class="block font-medium text-gray-700 mb-1">State / Province</label>
-                <input wire:model.lazy="state" type="text" id="state" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                <input wire:model.live="state" type="text" id="state" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                 @error('state') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
             <div>
                 <label for="country" class="block font-medium text-gray-700 mb-1">Country</label>
-                <input wire:model.lazy="country" type="text" id="country" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                <input wire:model.live="country" type="text" id="country" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                 @error('country') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
         </div>
@@ -108,25 +108,25 @@
 
             <div class="mb-5">
                 <label for="billing_address_line1" class="block font-medium text-gray-700 mb-1">Address Line 1</label>
-                <input wire:model.lazy="billing_address_line1" type="text" id="billing_address_line1" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                <input wire:model.live="billing_address_line1" type="text" id="billing_address_line1" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                 @error('billing_address_line1') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="mb-5">
                 <label for="billing_address_line2" class="block font-medium text-gray-700 mb-1">Address Line 2 (optional)</label>
-                <input wire:model.lazy="billing_address_line2" type="text" id="billing_address_line2" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                <input wire:model.live="billing_address_line2" type="text" id="billing_address_line2" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                 @error('billing_address_line2') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-5">
                 <div>
                     <label for="billing_city" class="block font-medium text-gray-700 mb-1">City</label>
-                    <input wire:model.lazy="billing_city" type="text" id="billing_city" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                    <input wire:model.live="billing_city" type="text" id="billing_city" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                     @error('billing_city') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
                     <label for="billing_state" class="block font-medium text-gray-700 mb-1">State / Province</label>
-                    <input wire:model.lazy="billing_state" type="text" id="billing_state" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                    <input wire:model.live="billing_state" type="text" id="billing_state" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                     @error('billing_state') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -134,12 +134,12 @@
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
                     <label for="billing_zip" class="block font-medium text-gray-700 mb-1">ZIP / Postal Code</label>
-                    <input wire:model.lazy="billing_zip" type="text" id="billing_zip" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                    <input wire:model.live="billing_zip" type="text" id="billing_zip" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                     @error('billing_zip') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
                     <label for="billing_country" class="block font-medium text-gray-700 mb-1">Country</label>
-                    <input wire:model.lazy="billing_country" type="text" id="billing_country" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+                    <input wire:model.live="billing_country" type="text" id="billing_country" class="w-full border text-gray-700 border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
                     @error('billing_country') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -148,10 +148,20 @@
         <button
             type="submit"
             class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition-colors duration-300 cursor-pointer"
+            wire:loading.attr="disabled"
+            wire:target="submitButton"
         >
-            Continue to Shipping
+            <span wire:loading.remove wire:target="submitButton">
+                Continue to Shipping
+            </span>
+            <span wire:loading wire:target="submitButton" class="flex items-center justify-center space-x-2">
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+                <span>Loading...</span>
+            </span>
         </button>
-
     </form>
 </div>
 

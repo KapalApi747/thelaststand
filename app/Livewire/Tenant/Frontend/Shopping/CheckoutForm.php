@@ -36,6 +36,32 @@ class CheckoutForm extends Component
     public string $password_confirmation = '';
 
     public bool $showLoginButton = false;
+    public $shipping_address_id = null; // selected shipping address
+    public $billing_address_id = null; // selected billing address (optional)
+    public $useNewShippingAddress = false;
+    public $useNewBillingAddress = false;
+
+// For the address form fields (shipping + billing)
+    public $addressFields = [
+        'shipping' => [
+            'phone' => '',
+            'address_line1' => '',
+            'address_line2' => '',
+            'city' => '',
+            'state' => '',
+            'zip' => '',
+            'country' => '',
+        ],
+        'billing' => [
+            'address_line1' => '',
+            'address_line2' => '',
+            'city' => '',
+            'state' => '',
+            'zip' => '',
+            'country' => '',
+        ],
+    ];
+
 
     protected function rules()
     {
