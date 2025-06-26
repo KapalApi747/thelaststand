@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
-class Customer extends Authenticatable
+class Customer extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable, SoftDeletes, HasFactory;
 
@@ -28,6 +29,7 @@ class Customer extends Authenticatable
 
     protected $casts = [
         'is_active' => 'boolean',
+        'email_verified_at' => 'datetime',
     ];
 
     protected static function booted()

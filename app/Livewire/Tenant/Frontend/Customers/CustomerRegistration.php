@@ -32,13 +32,15 @@ class CustomerRegistration extends Component
     {
         $validated = $this->validate();
 
-        Customer::create([
+        $customer = Customer::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
             'password' => Hash::make($validated['password']),
             'is_active' => true,
         ]);
+
+        $customer->sendEmailVerificationNotification();
 
         session()->flash('message', 'Registration successful! You can now log in.');
 

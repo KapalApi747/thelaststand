@@ -1,6 +1,28 @@
 <div class="ml-{{ $depth * 4 }} border-l pl-4 mb-2">
-    <h3 class="font-semibold text-gray-800">{{ $category->name }}</h3>
-    <p class="text-sm text-gray-600">Slug: {{ $category->slug }}</p>
+    <div class="flex justify-between items-center">
+        <div>
+            <strong>{{ $category->name }}</strong>
+            <span class="text-sm text-gray-500">({{ $category->slug }})</span>
+        </div>
+        <div class="flex space-x-2">
+            <div>
+                <a href="{{ route('tenant-dashboard.category-edit', $category->slug) }}"
+                   class="text-yellow-500 hover:text-yellow-700 transition-colors duration-300"
+                >
+                    <i class="fas fa-edit"></i>
+                </a>
+            </div>
+            <div>
+                <button
+                    x-data
+                    @click="if (confirm('Are you sure you want to delete this category?')) { $dispatch('category-delete-requested', { id: {{ $category->id }} }) }"
+                    class="text-red-600 hover:text-red-800 transition-colors duration-300"
+                >
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
     @if ($category->children->isNotEmpty())
         @foreach ($category->children as $child)
