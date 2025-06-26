@@ -2,7 +2,12 @@
     <h2 class="h2 font-bold">Edit Customer: <span class="text-gray-700">{{ $customer->name }}</span></h2>
 
     @if (session()->has('message'))
-        <div class="p-4 bg-green-100 text-green-800 rounded">{{ session('message') }}</div>
+        <div class="alert alert-success alert-close">
+            <button class="alert-btn-close">
+                <i class="fad fa-times"></i>
+            </button>
+            <span>{{ session('message') }}</span>
+        </div>
     @endif
 
     <form wire:submit.prevent="save" class="space-y-4">

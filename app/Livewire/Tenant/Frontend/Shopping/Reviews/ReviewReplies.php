@@ -34,6 +34,27 @@ class ReviewReplies extends Component
         return null;
     }
 
+    public function getIsAdminProperty()
+    {
+        // Check if logged in user is a tenant dashboard user (admin)
+        if ($tenantUser = auth('web')->user()) {
+            // Use Spatie's hasRole method on tenantUser
+            return $tenantUser->hasRole('admin');
+        }
+
+        // Frontend customers don't have admin roles
+        return false;
+    }
+
+    public function toggleApproval($reviewReplyId)
+    {
+        $reviewReply = ProductReviewReply::findOrFail($reviewReplyId);
+        $reviewReply->is_approved = ! $reviewReply->is_approved;
+        $reviewReply->save();
+
+        session()->flash('message', 'Reply moderation status updated.');
+    }
+
     public function submit()
     {
         $this->validate();

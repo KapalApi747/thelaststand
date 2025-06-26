@@ -23,13 +23,27 @@
     @foreach ($replies as $reply)
         <div
             class="text-sm text-gray-700 mb-2 border-l border-gray-700 pl-3">
+            @if ($this->isAdmin)
+                <button
+                    wire:click="toggleApproval({{ $reply->id }})"
+                    class="text-red-600 hover:text-red-400 underline my-3 cursor-pointer text-sm font-medium block"
+                >
+                    {{ $reply->is_approved ? 'Unapprove' : 'Approve' }}
+                </button>
+            @endif
             <p class="mb-1">
                 <strong>{{ $reply->customer?->name ?? 'Deleted User' }}</strong>
                 <span class="text-xs text-gray-500 ml-2">
                     {{ $reply->created_at->diffForHumans() }}
                 </span>
             </p>
-            <p class="text-gray-400">{{ $reply->body }}</p>
+            @if (! $reply->is_approved)
+                <div class="mt-2 text-gray-500 line-through italic">
+                    This reply has been removed by a moderator.
+                </div>
+            @else
+                <div class="mt-2 text-gray-800">{{ $reply->body }}</div>
+            @endif
         </div>
     @endforeach
 

@@ -15,13 +15,19 @@ class ShopProducts extends Component
 
     public $categories;
 
+    public $search = '';
     public $selectedCategories = [];
     public $minPrice = null;
     public $maxPrice = null;
 
     public function mount()
     {
-        $this->categories = Category::all();
+        $this->categories = Category::with('children')->get();
+    }
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
     }
 
     public function updatedSelectedCategories()
@@ -56,6 +62,10 @@ class ShopProducts extends Component
                 'approvedReviews' => fn ($q) => $q->where('is_approved', true)
             ], 'rating') // gives: approved_reviews_avg_rating
             ->where('is_active', 1);
+
+        if (!empty($this->search)) {
+            $query->where('name', 'like', '%' . $this->search . '%');
+        }
 
         if (!empty($this->selectedCategories)) {
             foreach ($this->selectedCategories as $categoryId) {

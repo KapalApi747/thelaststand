@@ -15,19 +15,22 @@
             <h3 class="text-lg font-semibold mb-4 text-gray-900">Filter Products</h3>
 
             <div class="mb-6">
+                <label class="block text-sm font-medium mb-2 text-gray-700" for="search">Search Products</label>
+                <input
+                    type="text"
+                    id="search"
+                    wire:model.live.300ms="search"
+                    placeholder="Search by name..."
+                    class="w-full rounded-md border border-gray-300 text-gray-800 p-2 bg-white"
+                />
+            </div>
+
+            <div class="mb-6">
                 <label class="block text-sm font-medium mb-2 text-gray-700">Categories</label>
 
                 <div class="flex flex-col space-y-2">
-                    @foreach ($categories as $category)
-                        <label class="flex items-center space-x-2 text-sm text-gray-800">
-                            <input
-                                type="checkbox"
-                                wire:model.live="selectedCategories"
-                                value="{{ $category->id }}"
-                                class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                            >
-                            <span>{{ $category->name }}</span>
-                        </label>
+                    @foreach ($categories->where('parent_id', null) as $category)
+                        @include('partials.categories.category-checkbox', ['category' => $category, 'level' => 0])
                     @endforeach
                 </div>
 

@@ -25,10 +25,6 @@
             <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
                 <h3 class="text-xl font-semibold mb-4 text-gray-900">Leave a Review</h3>
 
-                @if (session()->has('review_message'))
-                    <div class="mb-4 text-green-700 font-medium">{{ session('review_message') }}</div>
-                @endif
-
                 <form wire:submit.prevent="submitReview" class="space-y-4">
                     {{-- Rating stars --}}
                     <div>
@@ -69,7 +65,11 @@
         </p>
     @endif
 
-    {{-- Approved Reviews List --}}
+    {{--
+        Beoordelingen van klanten (alleen goedgekeurde reviews)
+        Deze container gebruikt Alpine.js om automatisch naar het review-gedeelte te scrollen
+        wanneer de paginaparameter ('?page=...') verandert – handig bij paginatie.
+    --}}
     <div
         id="customer-reviews"
         x-data="{ page: new URLSearchParams(window.location.search).get('page') }"
@@ -94,6 +94,10 @@
         class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
     >
         <h3 class="text-xl font-semibold mb-4 text-gray-900">Customer Reviews</h3>
+
+        @if (session()->has('review_message'))
+            <div class="mb-4 text-green-700 font-medium">{{ session('review_message') }}</div>
+        @endif
 
         @forelse ($reviews as $review)
             <div class="border-b border-gray-300 py-4 last:border-0">
