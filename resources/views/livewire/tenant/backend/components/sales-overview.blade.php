@@ -5,7 +5,7 @@
     <div class="card-header flex flex-row justify-between">
         <h1 class="h6">Sales Overview</h1>
 
-        <div class="flex flex-row justify-center items-center">
+        {{--<div class="flex flex-row justify-center items-center">
 
             <a href="">
                 <i class="fad fa-chevron-double-down mr-6"></i>
@@ -15,7 +15,7 @@
                 <i class="fad fa-ellipsis-v"></i>
             </a>
 
-        </div>
+        </div>--}}
 
     </div>
     <!-- end header -->

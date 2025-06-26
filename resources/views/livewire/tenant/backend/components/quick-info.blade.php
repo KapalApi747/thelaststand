@@ -1,8 +1,9 @@
 <!-- start quick Info -->
-<div class="grid grid-cols-3 gap-6 mt-6 xl:grid-cols-1">
+<div class="w-full my-6">
 
+{{--<div class="grid grid-cols-3 gap-6 mt-6 xl:grid-cols-1">--}}
 
-    <!-- Browser Stats -->
+    {{--<!-- Browser Stats -->
     <div class="card">
         <div class="card-header">Browser Stats</div>
 
@@ -55,7 +56,7 @@
         <!-- end brawser -->
 
     </div>
-    <!-- end Browser Stats -->
+    <!-- end Browser Stats -->--}}
 
     <!-- Start Recent Sales -->
     <div class="card col-span-2 xl:col-span-1">
@@ -78,7 +79,18 @@
                             <img src="{{ asset('tenant' . tenant()->id . '/' . $product->images[0]->path) }}" alt="{{ $product->name }}" class="w-12 h-12 object-cover rounded">
                         </div>
                     </td>
-                    <td class="border border-l-0 px-4 py-2">{{ $product->name }}</td>
+                    <td class="border border-l-0 px-4 py-2">
+                        @role('admin')
+                        <a
+                            href="{{ route('tenant-dashboard.product-view', $product) }}"
+                            class="text-teal-600 hover:text-teal-400 transition-colors duration-300 ease-in-out"
+                        >
+                            {{ $product->name }}
+                        </a>
+                        @else
+                            {{ $product->name }}
+                        @endrole
+                    </td>
                     <td class="border border-l-0 px-4 py-2">${{ number_format($product->price, 2) }}</td>
                     <td class="border border-l-0 border-r-0 px-4 py-2">{{ $product->total_sold }}</td>
                 </tr>

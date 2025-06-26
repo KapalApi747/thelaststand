@@ -40,8 +40,7 @@
 
         <!-- alert -->
         <div class="alert alert-dark mb-6">
-            Hi! Wait A Minute . . . . . . Follow Me On Twitter
-            <a class="ml-2" target="_blank" href="https://twitter.com/MohamedSaid__">@moesaid</a>
+            Welcome, {{ auth()->user()->name }}!
         </div>
         <!-- end alert -->
 

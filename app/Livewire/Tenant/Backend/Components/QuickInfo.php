@@ -11,7 +11,7 @@ class QuickInfo extends Component
 
     public function mount()
     {
-        $this->popularProducts = Product::select('products.id', 'products.name', 'products.price')
+        $this->popularProducts = Product::select('products.id', 'products.name', 'products.slug', 'products.price')
             ->selectRaw('SUM(order_items.quantity) as total_sold')
             ->join('order_items', 'products.id', '=', 'order_items.product_id')
             ->groupBy('products.id', 'products.name', 'products.price')

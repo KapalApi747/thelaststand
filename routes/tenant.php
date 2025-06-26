@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Livewire\Tenant\Backend\Categories\CategoryCreation;
+use App\Livewire\Tenant\Backend\Categories\CategoryEdit;
 use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
 use App\Livewire\Tenant\Backend\Customers\CustomerCreation;
 use App\Livewire\Tenant\Backend\Customers\CustomerEdit;
@@ -145,6 +147,8 @@ Route::middleware([
                 Route::get('/products/{product:slug}/edit', ProductEdit::class)->name('product-edit');
 
                 Route::get('/categories', CategoryManagement::class)->name('category-management');
+                Route::get('/categories/category-creation', CategoryCreation::class)->name('category-creation');
+                Route::get('/categories/{category:slug}/edit', CategoryEdit::class)->name('category-edit');
             });
 
             Route::middleware(['role:admin'])->group(function () {

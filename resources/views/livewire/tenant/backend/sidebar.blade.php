@@ -157,7 +157,7 @@
             <div x-data="{ open: false }">
                 <button @click="open = !open" type="button"
                         class="w-full mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
-                    <i class="fas fa-user-tie text-xs"></i>
+                    <i class="fa-solid fa-box text-xs"></i>
                     <div class="flex items-center">
                         Products
                         <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -175,9 +175,49 @@
 
                         <a href="{{ route('tenant-dashboard.product-management') }}"
                            class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
-                            <i class="fas fa-person-walking"></i>
+                            <i class="fa-solid fa-boxes"></i>
                             <div>
                                 All Products
+                            </div>
+                        </a>
+
+                        <a href="{{ route('tenant-dashboard.product-creation') }}"
+                           class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+                            <i class="fa-solid fa-box"></i>
+                            <div>
+                                Create New Product
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <!-- end link -->
+
+        <!-- link -->
+            <div x-data="{ open: false }">
+                <button @click="open = !open" type="button"
+                        class="w-full mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+                    <i class="fa-solid fa-list text-xs"></i>
+                    <div class="flex items-center">
+                        Categories
+                        <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </button>
+
+                <!-- Dropdown panel -->
+                <div x-show="open" @click.outside="open = false"
+                     class="absolute z-10 w-full origin-bottom-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+                    <div class="py-1">
+
+                        <a href="{{ route('tenant-dashboard.category-management') }}"
+                           class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
+                            <i class="fas fa-person-walking"></i>
+                            <div>
+                                All Categories
                             </div>
                         </a>
 
@@ -191,15 +231,6 @@
                     </div>
                 </div>
             </div>
-        <!-- end link -->
-
-        <!-- link -->
-        <a
-            href="{{ route('tenant-dashboard.category-management') }}"
-            class="mb-3 font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
-            <i class="fa-solid fa-book-open text-xs"></i>
-            <div>Categories</div>
-        </a>
         @endcan
         <!-- end link -->
 
@@ -404,7 +435,7 @@
         <!-- end link -->--}}
 
 
-        <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">UI Elements</p>
+        {{--<p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">UI Elements</p>
 
         <!-- link -->
         <a href="./typography.html" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
@@ -468,7 +499,7 @@
             <i class="fad fa-computer-classic text-xs mr-2"></i>
             Components
         </a>
-        <!-- end link -->
+        <!-- end link -->--}}
 
 
 

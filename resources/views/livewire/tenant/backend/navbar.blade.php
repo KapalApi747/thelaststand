@@ -15,7 +15,7 @@
         @if (tenant())
             <div class="flex flex-col flex-1 ml-3">
                 <strong class="capitalize">{{ tenant()->store_name }}</strong>
-                <a href="{{ route('shop.shop-products') }}" class="text-xs text-gray-600 hover:text-gray-900 transition-colors ease-in-out duration-500">Return To Shop</a>
+                <a href="{{ route('shop.shop-products') }}" class="text-xs text-gray-600 hover:text-teal-400 transition-colors ease-in-out duration-500">Return To Shop</a>
             </div>
         @endif
 
@@ -80,7 +80,7 @@
                     </a>
                     <!-- end item -->
 
-                    <!-- item -->
+                    {{--<!-- item -->
                     <a class="px-4 py-2 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 hover:text-gray-900 transition-all duration-300 ease-in-out" href="#">
                         <i class="fad fa-inbox-in text-xs mr-1"></i>
                         my inbox
@@ -99,7 +99,7 @@
                         <i class="fad fa-comment-alt-dots text-xs mr-1"></i>
                         chats
                     </a>
-                    <!-- end item -->
+                    <!-- end item -->--}}
 
                     <hr>
 
