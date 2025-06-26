@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Tenant\Frontend\Shopping;
 
+use App\Mail\OrderConfirmation;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\CartService;
 use App\Services\PaymentService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Stripe\StripeClient;
@@ -82,6 +84,8 @@ class CheckoutSuccess extends Component
                 'provider' => 'stripe',
                 'provider_customer_id' => $session->customer,
             ]);
+
+            Mail::to($this->order->customer->email)->send(new OrderConfirmation($this->order));
         } catch (\Throwable $e) {
             Log::error("Failed to save payment info for order {$this->order->id}: " . $e->getMessage());
         }

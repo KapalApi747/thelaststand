@@ -95,17 +95,17 @@
                     @click.outside="open = false"
                 >
                     @if ($customerUser || $linkedCustomer)
-                        <a href="{{ route('shop.customer-orders') }}" class="block px-4 py-2 hover:bg-gray-100">My Orders</a>
-                        <a href="{{ route('shop.customer-addresses') }}" class="block px-4 py-2 hover:bg-gray-100">My Addresses</a>
-                        <a href="{{ route('shop.customer-profile') }}" class="block px-4 py-2 hover:bg-gray-100">My Profile</a>
-                        <a href="{{ route('shop.customer-settings') }}" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
+                        <a href="{{ route('customer-orders') }}" class="block px-4 py-2 hover:bg-gray-100">My Orders</a>
+                        <a href="{{ route('customer-addresses') }}" class="block px-4 py-2 hover:bg-gray-100">My Addresses</a>
+                        <a href="{{ route('customer-profile') }}" class="block px-4 py-2 hover:bg-gray-100">My Profile</a>
+                        <a href="{{ route('customer-settings') }}" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
                     @endif
 
                     @if ($tenantUser)
                         <a href="{{ route('tenant-dashboard.index') }}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
                     @endif
 
-                    <form method="POST" action="{{ route('shop.customer-logout') }}">
+                    <form method="POST" action="{{ route('customer-logout') }}">
                         @csrf
                         <button type="submit" class="w-full text-left px-4 py-2 hover:bg-red-100 text-red-600 cursor-pointer">
                             Logout
@@ -117,7 +117,7 @@
         @else
             <a
                 class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300"
-                href="{{ route('shop.login') }}"
+                href="{{ route('login') }}"
             >
                 Login
             </a>

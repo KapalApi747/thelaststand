@@ -29,7 +29,7 @@
                 <p class="text-blue-800">
                     Not a member yet?
                     <a
-                        href="{{ route('shop.customer-register') }}"
+                        href="{{ route('customer-register') }}"
                         class="italic underline text-blue-500 hover:text-blue-700 transition-colors duration-300 ease-in-out"
                     >
                         Register

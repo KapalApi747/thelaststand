@@ -3,6 +3,7 @@
 use App\Http\Middleware\AuthenticateCentral;
 use App\Http\Middleware\AuthenticateCustomer;
 use App\Http\Middleware\AuthenticateTenant;
+use App\Http\Middleware\CustomerEmailVerification;
 use App\Http\Middleware\OnlyTenancyOnTenantDomain;
 use App\Http\Middleware\SessionCookie;
 use App\Http\Middleware\SetLivewireUpdateRoute;
@@ -28,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'central.auth' => AuthenticateCentral::class,
             'tenant.auth' => AuthenticateTenant::class,
             'customer.auth' => AuthenticateCustomer::class,
+            'customer.verified' => CustomerEmailVerification::class,
 
             'tenant.onlytenancyontenant' => OnlyTenancyOnTenantDomain::class,
             'role' => RoleMiddleware::class,

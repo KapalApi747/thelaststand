@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\VerifyCustomerEmailController;
 use App\Livewire\Tenant\Backend\Categories\CategoryCreation;
 use App\Livewire\Tenant\Backend\Categories\CategoryEdit;
 use App\Livewire\Tenant\Backend\Categories\CategoryManagement;
@@ -43,6 +44,7 @@ use App\Livewire\Tenant\Frontend\Customers\CustomerOrderView;
 use App\Livewire\Tenant\Frontend\Customers\CustomerProfile;
 use App\Livewire\Tenant\Frontend\Customers\CustomerRegistration;
 use App\Livewire\Tenant\Frontend\Customers\CustomerSettings;
+use App\Livewire\Tenant\Frontend\Customers\CustomerVerify;
 use App\Livewire\Tenant\Frontend\Main\Cart;
 use App\Livewire\Tenant\Frontend\Main\Homepage;
 use App\Livewire\Tenant\Frontend\Main\PageShow;
@@ -54,6 +56,8 @@ use App\Livewire\Tenant\Frontend\Shopping\CheckoutShipping;
 use App\Livewire\Tenant\Frontend\Shopping\CheckoutSuccess;
 use App\Livewire\Tenant\Frontend\Shopping\Products\ProductShow;
 use App\Livewire\TenantLogin;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
@@ -80,6 +84,8 @@ Route::middleware(['universal', InitializeTenancyByDomain::class])->group(functi
     });
 });
 
+
+
 Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
@@ -92,28 +98,41 @@ Route::middleware([
         ->name('page-show')
         ->where('slug', 'privacy-policy|terms-of-service|about-us|cookies-policy');
 
+    Route::get('/login', TenantLogin::class)->name('login');
+    Route::get('/register', CustomerRegistration::class)->name('customer-register');
+    Route::post('/logout', function () {
+        Auth::guard('customer')->logout();
+        Auth::guard('web')->logout();
+        request()->session()->regenerateToken();
+        return redirect()->route('tenant-homepage');
+    })->name('customer-logout');
+
+    Route::middleware(['customer.auth', 'customer.verified'])->group(function () {
+        Route::get('/my-orders', CustomerOrders::class)->name('customer-orders');
+        Route::get('/my-orders/{order:order_number}', CustomerOrderView::class)->name('customer-order-view');
+        Route::get('/my-addresses', CustomerAddresses::class)->name('customer-addresses');
+        Route::get('/my-profile', CustomerProfile::class)->name('customer-profile');
+        Route::get('/my-settings', CustomerSettings::class)->name('customer-settings');
+    });
+
+    // Email verification
+    Route::middleware(['customer.auth'])->group(function () {
+
+        Route::get('/email/verify', CustomerVerify::class)->name('customer-verification.notice');
+
+        Route::get('/email/verify/{id}/{hash}', VerifyCustomerEmailController::class)->middleware(['signed'])->name('customer-verification.verify');
+
+        // Resend verification email
+        Route::post('/email/verification-notification', function (Request $request) {
+            $request->user('customer')->sendEmailVerificationNotification();
+
+            return back()->with('message', 'Verification link sent!');
+        })->middleware(['throttle:6,1'])->name('customer-verification.send');
+    });
+
     Route::prefix('shop')
         ->as('shop.')
         ->group(function () {
-
-            Route::get('login', TenantLogin::class)->name('login');
-            Route::get('register', CustomerRegistration::class)->name('customer-register');
-
-            Route::middleware(['customer.auth'])->group(function () {
-                Route::post('/logout', function () {
-                    Auth::guard('customer')->logout();
-                    Auth::guard('web')->logout();
-                    request()->session()->regenerateToken();
-                    return redirect()->route('shop.shop-products');
-                })->name('customer-logout');
-
-                Route::get('my-orders', CustomerOrders::class)->name('customer-orders');
-                Route::get('my-orders/{order:order_number}', CustomerOrderView::class)->name('customer-order-view');
-                Route::get('my-addresses', CustomerAddresses::class)->name('customer-addresses');
-                Route::get('my-profile', CustomerProfile::class)->name('customer-profile');
-                Route::get('my-settings', CustomerSettings::class)->name('customer-settings');
-            });
-
             Route::get('products', ShopProducts::class)->name('shop-products');
             Route::get('products/{slug}', ProductShow::class)->name('shop-product-show');
 

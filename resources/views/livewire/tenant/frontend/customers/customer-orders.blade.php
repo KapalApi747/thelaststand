@@ -34,7 +34,7 @@
                     <td class="py-4 px-3 text-center">€{{ $order->total_amount }}</td>
                     <td class="py-4 px-3 text-center uppercase">{{ $order->status }}</td>
                     <td class="py-4 px-3 text-center whitespace-nowrap">
-                        <a href="{{ route('shop.customer-order-view', $order) }}"
+                        <a href="{{ route('customer-order-view', $order) }}"
                            class="text-blue-600 hover:text-blue-800 font-medium me-3 transition"
                         >
                             View Order
