@@ -40,7 +40,7 @@ class ProductEdit extends Component
         $this->description = $this->product->description;
         $this->price = $this->product->price;
         $this->stock = $this->product->stock;
-        $this->is_active = $this->product->is_active;
+        $this->is_active = $this->product->is_active ? '1' : '0';
         $this->existingImages = $product->images->toArray();
     }
 

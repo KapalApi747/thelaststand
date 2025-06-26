@@ -14,12 +14,12 @@
         @if ($categories->isEmpty())
             <p class="text-gray-600">You haven't added any categories yet.</p>
         @else
-            <div class="flex flex-wrap flex-col">
+            <div class="flex flex-col">
                 @foreach ($categories as $category)
-                    <div class="border p-3 rounded shadow-sm">
-                        <h3 class="font-bold text-lg">{{ $category->name }}</h3>
-                        <p class="text-sm text-gray-700">Slug: {{ strtolower($category->slug) }}</p>
-                    </div>
+                    @include('livewire.tenant.backend.categories._category-list', [
+                        'category' => $category,
+                        'depth' => 0
+                    ])
                 @endforeach
             </div>
         @endif

@@ -21,6 +21,31 @@ class ProductManagement extends Component
     public $sortField = 'name';
     public $sortDirection = 'asc';
 
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedCategory()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedStatus()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPagination()
+    {
+        $this->resetPage();
+    }
+
+    public function delete(Product $product)
+    {
+        $product->delete();
+    }
+
     public function render()
     {
         $products = Product::query()

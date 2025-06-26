@@ -29,6 +29,7 @@ use App\Livewire\Tenant\Backend\Shipping\ShippingMethodForm;
 use App\Livewire\Tenant\Backend\Shipping\ShippingMethodIndex;
 use App\Livewire\Tenant\Backend\Statistics\ShopStatistics;
 use App\Livewire\Tenant\Backend\TenantDashboard;
+use App\Livewire\Tenant\Backend\Users\AccountEdit;
 use App\Livewire\Tenant\Backend\Users\UserEdit;
 use App\Livewire\Tenant\Backend\Users\UserIndex;
 use App\Livewire\Tenant\Backend\Users\UserRegistration;
@@ -130,6 +131,8 @@ Route::middleware([
         ->group(function () {
 
             Route::get('/', TenantDashboard::class)->name('index');
+
+            Route::get('/account/{user}/edit', AccountEdit::class)->name('account-edit');
 
             Route::middleware(['role:admin'])->group(function () {
                 Route::get('/profile-settings', StoreSettings::class)->name('store-settings');

@@ -34,7 +34,6 @@ class TenantPermissionSeeder extends Seeder
 
         Role::firstOrCreate(['name' => 'staff'])->syncPermissions([
             'manage products',
-            'manage orders',
         ]);
 
         Role::firstOrCreate(['name' => 'inventory manager'])->syncPermissions([

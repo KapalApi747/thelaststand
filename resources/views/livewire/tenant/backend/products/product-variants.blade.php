@@ -27,7 +27,7 @@
         <input type="file" wire:model="images" multiple class="border p-2 rounded w-full mb-2">
         @error('images.*') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-        <button wire:click="saveVariant" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
+        <button wire:click="saveVariant" class="btn">
             {{ $variantEditId ? 'Update Variant' : 'Add Variant' }}
         </button>
 
@@ -68,8 +68,22 @@
                 <td class="border p-2">{{ $variant->stock }}</td>
                 <td class="border p-2">{{ $variant->is_active ? 'Yes' : 'No' }}</td>
                 <td class="border p-2">
-                    <button wire:click="editVariant({{ $variant->id }})" class="text-blue-600 mr-2">Edit</button>
-                    <button wire:click="deleteVariant({{ $variant->id }})" class="text-red-600">Delete</button>
+                    <div class="flex justify-center items-center">
+                        <div class="mr-2">
+                            <button wire:click="editVariant({{ $variant->id }})"
+                                    class="text-blue-600"
+                            >
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <button wire:click="deleteVariant({{ $variant->id }})"
+                                    class="text-red-600"
+                            >
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
                 </td>
             </tr>
         @endforeach

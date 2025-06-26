@@ -75,25 +75,46 @@
                     <tbody class="text-sm text-gray-700">
                     @foreach ($products as $product)
                         <tr class="border-t border-gray-200 hover:bg-gray-50">
-                            <td class="p-3">
+                            <td class="p-2">
                                 @php
                                     $image = $product->images->first();
                                     $imageUrl = $image ? asset('tenant' . tenant()->id . '/' . $image->path) : 'https://placehold.co/80x80?text=No+Image';
                                 @endphp
                                 <img src="{{ $imageUrl }}" alt="Product Image" class="w-16 h-16 object-cover rounded">
                             </td>
-                            <td class="p-3 font-medium">{{ $product->name }}</td>
-                            <td class="p-3">{{ $product->slug }}</td>
-                            <td class="p-3">{{ $product->sku }}</td>
-                            <td class="p-3">{{ implode(', ', $product->categories->pluck('name')->toArray()) }}</td>
-                            <td class="p-3">€{{ number_format($product->price, 2) }}</td>
-                            <td class="p-3">{{ $product->stock }}</td>
-                            <td class="p-3">{{ ucfirst($product->is_active ? 'Active' : 'Inactive') }}</td>
-                            <td class="p-3 text-center whitespace-nowrap">
-                                <a href="{{ route('tenant-dashboard.product-view', $product) }}"
-                                   class="text-blue-600 hover:text-blue-800 font-semibold text-sm mr-3">View</a>
-                                <a href="{{ route('tenant-dashboard.product-edit', $product) }}"
-                                   class="text-green-600 hover:text-green-800 font-semibold text-sm">Edit</a>
+                            <td class="p-2 font-medium">{{ $product->name }}</td>
+                            <td class="p-2">{{ $product->slug }}</td>
+                            <td class="p-2">{{ $product->sku }}</td>
+                            <td class="p-2">{{ implode(', ', $product->categories->pluck('name')->toArray()) }}</td>
+                            <td class="p-2">€{{ number_format($product->price, 2) }}</td>
+                            <td class="p-2">{{ $product->stock }}</td>
+                            <td class="p-2">{{ ucfirst($product->is_active ? 'Active' : 'Inactive') }}</td>
+                            <td class="p-2 text-center">
+                                <div class="flex justify-center items-center">
+                                    <div class="mr-3">
+                                        <a href="{{ route('tenant-dashboard.product-view', $product) }}"
+                                           class="text-blue-600 hover:text-blue-800 transition-colors duration-300"
+                                        >
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                    <div class="mr-3">
+                                        <a href="{{ route('tenant-dashboard.product-edit', $product) }}"
+                                           class="text-yellow-500 hover:text-yellow-700 transition-colors duration-300"
+                                        >
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <button
+                                            onclick="confirm('Are you sure you want to delete this product?') || event.stopImmediatePropagation()"
+                                            wire:click="deleteProduct({{ $product->id }})"
+                                            class="text-red-600 hover:text-red-800 transition-colors duration-300"
+                                        >
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

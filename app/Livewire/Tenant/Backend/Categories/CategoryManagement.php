@@ -12,7 +12,7 @@ class CategoryManagement extends Component
     public function render()
     {
         return view('livewire.tenant.backend.categories.category-management', [
-            'categories' => Category::all()
+            'categories' => Category::with('children')->whereNull('parent_id')->get(),
         ]);
     }
 }
