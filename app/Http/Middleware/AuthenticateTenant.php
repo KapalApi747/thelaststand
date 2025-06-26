@@ -12,7 +12,7 @@ class AuthenticateTenant
     {
         // Optional: specify a custom guard if you're using one
         if (!Auth::guard('web')->check()) {
-            return redirect()->route('shop.login');
+            return redirect()->route('login');
         }
 
         return $next($request);

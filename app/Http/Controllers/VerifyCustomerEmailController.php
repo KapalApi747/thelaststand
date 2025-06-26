@@ -9,6 +9,19 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 
+/**
+ * Verwerkt de verificatielink die naar een klant wordt gestuurd bij registratie.
+ *
+ * Deze controller:
+ * - Valideert de ondertekende URL en de bijbehorende hash
+ * - Controleert of het e-mailadres al geverifieerd is
+ * - Verifieert het e-mailadres indien nodig en activeert het account
+ * - Logt de klant automatisch in na succesvolle verificatie
+ * - Stuurt de klant terug naar de homepage met een bevestigingsmelding
+ *
+ * Dit wordt aangeroepen via een GET-verzoek naar de verificatielink.
+ */
+
 class VerifyCustomerEmailController extends Controller
 {
     public function __invoke(Request $request, $id, $hash)

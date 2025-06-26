@@ -115,19 +115,38 @@ Route::middleware([
         Route::get('/my-settings', CustomerSettings::class)->name('customer-settings');
     });
 
-    // Email verification
+    // Email verificatie routes voor ingelogde klanten
     Route::middleware(['customer.auth'])->group(function () {
 
-        Route::get('/email/verify', CustomerVerify::class)->name('customer-verification.notice');
+        /*
+        Toon de pagina met de melding "Verifieer je e-mailadres"
+        Deze route toont een Livewire component (CustomerVerify) als de klant nog niet geverifieerd is
+        */
 
-        Route::get('/email/verify/{id}/{hash}', VerifyCustomerEmailController::class)->middleware(['signed'])->name('customer-verification.verify');
+        Route::get('/email/verify', CustomerVerify::class)
+            ->name('customer-verification.notice');
 
-        // Resend verification email
+        /*
+        Verwerk de verificatielink uit de e-mail
+        Deze route wordt bezocht als de klant op de link in de e-mail klikt
+        De 'signed' middleware controleert of de URL geldig en niet gemanipuleerd is
+        */
+
+        Route::get('/email/verify/{id}/{hash}', VerifyCustomerEmailController::class)
+            ->middleware(['signed'])
+            ->name('customer-verification.verify');
+        /*
+        Verstuur een nieuwe verificatielink (opnieuw versturen)
+        Deze route wordt gebruikt als de klant op "Verstuur opnieuw" klikt
+        De klant moet even wachten tussen aanvragen (max 6 keer per minuut via 'throttle:6,1')
+        */
+
         Route::post('/email/verification-notification', function (Request $request) {
             $request->user('customer')->sendEmailVerificationNotification();
 
             return back()->with('message', 'Verification link sent!');
-        })->middleware(['throttle:6,1'])->name('customer-verification.send');
+        })->middleware(['throttle:6,1'])
+            ->name('customer-verification.send');
     });
 
     Route::prefix('shop')

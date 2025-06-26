@@ -63,7 +63,7 @@
 
     @else
         <p class="text-sm text-gray-600">
-            <a href="{{ route('shop.login') }}" class="underline text-indigo-600 hover:text-indigo-700 font-medium">
+            <a href="{{ route('login') }}" class="underline text-indigo-600 hover:text-indigo-700 font-medium">
                 Log in
             </a> to leave a review or reply.
         </p>
@@ -147,7 +147,13 @@
                     </div>
 
                     {{-- Comment --}}
-                    <div class="mt-2 text-gray-800">{{ $review->comment }}</div>
+                    @if (! $review->is_approved)
+                        <div class="mt-2 text-gray-500 line-through italic">
+                            This review has been removed by a moderator.
+                        </div>
+                    @else
+                        <div class="mt-2 text-gray-800">{{ $review->comment }}</div>
+                    @endif
 
                     {{-- Meta --}}
                     <div class="flex">
@@ -177,6 +183,15 @@
                         class="text-indigo-600 hover:text-indigo-700 underline my-3 cursor-pointer text-sm font-medium block">
                     {{ in_array($review->id, $showReplies) ? 'Hide Replies' : 'Show Replies' }}
                 </button>
+
+                    @if ($this->isAdmin)
+                        <button
+                            wire:click="toggleApproval({{ $review->id }})"
+                            class="text-red-600 hover:text-red-400 underline my-3 cursor-pointer text-sm font-medium block"
+                        >
+                            {{ $review->is_approved ? 'Unapprove' : 'Approve' }}
+                        </button>
+                    @endif
 
                 {{-- Conditionally show replies --}}
                 @if (in_array($review->id, $showReplies))

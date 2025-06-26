@@ -5,14 +5,25 @@ namespace App\Services;
 use App\Models\Product;
 use App\Models\ProductVariant;
 
+/**
+ * CartService beheert de winkelwagenlogica voor een specifieke tenant.
+ * Alle gegevens worden opgeslagen in de sessie onder een unieke sleutel per tenant.
+ */
+
 class CartService
 {
+    /**
+     * Voeg een product of een specifieke productvariant toe aan de winkelwagen.
+     * Als het item al bestaat, verhoog de hoeveelheid met 1.
+     */
+
     public static function addProductToCart(Product $product, ?ProductVariant $variant = null): void
     {
-        $cartKey = 'cart_' . tenant()->id;
+        $cartKey = 'cart_' . tenant()->id; // Unieke cart-key per tenant
         $cart = session()->get($cartKey, []);
 
         if ($variant) {
+            // Als er een variant is, gebruik een unieke sleutel gebaseerd op de variant-ID
             $key = 'variant_' . $variant->id;
 
             if (isset($cart[$key])) {
@@ -29,6 +40,7 @@ class CartService
                 ];
             }
         } else {
+            // Als er geen variant is, gebruik het standaard product
             $key = 'product_' . $product->id;
 
             if (isset($cart[$key])) {
@@ -44,15 +56,21 @@ class CartService
             }
         }
 
-        session()->put($cartKey, $cart);
+        session()->put($cartKey, $cart); // Sla de bijgewerkte winkelwagen op in de sessie
     }
 
+    /**
+     * Haal de winkelwageninhoud op uit de sessie.
+     */
     public static function retrieveCart(): array
     {
         $key = 'cart_' . tenant()->id;
         return session()->get($key, []);
     }
 
+    /**
+     * Bereken het totaalbedrag van de winkelwagen (exclusief verzendkosten).
+     */
     public static function cartTotal(): float
     {
         $total = 0;
@@ -64,21 +82,34 @@ class CartService
         return round($total, 2);
     }
 
+    /**
+     * Haal de verzendkosten op uit de sessie.
+     */
     public static function shippingCost(): float
     {
         return session()->get('shipping_cost', 0);
     }
 
+    /**
+     * Bereken het totaalbedrag inclusief verzendkosten.
+     */
     public static function grandTotal(): float
     {
         return self::cartTotal() + self::shippingCost();
     }
 
+    /**
+     * Bereken het btw-bedrag (21% inbegrepen in het totaal).
+     * Gebaseerd op een berekening waarbij het totaalbedrag 121% is.
+     */
     public static function taxAmount(): float
     {
         return round((self::grandTotal() * 21) / 121, 2);
     }
 
+    /**
+     * Leeg de winkelwagen voor de huidige tenant.
+     */
     public static function clearCart(): void
     {
         session()->forget('cart_' . tenant()->id);

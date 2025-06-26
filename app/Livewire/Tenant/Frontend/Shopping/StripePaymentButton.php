@@ -5,9 +5,19 @@ namespace App\Livewire\Tenant\Frontend\Shopping;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Stripe\StripeClient;
+
+/**
+ * Livewire-component voor Stripe-betaling in de tenant-webshop.
+ *
+ * - Controleert eerst of er producten in de winkelwagen zitten en of er genoeg voorraad is.
+ * - Stelt Stripe Checkout sessie samen met producten, verzendkosten en klantinformatie.
+ * - Maakt indien nodig een Stripe Customer aan (voor ingelogde klant of gast).
+ * - Verwerkt metadata zoals tenant ID en order ID voor latere identificatie.
+ * - Slaat de Stripe sessie-ID op bij de order in de database.
+ * - Verwijst klant door naar de Stripe Checkout pagina.
+ */
 
 class StripePaymentButton extends Component
 {

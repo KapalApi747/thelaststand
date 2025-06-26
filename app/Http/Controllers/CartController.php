@@ -7,6 +7,17 @@ use App\Models\ProductVariant;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 
+/**
+ * Verantwoordelijk voor winkelwagenacties binnen het publieke storefront van THE LAST STAND.
+ *
+ * Momenteel ondersteunt deze controller het toevoegen van producten (eventueel met varianten)
+ * aan de sessie-gebaseerde winkelwagen via de CartService.
+ *
+ * Bij succesvol toevoegen wordt de gebruiker teruggeleid met een bevestigingsbericht.
+ *
+ * @zie \App\Services\CartService::addProductToCart
+ */
+
 class CartController extends Controller
 {
     public function add(Request $request)

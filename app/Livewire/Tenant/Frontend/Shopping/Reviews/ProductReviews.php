@@ -62,6 +62,27 @@ class ProductReviews extends Component
         return null;
     }
 
+    public function getIsAdminProperty()
+    {
+        // Check if logged in user is a tenant dashboard user (admin)
+        if ($tenantUser = auth('web')->user()) {
+            // Use Spatie's hasRole method on tenantUser
+            return $tenantUser->hasRole('admin');
+        }
+
+        // Frontend customers don't have admin roles
+        return false;
+    }
+
+    public function toggleApproval($reviewId)
+    {
+        $review = ProductReview::findOrFail($reviewId);
+        $review->is_approved = ! $review->is_approved;
+        $review->save();
+
+        session()->flash('review_message', 'Review moderation status updated.');
+    }
+
     public function submitReview()
     {
         $this->validate([
@@ -146,7 +167,6 @@ class ProductReviews extends Component
     public function render()
     {
         $reviews = $this->product->reviews()
-            ->where('is_approved', true)
             ->latest()
             ->paginate(10);
 

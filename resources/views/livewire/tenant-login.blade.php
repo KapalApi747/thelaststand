@@ -18,12 +18,12 @@
                 @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
-            <div class="mb-4">
+            {{--<div class="mb-4">
                 <label class="inline-flex items-center text-blue-800">
                     <input wire:model="remember" type="checkbox" class="mr-2 rounded border-blue-300 focus:ring-blue-300">
                     Remember Me
                 </label>
-            </div>
+            </div>--}}
 
             <div class="mb-4">
                 <p class="text-blue-800">

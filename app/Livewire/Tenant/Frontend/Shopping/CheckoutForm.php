@@ -36,32 +36,6 @@ class CheckoutForm extends Component
     public string $password_confirmation = '';
 
     public bool $showLoginButton = false;
-    public $shipping_address_id = null; // selected shipping address
-    public $billing_address_id = null; // selected billing address (optional)
-    public $useNewShippingAddress = false;
-    public $useNewBillingAddress = false;
-
-// For the address form fields (shipping + billing)
-    public $addressFields = [
-        'shipping' => [
-            'phone' => '',
-            'address_line1' => '',
-            'address_line2' => '',
-            'city' => '',
-            'state' => '',
-            'zip' => '',
-            'country' => '',
-        ],
-        'billing' => [
-            'address_line1' => '',
-            'address_line2' => '',
-            'city' => '',
-            'state' => '',
-            'zip' => '',
-            'country' => '',
-        ],
-    ];
-
 
     protected function rules()
     {
@@ -98,16 +72,21 @@ class CheckoutForm extends Component
         $customer = $this->currentCustomer();
 
         if ($customer) {
-            $customer = $this->currentCustomer();
             $this->name = $customer->name;
             $this->email = $customer->email;
             $this->phone = $customer->phone ?? '';
-            $this->address_line1 = $customer->addresses->firstWhere('type', 'shipping')->address_line1 ?? '';
-            $this->address_line2 = $customer->addresses->firstWhere('type', 'shipping')->address_line2 ?? '';
-            $this->city = $customer->addresses->firstWhere('type', 'shipping')->city ?? '';
-            $this->state = $customer->addresses->firstWhere('type', 'shipping')->state ?? '';
-            $this->zip = $customer->addresses->firstWhere('type', 'shipping')->zip ?? '';
-            $this->country = $customer->addresses->firstWhere('type', 'shipping')->country ?? '';
+            $latestShipping = $customer->addresses
+                ->where('type', 'shipping')
+                ->sortByDesc('created_at')
+                ->first();
+
+            $this->address_line1 = $latestShipping->address_line1 ?? '';
+            $this->address_line2 = $latestShipping->address_line2 ?? '';
+            $this->city = $latestShipping->city ?? '';
+            $this->state = $latestShipping->state ?? '';
+            $this->zip = $latestShipping->zip ?? '';
+            $this->country = $latestShipping->country ?? '';
+
             $this->loggedInCustomer = true;
         }
     }

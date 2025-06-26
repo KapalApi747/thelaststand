@@ -13,6 +13,23 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Webhook;
 
+/**
+ * Verwerkt inkomende Stripe-webhookevents voor het multi-tenant e-commerceplatform THE LAST STAND.
+ *
+ * Deze controller valideert de binnenkomende Stripe-events met behulp van het webhookgeheim
+ * en handelt vervolgens het juiste eventtype af.
+ *
+ * Ondersteunde eventtypes:
+ * - checkout.session.completed → Markeert de bestelling als betaald, slaat de betaling op, past voorraad aan, verstuurt bevestigingsmail.
+ * - payment_intent.payment_failed → Markeert de bestelling als mislukt.
+ * - checkout.session.expired → Markeert de bestelling als verlopen.
+ *
+ * Multitenancy wordt dynamisch geïnitialiseerd op basis van de `tenant_id` uit de Stripe-metadata.
+ *
+ * @zie https://stripe.com/docs/webhooks
+ * @zie \App\Services\PaymentService::savePayment
+ */
+
 class StripeWebhookController extends Controller
 {
     public function handle(Request $request)
@@ -69,7 +86,7 @@ class StripeWebhookController extends Controller
             return;
         }
 
-        // Initialize tenancy for this tenant
+        // Tenancy initialization
         tenancy()->initialize($tenant);
 
         $order = Order::find($orderId);

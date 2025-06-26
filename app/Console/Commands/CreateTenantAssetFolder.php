@@ -9,46 +9,46 @@ use Illuminate\Support\Facades\File;
 class CreateTenantAssetFolder extends Command
 {
     /**
-     * The name and signature of the console command.
+     * De naam en signatuur van het Artisan-commando.
      *
      * @var string
      */
     protected $signature = 'tenancy:create-tenant-asset-folder';
 
     /**
-     * The console command description.
+     * De beschrijving van het Artisan-commando.
      *
      * @var string
      */
-    protected $description = 'Create tenant asset folders for each tenant!';
+    protected $description = 'Maak asset-mappen aan voor elke tenant!';
 
     /**
-     * Execute the console command.
+     * Voer het Artisan-commando uit.
      */
     public function handle()
     {
-        // Base path for tenant assets
+        // Basispad voor tenant-bestanden
         $basePath = storage_path('app/tenancy');
 
-        // Get all tenancy from the central database
+        // Haal alle tenants op uit de centrale database
         $tenants = Tenant::all();
 
         foreach ($tenants as $tenant) {
             $tenantId = $tenant->id;
 
-            // Build full path for tenant assets
+            // Bouw het volledige pad naar de asset-map van de tenant
             $path = $basePath . DIRECTORY_SEPARATOR . $tenantId . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img';
 
-            // Create directory if it doesn't exist
+            // Maak de map aan als die nog niet bestaat
             if (!File::exists($path)) {
                 File::makeDirectory($path, 0755, true);
-                $this->info("Created asset folder for tenant: {$tenantId}");
+                $this->info("Asset-map aangemaakt voor tenant: {$tenantId}");
             } else {
-                $this->info("Asset folder already exists for tenant: {$tenantId}");
+                $this->info("Asset-map bestaat al voor tenant: {$tenantId}");
             }
         }
 
-        $this->info('Tenant asset folders setup completed.');
+        $this->info('Tenant asset-mappen zijn aangemaakt.');
 
         return 0;
     }

@@ -18,25 +18,26 @@ use Illuminate\Support\Str;
 class OrderService
 {
     /**
-     * Create a new order and associated data.
+     * Maak een nieuwe bestelling aan, inclusief klantgegevens, adressen, items en verzending.
      *
-     * @param array $customerInfo
-     * @param array $cartItems
-     * @param array $shippingInfo
-     * @param int $customerId
+     * @param array $customerInfo Klantinformatie (inclusief adres)
+     * @param array $cartItems Winkelwagenitems
+     * @param array $shippingInfo Verzendinformatie
+     * @param int|null $customerId Optioneel bestaande klant-ID
      * @return \App\Models\Order
      */
     public static function createOrder(array $customerInfo, array $cartItems, array $shippingInfo, ?int $customerId = null): Order
     {
+        // Voer alles binnen een database-transactie uit voor consistentie
         $order = DB::transaction(function () use ($customerInfo, $cartItems, $shippingInfo, $customerId) {
 
-            // 1. Calculate totals
+            // Bereken totaal, verzendkosten en btw
             $cartTotal = CartService::cartTotal();
             $shippingCost = $shippingInfo['cost'] ?? 0;
             $grandTotal = $cartTotal + $shippingCost;
             $taxAmount = round(($grandTotal * 21) / 121, 2);
 
-            // 1.5 Get or create customer
+            // Maak gastklant aan indien geen klant-ID meegegeven
             if (!$customerId) {
                 $guest = Customer::firstOrCreate(
                     ['email' => $customerInfo['email'] ?? null],
@@ -51,8 +52,10 @@ class OrderService
                 $customerId = $guest->id;
             }
 
+            // Sla het verzendadres op in het klantadresboek (indien nog niet bestaat)
             self::saveCustomerAddress($customerId, 'shipping', $customerInfo);
 
+            // Sla eventueel afwijkend factuuradres op
             if (!empty($customerInfo['billing_different'])) {
                 $billingInfo = [
                     'address_line1' => $customerInfo['billing_address_line1'] ?? '',
@@ -67,7 +70,7 @@ class OrderService
                 self::saveCustomerAddress($customerId, 'billing', $billingInfo);
             }
 
-            // 2. Create Order
+            // Maak de bestelling aan in de database
             $order = Order::create([
                 'customer_id' => $customerId,
                 'order_number' => strtoupper('ORD-' . Str::random(10)),
@@ -77,7 +80,7 @@ class OrderService
                 'status' => 'pending',
             ]);
 
-            // 3. Store Order Address
+            // Sla het verzendadres op bij de bestelling
             OrderAddress::create([
                 'order_id' => $order->id,
                 'type' => 'shipping',
@@ -91,6 +94,7 @@ class OrderService
                 'phone' => $customerInfo['phone'] ?? null,
             ]);
 
+            // Voeg factuuradres toe als dat anders is dan verzendadres
             if (!empty($customerInfo['billing_different'])) {
                 OrderAddress::create([
                     'order_id' => $order->id,
@@ -106,7 +110,7 @@ class OrderService
                 ]);
             }
 
-            // 4. Add Order Items
+            // Voeg elk item uit de winkelwagen toe aan de order_items
             foreach ($cartItems as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -118,7 +122,7 @@ class OrderService
                 ]);
             }
 
-            // 5. Save shipment info if available
+            // Maak een verzendrecord aan voor de bestelling
             Shipment::create([
                 'order_id' => $order->id,
                 'tracking_number' => null,
@@ -134,8 +138,12 @@ class OrderService
         return $order;
     }
 
+    /**
+     * Sla klantadres op als het nog niet bestaat in de database.
+     */
     protected static function saveCustomerAddress(int $customerId, string $type, array $data): void
     {
+        // Check of dit adres al bestaat voor deze klant en dit type
         $addressExistsOnDatabase = CustomerAddress::where('customer_id', $customerId)
             ->where('type', $type)
             ->where('address_line1', $data['address_line1'] ?? '')
@@ -146,6 +154,7 @@ class OrderService
             ->where('country', $data['country'] ?? '')
             ->exists();
 
+        // Als het adres nog niet bestaat, voeg het dan toe
         if (!$addressExistsOnDatabase) {
             CustomerAddress::create([
                 'customer_id' => $customerId,
