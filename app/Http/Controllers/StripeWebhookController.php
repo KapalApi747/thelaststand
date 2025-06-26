@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmation;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -9,6 +10,7 @@ use App\Models\Tenant;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Webhook;
 
 class StripeWebhookController extends Controller
@@ -109,6 +111,8 @@ class StripeWebhookController extends Controller
                     }
                 }
             }
+
+            Mail::to($order->customer->email)->send(new OrderConfirmation($order));
 
             Log::info("✅ Order #{$orderId} marked as paid, payment saved and stock updated.");
         } catch (\Throwable $e) {

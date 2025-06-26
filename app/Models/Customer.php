@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\CustomerVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,6 +42,11 @@ class Customer extends Authenticatable implements MustVerifyEmail
         static::updating(function ($customer) {
             $customer->slug = Str::slug($customer->name);
         });
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new CustomerVerifyEmail());
     }
 
     public function users()

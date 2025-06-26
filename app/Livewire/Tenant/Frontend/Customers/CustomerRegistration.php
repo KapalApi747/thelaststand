@@ -3,6 +3,7 @@
 namespace App\Livewire\Tenant\Frontend\Customers;
 
 use App\Models\Customer;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -40,11 +41,11 @@ class CustomerRegistration extends Component
             'is_active' => true,
         ]);
 
+        Auth::guard('customer')->login($customer);
+
         $customer->sendEmailVerificationNotification();
 
-        session()->flash('message', 'Registration successful! You can now log in.');
-
-        return redirect()->route('shop.customer-login');
+        return redirect()->route('customer-verification.notice');
     }
 
     public function render()

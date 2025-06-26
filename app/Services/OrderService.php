@@ -131,8 +131,6 @@ class OrderService
             return $order;
         });
 
-        Mail::to($order->customer->email)->send(new OrderConfirmation($order));
-
         return $order;
     }
 

@@ -6,7 +6,7 @@
         <div class="flex justify-between mb-6">
             <a
                 class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition-colors duration-300"
-                href="{{ route('shop.customer-orders') }}">
+                href="{{ route('customer-orders') }}">
                 Back
             </a>
             <button wire:click="exportPDF"

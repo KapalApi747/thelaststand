@@ -39,7 +39,7 @@
 
         <h3 class="text-lg font-semibold mb-3 text-gray-900">Addresses</h3>
 
-        <a href="{{ route('shop.customer-addresses') }}" class="text-blue-600 hover:underline transition-colors duration-300">
+        <a href="{{ route('customer-addresses') }}" class="text-blue-600 hover:underline transition-colors duration-300">
             Manage your addresses
         </a>
 
