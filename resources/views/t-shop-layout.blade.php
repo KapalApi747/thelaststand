@@ -61,5 +61,12 @@
 </footer>
 
 @fluxScripts
+<script>
+    window.addEventListener('updated_and_refresh', () => {
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+    });
+</script>
 </body>
 </html>

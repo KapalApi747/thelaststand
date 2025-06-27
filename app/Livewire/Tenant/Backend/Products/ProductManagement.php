@@ -17,9 +17,17 @@ class ProductManagement extends Component
     public $category = '';
     public $status = '';
     public $pagination = 10;
+    public $categories;
 
     public $sortField = 'name';
     public $sortDirection = 'asc';
+
+    public function mount()
+    {
+        $this->categories = Category::with('children')->whereNull('parent_id')->get();
+    }
+
+
 
     public function updatedSearch()
     {
@@ -41,15 +49,24 @@ class ProductManagement extends Component
         $this->resetPage();
     }
 
-    public function delete(Product $product)
+    public function deleteProduct(Product $product)
     {
         $product->delete();
+    }
+
+    public function restoreProduct($id)
+    {
+        $product = Product::withTrashed()->findOrFail($id);
+        $product->restore();
+
+        session()->flash('message', 'Product restored successfully!');
     }
 
     public function render()
     {
         $products = Product::query()
-            ->with(['categories', 'images'])
+            ->withTrashed()
+            ->with(['categories', 'mainImage'])
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
@@ -70,7 +87,6 @@ class ProductManagement extends Component
 
         return view('livewire.tenant.backend.products.product-management', [
             'products' => $products,
-            'categories' => Category::all()
         ]);
     }
 }

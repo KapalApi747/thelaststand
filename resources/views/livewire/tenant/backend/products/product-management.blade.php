@@ -8,8 +8,11 @@
 
         <div class="mb-6">
             @if (session()->has('message'))
-                <div class="p-2 bg-green-200 text-green-800 rounded">
-                    {{ session('message') }}
+                <div class="alert alert-success alert-close">
+                    <button class="alert-btn-close">
+                        <i class="fad fa-times"></i>
+                    </button>
+                    <span>{{ session('message') }}</span>
                 </div>
             @endif
         </div>
@@ -24,10 +27,11 @@
 
             <select wire:model.live="category" class="border border-gray-300 rounded px-3 py-2">
                 <option value="">All Categories</option>
-                @foreach($categories as $cat)
-                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                @foreach ($categories as $cat)
+                    @include('partials.categories.category-option', ['category' => $cat, 'level' => 0])
                 @endforeach
             </select>
+
 
             <select wire:model.live="status" class="border border-gray-300 rounded px-3 py-2">
                 <option value="">All Statuses</option>
@@ -74,10 +78,12 @@
                     </thead>
                     <tbody class="text-sm text-gray-700">
                     @foreach ($products as $product)
-                        <tr class="border-t border-gray-200 hover:bg-gray-50">
+                        <tr
+                            class="border-t border-gray-200 hover:bg-gray-50"
+                        >
                             <td class="p-2">
                                 @php
-                                    $image = $product->images->first();
+                                    $image = $product->mainImage;
                                     $imageUrl = $image ? asset('tenant' . tenant()->id . '/' . $image->path) : 'https://placehold.co/80x80?text=No+Image';
                                 @endphp
                                 <img src="{{ $imageUrl }}" alt="Product Image" class="w-16 h-16 object-cover rounded">
@@ -87,7 +93,17 @@
                             <td class="p-2">{{ $product->sku }}</td>
                             <td class="p-2">{{ implode(', ', $product->categories->pluck('name')->toArray()) }}</td>
                             <td class="p-2">€{{ number_format($product->price, 2) }}</td>
-                            <td class="p-2">{{ $product->stock }}</td>
+                            <td class="p-2">
+                                @if ($product->stock < 5)
+                                    <span class="text-red-600 font-semibold ml-2">
+                                        {{ $product->stock }} ⚠
+                                    </span>
+                                @else
+                                    <span class="text-green-600 font-semibold ml-2">
+                                        {{ $product->stock }}
+                                    </span>
+                                @endif
+                            </td>
                             <td class="p-2">{{ ucfirst($product->is_active ? 'Active' : 'Inactive') }}</td>
                             <td class="p-2 text-center">
                                 <div class="flex justify-center items-center">
@@ -98,24 +114,38 @@
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </div>
-                                    <div class="mr-3">
-                                        <a href="{{ route('tenant-dashboard.product-edit', $product) }}"
-                                           class="text-yellow-500 hover:text-yellow-700 transition-colors duration-300"
-                                        >
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    </div>
-                                    <div>
-                                        <button
-                                            onclick="confirm('Are you sure you want to delete this product?') || event.stopImmediatePropagation()"
-                                            wire:click="deleteProduct({{ $product->id }})"
-                                            class="text-red-600 hover:text-red-800 transition-colors duration-300"
-                                        >
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
+
+                                    @if (! $product->trashed())
+                                        <div class="mr-3">
+                                            <a href="{{ route('tenant-dashboard.product-edit', $product) }}"
+                                               class="text-yellow-500 hover:text-yellow-700 transition-colors duration-300"
+                                            >
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <button
+                                                onclick="confirm('Are you sure you want to delete this product?') || event.stopImmediatePropagation()"
+                                                wire:click="deleteProduct({{ $product->id }})"
+                                                class="text-red-600 hover:text-red-800 transition-colors duration-300"
+                                            >
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    @else
+                                        <div>
+                                            <button
+                                                onclick="confirm('Restore this product?') || event.stopImmediatePropagation()"
+                                                wire:click="restoreProduct({{ $product->id }})"
+                                                class="text-green-600 hover:text-green-800 transition-colors duration-300"
+                                            >
+                                                <i class="fas fa-undo"></i>
+                                            </button>
+                                        </div>
+                                    @endif
                                 </div>
                             </td>
+
                         </tr>
                     @endforeach
                     </tbody>

@@ -15,7 +15,7 @@ class CustomerProfile extends Component
     public $email;
     public $phone;
 
-    public $paymentAccounts = [];
+    public $paymentAccounts;
 
     public function mount()
     {
@@ -29,7 +29,7 @@ class CustomerProfile extends Component
         $this->email = $customer->email;
         $this->phone = $customer->phone;
 
-        $this->paymentAccounts = $customer->paymentAccounts()->get()->toArray();
+        $this->paymentAccounts = $customer->paymentAccounts()->latest()->get();
     }
 
     protected function currentCustomer()

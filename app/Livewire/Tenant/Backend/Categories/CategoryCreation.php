@@ -28,7 +28,10 @@ class CategoryCreation extends Component
         ]);
 
         session()->flash('message', 'Category created successfully!');
+
         $this->reset(['name', 'parent_id']);
+
+        $this->dispatch('updated_and_refresh');
     }
 
     public function render()

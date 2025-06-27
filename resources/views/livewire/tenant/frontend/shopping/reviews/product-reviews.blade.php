@@ -26,6 +26,7 @@
                 <h3 class="text-xl font-semibold mb-4 text-gray-900">Leave a Review</h3>
 
                 <form wire:submit.prevent="submitReview" class="space-y-4">
+                    @csrf
                     {{-- Rating stars --}}
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Rating</label>
@@ -49,10 +50,13 @@
                     </div>
 
                     {{-- Submit button --}}
-                    <button type="submit"
-                            class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded transition-colors duration-300 font-semibold shadow-md">
-                        Submit Review
-                    </button>
+                    <div>
+                        <button type="submit"
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded transition-colors duration-300 font-semibold shadow-md cursor-pointer">
+                            Submit Review
+                        </button>
+                    </div>
+
                 </form>
             </div>
         @endif

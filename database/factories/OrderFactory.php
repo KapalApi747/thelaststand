@@ -24,7 +24,7 @@ class OrderFactory extends Factory
         $shipping = $this->faker->randomFloat(2, 5, 20);
         $status = $this->faker->randomFloat(2, 0, 1) < 0.9
             ? 'completed'
-            : $this->faker->randomElement(['pending', 'processing', 'shipped', 'delivered', 'refunded', 'failed', 'cancelled']);
+            : $this->faker->randomElement(['paid', 'pending', 'processing', 'shipped', 'delivered', 'refunded', 'failed', 'cancelled']);
 
         return [
             'order_number' => strtoupper('ORD-' . $this->faker->unique()->bothify('#######')), // e.g. ORD-1234567

@@ -128,9 +128,9 @@ class TenantRegistration extends Component
 
             $customer = Customer::create([
                 'name' => $user->name,
-                'slug' => Str::slug($user->name),
                 'email' => $user->email,
                 'password' => $user->password,
+                'email_verified_at' => now(),
             ]);
 
             $user->customers()->attach($customer->id);

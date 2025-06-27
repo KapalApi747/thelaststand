@@ -80,7 +80,7 @@ class CheckoutSuccess extends Component
                 'payment_method' => $session->payment_method_types[0] ?? 'stripe',
                 'transaction_id' => $session->payment_intent,
                 'amount' => $session->amount_total / 100,
-                'status' => 'paid',
+                'status' => 'completed',
                 'provider' => 'stripe',
                 'provider_customer_id' => $session->customer,
             ]);

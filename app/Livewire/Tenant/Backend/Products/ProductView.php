@@ -13,7 +13,7 @@ class ProductView extends Component
 
     public function mount(Product $product)
     {
-        $product->load('images', 'categories');
+        $product->load(['images', 'categories', 'variants.images']);
 
         $this->product = $product;
     }

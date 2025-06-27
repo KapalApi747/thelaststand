@@ -13,6 +13,7 @@
                     <option value="pending">Pending</option>
                     <option value="processing">Processing</option>
                     <option value="completed">Completed</option>
+                    <option value="paid">Paid</option>
                     <option value="shipped">Shipped</option>
                     <option value="delivered">Delivered</option>
                     <option value="cancelled">Cancelled</option>
@@ -92,8 +93,11 @@
 
     <div class="mb-6">
         @if (session()->has('message'))
-            <div class="p-2 bg-green-200 text-green-800 rounded">
-                {{ session('message') }}
+            <div class="alert alert-success alert-close">
+                <button class="alert-btn-close">
+                    <i class="fad fa-times"></i>
+                </button>
+                <span>{{ session('message') }}</span>
             </div>
         @endif
     </div>

@@ -142,11 +142,21 @@ Route::middleware([
         */
 
         Route::post('/email/verification-notification', function (Request $request) {
-            $request->user('customer')->sendEmailVerificationNotification();
+            $user = auth('customer')->user();
 
-            return back()->with('message', 'Verification link sent!');
+            if (! $user && $tenantUser = auth('web')->user()) {
+                $user = $tenantUser->customers()->first(); // Adjust if multiple customers
+            }
+
+            if ($user) {
+                $user->sendEmailVerificationNotification();
+                return back()->with('message', 'Verification link sent!');
+            }
+
+            return redirect()->route('login')->withErrors('No authenticated customer found.');
         })->middleware(['throttle:6,1'])
             ->name('customer-verification.send');
+
     });
 
     Route::prefix('shop')

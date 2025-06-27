@@ -12,7 +12,7 @@ class Navbar extends Component
         Auth::guard('web')->logout();
         session()->regenerateToken();
 
-        return redirect()->route('shop.login');
+        return redirect()->route('login');
     }
 
     public function render()

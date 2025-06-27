@@ -1,4 +1,15 @@
-<div class="space-y-4">
+<div class="space-y-6 p-6">
+
+    <h3 class="h3 font-bold mb-4">Create New Product</h3>
+
+    @if (session()->has('message'))
+        <div class="alert alert-success alert-close">
+            <button class="alert-btn-close">
+                <i class="fad fa-times"></i>
+            </button>
+            <span>{{ session('message') }}</span>
+        </div>
+    @endif
 
     <form wire:submit.prevent="saveProduct" enctype="multipart/form-data">
         @csrf

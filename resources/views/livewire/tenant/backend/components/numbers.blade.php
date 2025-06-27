@@ -10,8 +10,8 @@
             </div>
 
             <div class="flex flex-col">
-                <h1 class="font-semibold"><span class="num-2"></span> Sales</h1>
-                <p class="text-xs"><span class="num-2"></span> payments</p>
+                <h1 class="font-semibold"><span>{{ $totalSales }}</span> Sales</h1>
+                <p class="text-xs"><span>{{ $totalPayments }}</span> payments</p>
             </div>
 
         </div>
@@ -27,8 +27,8 @@
             </div>
 
             <div class="flex flex-col">
-                <h1 class="font-semibold"><span class="num-2"></span> Orders</h1>
-                <p class="text-xs"><span class="num-2"></span> items</p>
+                <h1 class="font-semibold"><span>{{ $totalOrders }}</span> Orders</h1>
+                <p class="text-xs"><span>{{ $totalItems }}</span> items</p>
             </div>
 
         </div>
@@ -44,8 +44,8 @@
             </div>
 
             <div class="flex flex-col">
-                <h1 class="font-semibold"><span class="num-2"></span> posts</h1>
-                <p class="text-xs"><span class="num-2"></span> active</p>
+                <h1 class="font-semibold"><span>0</span> posts</h1>
+                <p class="text-xs"><span>0</span> active</p>
             </div>
 
         </div>
@@ -61,8 +61,8 @@
             </div>
 
             <div class="flex flex-col">
-                <h1 class="font-semibold"><span class="num-2"></span> comments</h1>
-                <p class="text-xs"><span class="num-2"></span> approved</p>
+                <h1 class="font-semibold"><span>{{ $totalReviews }}</span> reviews</h1>
+                <p class="text-xs"><span>{{ $totalComments }}</span> comments</p>
             </div>
 
         </div>
@@ -78,8 +78,8 @@
             </div>
 
             <div class="flex flex-col">
-                <h1 class="font-semibold"><span class="num-2"></span> memebrs</h1>
-                <p class="text-xs"><span class="num-2"></span> online</p>
+                <h1 class="font-semibold"><span>{{ $totalCustomers }}</span> members</h1>
+                <p class="text-xs"><span>{{ $totalInactiveCustomers }}</span> inactive</p>
             </div>
 
         </div>

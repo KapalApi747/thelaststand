@@ -27,13 +27,18 @@
         <input type="file" wire:model="images" multiple class="border p-2 rounded w-full mb-2">
         @error('images.*') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-        <button wire:click="saveVariant" class="btn">
-            {{ $variantEditId ? 'Update Variant' : 'Add Variant' }}
-        </button>
-
-        @if($variantEditId)
-            <button wire:click="resetForm" class="ml-2 mt-4 bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-        @endif
+        <div class="flex items-center mt-6">
+            <div class="mr-4">
+                <button wire:click="saveVariant" class="btn">
+                    {{ $variantEditId ? 'Update Variant' : 'Add Variant' }}
+                </button>
+            </div>
+            @if($variantEditId)
+            <div>
+                <button wire:click="resetForm" class="btn-danger">Cancel</button>
+            </div>
+            @endif
+        </div>
     </div>
 
     <table class="w-full border-collapse border">

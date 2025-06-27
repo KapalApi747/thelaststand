@@ -115,7 +115,10 @@ class ProductReviews extends Component
         ]);
 
         session()->flash('review_message', 'Thank you for your review!');
+
         $this->reset(['rating', 'comment']);
+
+        $this->dispatch('updated_and_refresh');
     }
 
     public function startEditingReview(int $reviewId)

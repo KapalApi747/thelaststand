@@ -2,6 +2,18 @@
 
     <h3 class="h3 font-bold mb-4">All Orders</h3>
 
+    @if ($failedCount > 0)
+        <div class="p-4 mb-4 text-sm text-red-800 bg-red-100 border border-red-200 rounded-lg" role="alert">
+            ⚠️ You have {{ $failedCount }} failed order{{ $failedCount > 1 ? 's' : '' }} that may require attention.
+        </div>
+    @endif
+
+    @if ($pendingCount > 0)
+        <div class="p-4 mb-4 text-sm text-yellow-800 bg-yellow-100 border border-yellow-200 rounded-lg" role="alert">
+            ⏳ There are {{ $pendingCount }} pending order{{ $pendingCount > 1 ? 's' : '' }} awaiting processing.
+        </div>
+    @endif
+
     <div class="grid grid-cols-3 md:grid-cols-1 gap-6 mb-6">
         <div class="bg-white p-4 shadow rounded">
             <p class="text-gray-500">Total Orders</p>
@@ -17,8 +29,11 @@
 
         <div class="mb-6">
             @if (session()->has('message'))
-                <div class="p-2 bg-green-200 text-green-800 rounded">
-                    {{ session('message') }}
+                <div class="alert alert-success alert-close">
+                    <button class="alert-btn-close">
+                        <i class="fad fa-times"></i>
+                    </button>
+                    <span>{{ session('message') }}</span>
                 </div>
             @endif
         </div>
@@ -35,6 +50,7 @@
             <select wire:model.live="status" class="border border-gray-300 rounded px-3 py-2">
                 <option value="">All Statuses</option>
                 <option value="completed">Completed</option>
+                <option value="paid">Paid</option>
                 <option value="pending">Pending</option>
                 <option value="processing">Processing</option>
                 <option value="shipped">Shipped</option>

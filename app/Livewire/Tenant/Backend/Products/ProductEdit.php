@@ -32,7 +32,12 @@ class ProductEdit extends Component
         $product->load('images', 'categories');
         $this->product = $product;
 
-        $this->allCategories = Category::all();
+        $this->allCategories = Category::with([
+            'children',
+            'children.children',
+            'children.children.children',
+        ])->whereNull('parent_id')->get();
+
         $this->categoryIds = $this->product->categories->pluck('id')->toArray();
 
         $this->sku = $this->product->sku;
@@ -57,6 +62,11 @@ class ProductEdit extends Component
             'categoryIds.*' => 'exists:categories,id',
             'newImages.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
         ];
+    }
+
+    public function updatedPrice($value)
+    {
+        $this->price = is_numeric($value) ? floatval($value) : null;
     }
 
     public function setMainImage($imageId)

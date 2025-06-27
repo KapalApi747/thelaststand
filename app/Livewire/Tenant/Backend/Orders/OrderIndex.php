@@ -46,6 +46,7 @@ class OrderIndex extends Component
             'shipped'    => 'bg-indigo-100 text-indigo-800 border border-indigo-800',
             'delivered'  => 'bg-emerald-100 text-emerald-800 border border-emerald-800',
             'completed'  => 'bg-green-100 text-green-800 border border-green-800',
+            'paid'       => 'bg-teal-100 text-teal-800 border border-teal-800',
             'cancelled'  => 'bg-gray-200 text-gray-700 border border-gray-700',
             'refunded'   => 'bg-pink-100 text-pink-800 border border-pink-800',
             'failed'     => 'bg-red-100 text-red-800 border border-red-800',
@@ -235,6 +236,9 @@ class OrderIndex extends Component
 
     public function render()
     {
+        $failedCount = Order::where('status', 'failed')->count();
+        $pendingCount = Order::where('status', 'pending')->count();
+
         $orders = Order::query()
             ->join('customers', 'orders.customer_id', '=', 'customers.id')
             ->select('orders.*')
@@ -261,6 +265,8 @@ class OrderIndex extends Component
             'orders' => $orders,
             'orderCount' => $this->orderCount,
             'totalRevenue' => $this->totalRevenue,
+            'failedCount' => $failedCount,
+            'pendingCount' => $pendingCount,
         ]);
     }
 }

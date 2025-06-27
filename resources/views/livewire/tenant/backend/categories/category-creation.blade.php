@@ -1,4 +1,10 @@
-<div class="space-y-4">
+<div class="space-y-6">
+
+    @if (session()->has('message'))
+        <div class="p-2 bg-green-100 text-green-800 rounded">
+            {{ session('message') }}
+        </div>
+    @endif
 
     <form wire:submit.prevent="saveCategory">
         @csrf

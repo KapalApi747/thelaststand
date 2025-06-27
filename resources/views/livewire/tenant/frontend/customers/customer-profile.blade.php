@@ -45,15 +45,37 @@
 
         <hr class="my-12 border-gray-300" />
 
-        <h3 class="text-lg font-semibold mb-3 text-gray-900">Linked Payment Accounts</h3>
-        @if(count($paymentAccounts) > 0)
-            <ul class="list-disc pl-5 text-gray-900">
-                @foreach($paymentAccounts as $account)
-                    <li>
-                        <strong>{{ ucfirst($account['provider']) }}</strong> - ID: {{ $account['provider_customer_id'] }}
-                    </li>
+        <h3 class="text-lg font-semibold mb-4 text-gray-900">Linked Payment Accounts</h3>
+
+        @if ($paymentAccounts)
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @foreach ($paymentAccounts as $account)
+                    <div class="border rounded-lg p-4 bg-white shadow-sm flex items-center gap-4">
+                        {{-- Icon or provider logo --}}
+                        <div class="flex-shrink-0">
+                            @if ($account->provider === 'stripe')
+                                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/stripe.svg" alt="Stripe" class="h-6 w-auto" />
+                            @else
+                                <span class="inline-block w-6 h-6 bg-gray-300 rounded-full"></span>
+                            @endif
+                        </div>
+
+                        <div>
+                            <div class="text-sm font-medium text-gray-900">
+                                {{ ucfirst($account->provider) }}
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                Linked on {{ $account->created_at->format('M d, Y') }}
+                            </div>
+                        </div>
+
+                        {{-- Optionally show ID or unlink button --}}
+                        <div class="ml-auto text-xs text-gray-400">
+                            ID: {{ Str::limit($account->provider_customer_id, 8, '...') }}
+                        </div>
+                    </div>
                 @endforeach
-            </ul>
+            </div>
         @else
             <p class="text-gray-700">No linked payment accounts.</p>
         @endif

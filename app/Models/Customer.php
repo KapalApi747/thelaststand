@@ -22,6 +22,7 @@ class Customer extends Authenticatable implements MustVerifyEmail
         'phone',
         'password',
         'is_active',
+        'email_verified_at',
     ];
 
     protected $hidden = [

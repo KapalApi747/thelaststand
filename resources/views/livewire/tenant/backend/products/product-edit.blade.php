@@ -3,10 +3,15 @@
     <h3 class="h3 font-bold mb-4">Editing Product: <span class="text-gray-700">{{ $product->name }}</span></h3>
 
     @if (session()->has('message'))
-        <div class="text-green-600 font-semibold">{{ session('message') }}</div>
+        <div class="alert alert-success alert-close">
+            <button class="alert-btn-close">
+                <i class="fad fa-times"></i>
+            </button>
+            <span>{{ session('message') }}</span>
+        </div>
     @endif
 
-    <div class="p-6 border shadow rounded">
+    <div class="max-w-3xl p-6 border shadow rounded">
         <form wire:submit.prevent="updateProduct" enctype="multipart/form-data">
             @csrf
             <div class="mb-4">
@@ -32,25 +37,16 @@
 
                 <div class="flex flex-col">
                     @foreach ($allCategories as $category)
-                        <label class="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
-                                value="{{ $category->id }}"
-                                wire:model="categoryIds"
-                                class="form-checkbox"
-                            >
-                            <span>{{ $category->name }}</span>
-                        </label>
+                        @include('partials.categories.category-checkbox-2', ['category' => $category, 'level' => 0])
                     @endforeach
                 </div>
 
                 @error('categoryIds') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
-
             <div class="mb-4">
                 <label>Price</label>
-                <input type="number" wire:model.defer="price" class="w-full border p-2 rounded"/>
+                <input type="text" wire:model.defer="price" class="w-full border p-2 rounded"/>
                 @error('price') <span class="text-red-600">{{ $message }}</span> @enderror
             </div>
 
@@ -93,7 +89,7 @@
                 </div>
             </div>
 
-            <div class="mb-4">
+            <div class="mt-6">
                 <label for="newImages">Add Images:</label>
                 <input type="file" id="newImages" wire:model="newImages" multiple>
                 @error('newImages.*') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
