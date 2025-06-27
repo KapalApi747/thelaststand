@@ -1,6 +1,7 @@
 <div class="p-6 space-y-6">
 
     @php
+        $user = $this->user;
         $profile_picture = 'tenant' . tenant()->id . '/' . $user->profile_picture_path;
     @endphp
 
@@ -33,7 +34,7 @@
         <div class="mt-4">
             <strong>Profile picture:</strong>
             <div class="w-40 h-40 overflow-hidden rounded-full mt-6">
-                <img src="{{ file_exists(public_path($profile_picture)) ? asset($profile_picture) : 'https://placehold.co/40x40' }}" class="w-full h-full object-cover">
+                <img src="{{ file_exists(public_path('tenancy/assets/' . $profile_picture)) ? asset($profile_picture) : 'https://placehold.co/40x40' }}" class="w-full h-full object-cover">
             </div>
         </div>
 

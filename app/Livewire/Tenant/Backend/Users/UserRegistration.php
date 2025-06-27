@@ -54,7 +54,6 @@ class UserRegistration extends Component
 
         $customer = Customer::create([
             'name' => $user->name,
-            'slug' => Str::slug($user->name),
             'email' => $user->email,
             'password' => $user->password,
             'email_verified_at' => now(),
@@ -65,6 +64,8 @@ class UserRegistration extends Component
         session()->flash('message', 'User registered successfully!');
 
         $this->reset();
+
+        $this->dispatch('updated_and_refresh');
     }
 
     public function updated($validation)

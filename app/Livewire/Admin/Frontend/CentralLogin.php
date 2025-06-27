@@ -18,7 +18,7 @@ class CentralLogin extends Component
     {
         $credentials = $this->only(['email', 'password']);
 
-        if (Auth::guard('central')->attempt($credentials, $this->remember)) {
+        if (Auth::guard('central')->attempt($credentials)) {
             session()->regenerate();
             return redirect()->intended(route('home'));
         }

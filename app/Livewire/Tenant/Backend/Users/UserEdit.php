@@ -81,6 +81,8 @@ class UserEdit extends Component
         $this->user->syncRoles($this->userRoles);
 
         session()->flash('message', 'User updated successfully!');
+
+        $this->dispatch('updated_and_refresh');
     }
 
     public function updated($validation)

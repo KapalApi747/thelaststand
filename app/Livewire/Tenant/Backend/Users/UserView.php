@@ -11,14 +11,12 @@ class UserView extends Component
 {
     public User $user;
 
-    public function mount(User $user)
-    {
-        $user->load('roles');
-        $this->user = $user;
-    }
-
     public function render()
     {
-        return view('livewire.tenant.backend.users.user-view');
+        $user = User::with(['roles'])->findOrFail($this->user->id);
+
+        return view('livewire.tenant.backend.users.user-view', [
+            'user' => $user
+        ]);
     }
 }
