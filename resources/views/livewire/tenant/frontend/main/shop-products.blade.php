@@ -235,7 +235,7 @@
                             </flux:modal>
 
                             <a href="{{ route('shop.shop-product-show', $product->slug) }}"
-                               class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-300">
+                               class="px-4 py-2 bg-blue-400 hover:bg-blue-200 text-white rounded-md transition-colors duration-300">
                                 View Details
                             </a>
                         </div>

@@ -12,7 +12,7 @@ class PageSeeder extends Seeder
         Page::firstOrCreate(['slug' => 'privacy-policy'], [
             'title' => 'Privacy Policy',
             'content_html' => <<<HTML
-                <h2 class="text-xl font-bold mb-4">Privacy Policy</h2>
+                <h2 class="text-xl font-bold mb-4">Our Privacy Policy</h2>
                 <p class="mb-4">
                     At {{store_name}}, your privacy is important to us. This policy explains what personal data we collect and how we use it to provide and improve our services.
                 </p>
@@ -34,7 +34,7 @@ class PageSeeder extends Seeder
         Page::firstOrCreate(['slug' => 'terms-of-service'], [
             'title' => 'Terms of Service',
             'content_html' => <<<HTML
-                <h2 class="text-xl font-bold mb-4">Terms of Service</h2>
+                <h2 class="text-xl font-bold mb-4">Our Terms of Service</h2>
                 <p class="mb-4">
                     These terms govern your use of {{store_name}}. By using our platform, you agree to the terms outlined here.
                 </p>
@@ -56,7 +56,7 @@ class PageSeeder extends Seeder
         Page::firstOrCreate(['slug' => 'cookies-policy'], [
             'title' => 'Cookies Policy',
             'content_html' => <<<HTML
-                <h2 class="text-xl font-bold mb-4">Cookies Policy</h2>
+                <h2 class="text-xl font-bold mb-4">Our Cookies Policy</h2>
                 <p class="mb-4">
                     This policy describes how {{store_name}} uses cookies and similar technologies on our website.
                 </p>
