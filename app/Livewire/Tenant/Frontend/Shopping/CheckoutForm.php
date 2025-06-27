@@ -114,6 +114,41 @@ class CheckoutForm extends Component
         $this->validateOnly($propertyName);
     }
 
+    public function updatedBillingDifferent($value)
+    {
+        if ($value) {
+            $this->latestBillingAddress();
+        } else {
+            // Optionally clear billing fields
+            $this->billing_address_line1 = '';
+            $this->billing_address_line2 = '';
+            $this->billing_city = '';
+            $this->billing_state = '';
+            $this->billing_zip = '';
+            $this->billing_country = '';
+        }
+    }
+
+    public function latestBillingAddress()
+    {
+        $customer = $this->currentCustomer();
+
+        $latestBilling = $customer->addresses()
+            ->where('type', 'billing')
+            ->latest()
+            ->first();
+
+        if ($latestBilling) {
+            $this->billing_address_line1 = $latestBilling->address_line1;
+            $this->billing_address_line2 = $latestBilling->address_line2;
+            $this->billing_city = $latestBilling->city;
+            $this->billing_state = $latestBilling->state;
+            $this->billing_zip = $latestBilling->zip;
+            $this->billing_country = $latestBilling->country;
+        }
+    }
+
+
     public function submit()
     {
         $this->validate();

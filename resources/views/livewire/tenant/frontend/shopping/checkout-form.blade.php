@@ -1,4 +1,4 @@
-<div class="max-w-2xl mx-auto mt-6 p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
+<div class="max-w-2xl mx-auto my-6 p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
 
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Checkout Information</h2>
 
@@ -147,7 +147,7 @@
 
         <button
             type="submit"
-            class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition-colors duration-300 cursor-pointer"
+            class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-400 transition-colors duration-300 cursor-pointer"
             wire:loading.attr="disabled"
             wire:target="submitButton"
         >

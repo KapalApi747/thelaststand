@@ -67,5 +67,9 @@
 </footer>
 
 @fluxScripts
+
+{{-- Cookie Banner --}}
+<x-cookies.cookie-banner />
+
 </body>
 </html>

@@ -47,7 +47,7 @@
     <div class="pt-4">
         <button
             wire:click="confirmShipping"
-            class="w-full bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold py-3 px-6 rounded-xl cursor-pointer"
+            class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-400 transition-colors duration-300 cursor-pointer"
         >
             Continue to Payment
         </button>
