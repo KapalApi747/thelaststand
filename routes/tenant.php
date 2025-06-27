@@ -123,8 +123,7 @@ Route::middleware([
         Deze route toont een Livewire component (CustomerVerify) als de klant nog niet geverifieerd is
         */
 
-        Route::get('/email/verify', CustomerVerify::class)
-            ->name('customer-verification.notice');
+        Route::get('/email/verify', CustomerVerify::class)->name('customer-verification.notice');
 
         /*
         Verwerk de verificatielink uit de e-mail

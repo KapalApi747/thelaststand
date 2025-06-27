@@ -31,22 +31,52 @@ class CustomerRegistration extends Component
 
     public function register()
     {
-        $validated = $this->validate();
+        $this->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:20',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
 
+        // Try to find an existing customer
+        $existingCustomer = Customer::where('email', $this->email)->first();
+
+        if ($existingCustomer) {
+            if ($existingCustomer->password) {
+                // Already registered
+                $this->addError('email', 'This email is already registered. Please log in.');
+                return;
+            }
+
+            // Guest: upgrade to full account
+            $existingCustomer->update([
+                'name' => $this->name,
+                'phone' => $this->phone,
+                'password' => Hash::make($this->password),
+                'is_active' => true,
+            ]);
+
+            Auth::guard('customer')->login($existingCustomer);
+            $existingCustomer->sendEmailVerificationNotification();
+
+            return redirect()->route('customer-verification.notice');
+        }
+
+        // New registration
         $customer = Customer::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'phone' => $validated['phone'] ?? null,
-            'password' => Hash::make($validated['password']),
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone ?? null,
+            'password' => Hash::make($this->password),
             'is_active' => true,
         ]);
 
         Auth::guard('customer')->login($customer);
-
         $customer->sendEmailVerificationNotification();
 
         return redirect()->route('customer-verification.notice');
     }
+
 
     public function render()
     {

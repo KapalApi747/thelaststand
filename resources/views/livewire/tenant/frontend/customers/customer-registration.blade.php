@@ -52,7 +52,7 @@
             <div class="flex justify-between items-center">
                 <div>
                     <a
-                        href="{{ route('shop.login') }}"
+                        href="{{ route('login') }}"
                         class="bg-blue-200 text-blue-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300 ease-in-out cursor-pointer"
                     >
                         <i class="fa-solid fa-arrow-left"></i>

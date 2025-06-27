@@ -26,8 +26,11 @@
 <footer class="text-center text-gray-500 py-6 text-sm border-t border-gray-800">
     &copy; {{ date('Y') }} THE LAST STAND. All rights reserved.
 </footer>
-</body>
 
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+{{-- Cookie Banner --}}
+<x-cookies.cookie-banner />
 
 </body>
 </html>

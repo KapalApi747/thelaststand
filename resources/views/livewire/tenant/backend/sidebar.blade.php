@@ -221,13 +221,6 @@
                             </div>
                         </a>
 
-                        <a href="{{ route('tenant-dashboard.product-creation') }}"
-                           class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition ease-in-out duration-500 flex justify-between items-center">
-                            <i class="fas fa-user-plus"></i>
-                            <div>
-                                Create New Product
-                            </div>
-                        </a>
                     </div>
                 </div>
             </div>

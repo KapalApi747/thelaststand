@@ -68,5 +68,9 @@
         }, 2000);
     });
 </script>
+
+{{-- Cookie Banner --}}
+<x-cookies.cookie-banner />
+
 </body>
 </html>
