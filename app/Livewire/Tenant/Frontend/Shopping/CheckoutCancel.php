@@ -18,6 +18,10 @@ class CheckoutCancel extends Component
     {
         $sessionId = request()->query('session_id');
 
+        if (!$sessionId) {
+            abort(404, "No checkout session ID provided.");
+        }
+
         try {
             if ($sessionId) {
                 $stripe = new StripeClient(config('services.stripe.secret'));

@@ -56,7 +56,7 @@ class TenantLogin extends Component
             Auth::guard('customer')->login($customer, $this->remember);
             session()->regenerate();
 
-            return redirect()->intended(route('shop.shop-products')); // Adjust this route as needed
+            return redirect()->intended(route('shop.shop-products'));
         }
 
         $this->addError('email', __('Invalid credentials.'));

@@ -69,6 +69,11 @@ class CheckoutForm extends Component
     {
         session()->forget('checkout_customer_info');
 
+        $cart = session()->get('cart_' . tenant()->id, []);
+        if (empty($cart)) {
+            return redirect()->route('shop.shop-products');
+        }
+
         $customer = $this->currentCustomer();
 
         if ($customer) {

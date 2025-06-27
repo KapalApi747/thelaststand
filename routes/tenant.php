@@ -145,7 +145,7 @@ Route::middleware([
             $user = auth('customer')->user();
 
             if (! $user && $tenantUser = auth('web')->user()) {
-                $user = $tenantUser->customers()->first(); // Adjust if multiple customers
+                $user = $tenantUser->customers()->first();
             }
 
             if ($user) {

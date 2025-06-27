@@ -36,6 +36,10 @@ class CheckoutShipping extends Component
                 'carriers' => $method->carriers,
             ])
             ->toArray();
+
+        if (!session()->has('checkout_customer_info')) {
+            return redirect()->route('shop.checkout-form');
+        }
     }
 
     public function updatedShippingMethod($value)

@@ -26,6 +26,11 @@ class CheckoutPayment extends Component
                 'name' => auth('customer')->user()->name,
                 'email' => auth('customer')->user()->email,
             ]);
+        } elseif (auth('web')->check()) {
+            $this->customerInfo = array_merge($this->customerInfo, [
+                'name' => auth('web')->user()->name,
+                'email' => auth('web')->user()->email,
+            ]);
         }
 
         if (!session()->has('shipping_method')) {
